@@ -27,6 +27,6 @@ class SampleCommandLineRunner implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		System.out.println("PUT TEST CODE HERE");
+		System.out.println("Hello World! :D");
 	}
 }
