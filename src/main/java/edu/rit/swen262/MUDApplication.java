@@ -7,11 +7,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import edu.rit.swen262.ui.MUDGame;
+
 @SpringBootApplication
-public class MyApplication {
+public class MUDApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MyApplication.class, args);
+		SpringApplication.run(MUDApplication.class, args);
 	}
 
 }
@@ -28,5 +30,7 @@ class SampleCommandLineRunner implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		System.out.println("Hello World! :D");
+		MUDGame client = new MUDGame();
+		client.start();
 	}
 }
