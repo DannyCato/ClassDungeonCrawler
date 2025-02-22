@@ -1,5 +1,6 @@
 package edu.rit.swen262.domain.DungeonPiece;
 
+import java.lang.reflect.Constructor;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -13,62 +14,92 @@ import edu.rit.swen262.domain.RenderRepresentation;
  * 
  * @author Danny Catorcini
  */
-public class Tile implements DungeonPiece<Tile>{
+public class Tile implements DungeonPiece<Tile> {
 
     /**
-     * The {@link Occupant Occupant}  that will always be in a Tile. Set upon construction.
+     * The {@link Occupant Occupant} that will always be in a {@link Tile}. Set upon construction and final.
      */
-    private Occupant permanentOccupant;
+    private final Occupant permanentOccupant;
 
     /**
-     * A set of {@link Occupant Occupants} that can be dynamically changed. Modified after construction <p>
+     * A collection of {@link Occupant Occupants} that can be dynamically changed. Modified after construction <p>
      * 
-     * Difference between permanent and transient will be described SOMEWHERE <p>
+     * Difference between permanent and transient will be described somewhere <p>
      * TODO: WRITE UP OF DIFFERENCE BETWEEN WHAT IS CONSIDERED PERMANENT AND TRANSIENT
      */
     private Collection<Occupant> transientOccupant;
 
     /**
-     * If a character can move to this Tile.
+     * If a {@link GameCharacter} can move to this {@link Tile}.
      */
     private boolean stackable;
 
     /**
-     * If a player can exit to a different room from this tile.
+     * If a {@link GameCharacter} can exit to a different {@link Room} from this {@link Tile}.
      */
     private boolean isExit;
 
 
     /**
-     * Create a Tile with given information
+     * Create a {@link Tile} with given information
      * 
-     * @param pOccupant {@link Occupant} that can never be removed from the Tile
+     * @param pOccupant {@link Occupant} that can never be removed from the {@link Tile}
+     * @param stackable whether the {@link Tile} can have other {@link Occupant Occupants} stacked on it
+     * @param tOccupantCol Collection<{@link Occupant}> the collection to be used for {@link Occupant transientOccupant} so that it can be passed through as needed
      */
-    public Tile(Occupant pOccupant, boolean stackable) {
+    public Tile(Occupant pOccupant, boolean stackable, Collection<Occupant> tOccupantCol) {
         this.permanentOccupant = pOccupant;
         this.stackable = stackable;
-        this.transientOccupant = new HashSet<Occupant>() ;
+        this.transientOccupant = tOccupantCol ;
+        this.addOccupant(this.permanentOccupant); // putting the permanent in the transient collection so getting all occupants is easier.
     }
 
-
+    /**
+     * Return a single element List of only the highest priority {@link Occupant Occupant's} {@link RenderRepresentation} within the {@link Tile}
+     * 
+     * @return List<{@link RenderRepresentation}>
+     */
     @Override
     public List<RenderRepresentation> render() {
-        // TODO Auto-generated method stub
+        // TODO: Do what the comment says
         throw new UnsupportedOperationException("Unimplemented method 'render'");
     }
 
+    /**
+     * Return the descriptions of the {@link Occupant Occupants}
+     * 
+     * @return a String of descriptions
+     */
     @Override
     public String description() {
-        // TODO Auto-generated method stub
+        // TODO: do what the comment says
         throw new UnsupportedOperationException("Unimplemented method 'description'");
     }
 
+    /**
+     * Gets the collection of {@link Occupant Occupants} within the {@link Tile}
+     * 
+     * @return Collection<{@link Occupant}>
+     */
+    @SuppressWarnings("unchecked") // thrown at newCol = (Collection<Occupant>) colConstructor.newInstance(transientOccupant); 
+    // ^Java cannot guarantee a cast to a Collection<Occupant> but by definition, it has to be one for this entire class to be usable.
     @Override
     public Collection<Occupant> getOccupants() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getOccupants'");
+        Collection<Occupant> newCol = new HashSet<Occupant>();
+        try { // in case transientOccupant is null for some reason. This would cause other errors upstream but just to be safe
+            Constructor<?> colConstructor = transientOccupant.getClass().getDeclaredConstructor(); // Get empty constructor
+            if (colConstructor != null) {
+                newCol = (Collection<Occupant>) colConstructor.newInstance(); // create a new instance of the class
+            }
+        } catch (Exception e) {
+            System.err.println("Could not create a new collection of the same type. Defaulting to HashSet");
+            e.printStackTrace();
+        }
+        newCol.addAll(transientOccupant); // .addAll() and .add() are defined by Collection interface so they will be implemented
+        newCol.add(permanentOccupant);
+        return newCol;
     }
-    
+
     /**
      * 
      * @return boolean of what isExit is set to
@@ -106,20 +137,27 @@ public class Tile implements DungeonPiece<Tile>{
 
 
     /**
-     * Add an {@link Occupant Occupant} to the Occupant Set
+     * Add an {@link Occupant Occupant} to the {@link Occupant Occupant} Collection
      * 
      * @param tOccupant to add
      * 
      * @return boolean if the add was successful or not
      */
-    public boolean addOccupant(Occupant tOccupant) 
-    {
-        // TODO Auto-generated method stub
+    public boolean addOccupant(Occupant tOccupant) {
+        // TODO: Decide on a collection type or make one and implement an add method here
         throw new UnsupportedOperationException("Unimplemented method 'addOccupant'");
     }
 
-    public void removeOccupant(Occupant tOccupant)
-    {
-
+    /**
+     * remove an {@link Occupant Occupant} from the {@link Occupant Occupants} Collection
+     * 
+     * @param tOccupant to remove
+     * 
+     * @return {@link Occupant Occupant} that was removed
+     */
+    public Occupant removeOccupant(Occupant tOccupant) {
+        // TODO: Decide on a collection type or make one and implement a remove method here.
+        // MAKE SURE YOU CANNOT REMOVE THE PERMANENT OCCUPANT FROM THE COLLECTION
+        throw new UnsupportedOperationException("Unimplemented method 'removeOccupant'");
     }
 }
