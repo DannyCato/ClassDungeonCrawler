@@ -10,9 +10,9 @@ import edu.rit.swen262.domain.RenderRepresentation;
 
 
 /**
- * A representation of the Tile DungeonPiece
- * 
- * @author Danny Catorcini
+ * A representation of the {@link Tile} {@link DungeonPiece}
+ *                         (v LIST YOUR NAME HERE WHEN YOU WORK ON IT v)
+ * @authors Danny Catorcini, 
  */
 public class Tile implements DungeonPiece<Tile> {
 
@@ -40,6 +40,8 @@ public class Tile implements DungeonPiece<Tile> {
     private boolean isExit;
 
 
+    // <-----------------------Constructor----------------------->
+
     /**
      * Create a {@link Tile} with given information
      * 
@@ -52,6 +54,9 @@ public class Tile implements DungeonPiece<Tile> {
         this.stackable = stackable;
         this.transientOccupant = tOccupantCol ;
     }
+
+
+    // <-----------------------Methods----------------------->
 
     /**
      * Return a single element List of only the highest priority {@link Occupant Occupant's} {@link RenderRepresentation} within the {@link Tile}

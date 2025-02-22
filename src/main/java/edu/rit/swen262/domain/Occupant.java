@@ -1,22 +1,26 @@
 package edu.rit.swen262.domain;
 
+import edu.rit.swen262.domain.DungeonPiece.Tile;
+
 /**
- * Defines the interface for Occupants to be on Tiles
+ * Defines the interface for {@link Occupant Occupants} to be on {@link Tile Tiles} <p>
  * 
  * @author Danny Catorcini
  */
 public interface Occupant {
+    //Try to edit this as little as possible
+    
     /**
-     * Give a character to be displayed for CLI
+     * Give a char to be displayed for CLI
      * 
-     * @return a character representing the Occupant
+     * @return a char representing the {@link Occupant}
      */
     public RenderRepresentation render();
 
     /**
-     * Return a description of the Occupant to be used for full descriptions of DungeonPieces
+     * Return a description of the {@link Occupant} to be used for full descriptions of {@link DungeonPiece DungeonPieces}
      * 
-     * @return a description of the Occupant
+     * @return a description of the {@link Occupant}
      */
     public String description();
 }

@@ -6,7 +6,7 @@ package edu.rit.swen262.domain;
  * This does not seem like it is the correct way to do this in
  * hindsight, so we should figure something out
  * 
- * TODO: THINK OF A DIFFERENT IDEA FOR THIS BC THIS OFFERS NO SCALABILITY
+ * TODO: THINK OF A DIFFERENT IDEA FOR THIS BC THIS OFFERS POOR SCALABILITY
  * 
  * @author Danny Catorcini
  */
@@ -14,10 +14,14 @@ public enum RenderRepresentation {
     CHARACTER('c', 10),
     ENEMY('e', 5),
     EXIT('X'),
+    HIDDENTRAP('.'),
     TRAP('T'),
     OBSTACLE('B'),
     CHEST('C'),
-    EMPTY('.', -1);
+    EMPTY('.', -1),
+    VWALL('|', 100),
+    HWALL('-', 100),
+    CORNER('+', 1000);
 
     /**
      * Holds the character as listed above
