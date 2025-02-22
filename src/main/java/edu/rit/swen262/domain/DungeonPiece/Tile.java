@@ -86,7 +86,7 @@ public class Tile implements DungeonPiece<Tile> {
      * @return Collection<{@link Occupant}>
      */
     @SuppressWarnings("unchecked") // thrown at newCol = (Collection<Occupant>) colConstructor.newInstance(transientOccupant); 
-    // ^Java cannot guarantee a cast to a Collection<Occupant> but by definition, it has to be one for this entire class to be usable.
+    // ^Java cannot guarantee a cast to a Collection<Occupant> but, by definition it has to be one for this entire class to be usable so it's just a nonsense error.
     @Override
     public Collection<Occupant> getOccupants() {
         Collection<Occupant> newCol = new HashSet<Occupant>();

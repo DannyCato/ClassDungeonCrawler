@@ -138,4 +138,5 @@ public class Room implements DungeonPiece<Room> {
     }
  
     // TODO: Discuss if Room should hold position information about Occupants external of Tile
+    // TODO: Figure out how Exiting works because it seems like that should work on a Room or Map level. It's still a little hazy to actually see though
 }
