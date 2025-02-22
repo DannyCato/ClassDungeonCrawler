@@ -3,6 +3,7 @@ package edu.rit.swen262.domain.DungeonPiece;
 import java.lang.reflect.Constructor;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 
 import edu.rit.swen262.domain.Occupant;
@@ -65,8 +66,14 @@ public class Tile implements DungeonPiece<Tile> {
      */
     @Override
     public List<RenderRepresentation> render() {
-        // TODO: Do what the comment says
-        throw new UnsupportedOperationException("Unimplemented method 'render'");
+        List<RenderRepresentation> renderRepresentation = new LinkedList<RenderRepresentation>();
+        if (this.permanentOccupant != null) {
+            renderRepresentation.add(this.permanentOccupant.render());
+        }
+        for (Occupant o : this.transientOccupant) {
+            renderRepresentation.add(o.render());
+        }
+        return renderRepresentation;
     }
 
     /**
