@@ -1,12 +1,15 @@
 package edu.rit.swen262.domain;
 
+// TODO: THINK OF A DIFFERENT IDEA FOR THIS BC THIS OFFERS POOR SCALABILITY
+// Honestly maybe it's fine. Was thinking about implementing comparable to keep
+// this enum responsible for handling its own values
+
 /**
  * Enum to represent the basic ways an object can be rendered
  * 
  * This does not seem like it is the correct way to do this in
  * hindsight, so we should figure something out
  * 
- * TODO: THINK OF A DIFFERENT IDEA FOR THIS BC THIS OFFERS POOR SCALABILITY
  * 
  * @author Danny Catorcini
  */
