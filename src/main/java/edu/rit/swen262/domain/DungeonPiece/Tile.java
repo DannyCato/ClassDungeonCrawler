@@ -51,7 +51,6 @@ public class Tile implements DungeonPiece<Tile> {
         this.permanentOccupant = pOccupant;
         this.stackable = stackable;
         this.transientOccupant = tOccupantCol ;
-        this.addOccupant(this.permanentOccupant); // putting the permanent in the transient collection so getting all occupants is easier.
     }
 
     /**
@@ -157,7 +156,6 @@ public class Tile implements DungeonPiece<Tile> {
      */
     public Occupant removeOccupant(Occupant tOccupant) {
         // TODO: Decide on a collection type or make one and implement a remove method here.
-        // MAKE SURE YOU CANNOT REMOVE THE PERMANENT OCCUPANT FROM THE COLLECTION
         throw new UnsupportedOperationException("Unimplemented method 'removeOccupant'");
     }
 }
