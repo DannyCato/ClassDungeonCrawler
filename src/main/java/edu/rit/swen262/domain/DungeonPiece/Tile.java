@@ -66,14 +66,14 @@ public class Tile implements DungeonPiece<Tile> {
      */
     @Override
     public List<RenderRepresentation> render() {
-        List<RenderRepresentation> renderRepresentation = new LinkedList<RenderRepresentation>();
+        List<RenderRepresentation> renderRepresentations = new LinkedList<RenderRepresentation>();
         if (this.permanentOccupant != null) {
-            renderRepresentation.add(this.permanentOccupant.render());
+            renderRepresentations.add(this.permanentOccupant.render());
         }
         for (Occupant o : this.transientOccupant) {
-            renderRepresentation.add(o.render());
+            renderRepresentations.add(o.render());
         }
-        return renderRepresentation;
+        return renderRepresentations;
     }
 
     /**
@@ -83,8 +83,14 @@ public class Tile implements DungeonPiece<Tile> {
      */
     @Override
     public String description() {
-        // TODO: do what the comment says
-        throw new UnsupportedOperationException("Unimplemented method 'description'");
+        List<String> descriptions = new LinkedList<String>();
+        if (this.permanentOccupant != null) {
+            descriptions.add(this.permanentOccupant.description());
+        }
+        for (Occupant o : this.transientOccupant) {
+            descriptions.add(o.description());
+        }
+        return String.join(", and ", descriptions);
     }
 
     /**
