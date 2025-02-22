@@ -1,6 +1,7 @@
 package edu.rit.swen262.domain.DungeonPiece;
 
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -10,7 +11,11 @@ import edu.rit.swen262.domain.RenderRepresentation;
 
 
 /**
- * A representation of the {@link Tile} {@link DungeonPiece}
+ * A representation of the {@link Tile} {@link DungeonPiece} <p>
+ * 
+ * The difference between a transient and a permanent object is that a transient object can be interacted with in a way that
+ * would reasonably remove it from the Tile. That is, a charater moving, enemy being defeated, or a Chest being used (<--- ALL TRANSIENT).
+ * While a permanemt would realistically always be there, like a boulder or an exit.
  *                         (v LIST YOUR NAME HERE WHEN YOU WORK ON IT v)
  * @authors Danny Catorcini, 
  */
@@ -23,9 +28,6 @@ public class Tile implements DungeonPiece<Tile> {
 
     /**
      * A collection of {@link Occupant Occupants} that can be dynamically changed. Modified after construction <p>
-     * 
-     * Difference between permanent and transient will be described somewhere <p>
-     * TODO: WRITE UP OF DIFFERENCE BETWEEN WHAT IS CONSIDERED PERMANENT AND TRANSIENT
      */
     private Collection<Occupant> transientOccupant;
 
@@ -59,25 +61,63 @@ public class Tile implements DungeonPiece<Tile> {
     // <-----------------------Methods----------------------->
 
     /**
-     * Return a single element List of only the highest priority {@link Occupant Occupant's} {@link RenderRepresentation} within the {@link Tile}
+     * Return a List of only the highest priority {@link Occupant Occupants'} {@link RenderRepresentation} within the {@link Tile}
      * 
      * @return List<{@link RenderRepresentation}>
      */
     @Override
     public List<RenderRepresentation> render() {
-        // TODO: Do what the comment says
-        throw new UnsupportedOperationException("Unimplemented method 'render'");
+        ArrayList<RenderRepresentation> atPriorityLevel = new ArrayList<>() ; // return an arrayList
+        if ( hasPermanentOccupant() ) { // check if not null
+            atPriorityLevel.add(permanentOccupant.render()); // then put the render representation
+        } else {
+            atPriorityLevel.add(RenderRepresentation.EMPTY); // Add as if it was empty
+        }
+        for (Occupant occupant : transientOccupant) { // go through all transientOccupants
+            RenderRepresentation rr = occupant.render(); // get their render
+            switch ( atPriorityLevel.get(0).compare(atPriorityLevel.get(0), rr)) { // compare first element of atPriorityLevel
+                case -1: // if atPriorityLevel is less than rr
+                    atPriorityLevel.clear();
+                    atPriorityLevel.add(rr); // refresh atPriorityLevel with only add rr
+                    break;
+                case 0:
+                    atPriorityLevel.add(rr); // append to atPriorityLevel
+                    break;
+                default:
+                    break;
+            }
+        }
+        return atPriorityLevel ;
     }
 
     /**
-     * Return the descriptions of the {@link Occupant Occupants}
+     * Return a formatted description of the {@link Tile Tile's} {@link Occupant Occupants}
      * 
      * @return a String of descriptions
      */
     @Override
     public String description() {
-        // TODO: do what the comment says
-        throw new UnsupportedOperationException("Unimplemented method 'description'");
+        String desc = "";
+        boolean trigger = false;
+        if (hasPermanentOccupant()){
+            desc += permanentOccupant.description();
+            trigger = true;
+        }
+
+        for (Occupant occupant : transientOccupant) {
+            if (trigger) {
+                desc += ", ";
+            }
+            String compStr = occupant.description(); 
+            if (compStr.equals(""))
+            {
+                trigger = false;
+                continue;
+            }
+            desc += compStr;
+            trigger = true;
+        }
+        return desc;
     }
 
     /**
@@ -99,8 +139,9 @@ public class Tile implements DungeonPiece<Tile> {
             System.err.println("Could not create a new collection of the same type. Defaulting to HashSet");
             e.printStackTrace();
         }
-        newCol.addAll(transientOccupant); // .addAll() and .add() are defined by Collection interface so they will be implemented
-        newCol.add(permanentOccupant);
+        newCol.addAll(transientOccupant); // add all transisents
+        newCol.add(permanentOccupant); // add permanent
+        newCol.remove(null); // remove any null elements which might populate the data
         return newCol;
     }
 
@@ -162,5 +203,14 @@ public class Tile implements DungeonPiece<Tile> {
     public Occupant removeOccupant(Occupant tOccupant) {
         // TODO: Decide on a collection type or make one and implement a remove method here.
         throw new UnsupportedOperationException("Unimplemented method 'removeOccupant'");
+    }
+
+    /**
+     * True if has a permanentOccupant. See class for description on permanent occupant
+     * 
+     * @return boolean
+     */
+    public boolean hasPermanentOccupant() {
+        return permanentOccupant != null;
     }
 }

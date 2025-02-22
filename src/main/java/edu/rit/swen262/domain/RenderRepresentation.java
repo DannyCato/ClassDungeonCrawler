@@ -1,5 +1,7 @@
 package edu.rit.swen262.domain;
 
+import java.util.Comparator;
+
 // TODO: THINK OF A DIFFERENT IDEA FOR THIS BC THIS OFFERS POOR SCALABILITY
 // Honestly maybe it's fine. Was thinking about implementing comparable to keep
 // this enum responsible for handling its own values
@@ -13,7 +15,7 @@ package edu.rit.swen262.domain;
  * 
  * @author Danny Catorcini
  */
-public enum RenderRepresentation {
+public enum RenderRepresentation implements Comparator<RenderRepresentation> {
     CHARACTER('c', 10),
     ENEMY('e', 5),
     EXIT('X'),
@@ -61,5 +63,17 @@ public enum RenderRepresentation {
 
     public char render() {
         return this.representation;
+    }
+
+    /**
+     * Compare two RenderRepresentations
+     * 
+     * @param thisRR the first object to compare
+     * @param otherRR the second object to compare
+     * @return int. -1 if less, 0 if equal, 1 if greater
+     */
+    @Override
+    public int compare(RenderRepresentation thisRR, RenderRepresentation otherRR) {
+        return Integer.compare(thisRR.priority, otherRR.priority);
     }
 }

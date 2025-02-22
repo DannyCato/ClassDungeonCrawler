@@ -12,15 +12,24 @@ import edu.rit.swen262.domain.RenderRepresentation;
  * @authors Danny Catorcini, 
  */
 public class Map implements DungeonPiece<Map> {
-    // TODO: so tired rn
+    
+    private List<DungeonPiece<Room>> rooms;
 
+    private DungeonPiece<Tile> startTile;
+
+    private DungeonPiece<Room> startRoom;
+    private DungeonPiece<Room> goal;
+
+    private DungeonPiece<Room> currentRoom;
 
 
     // <-----------------------Constructors----------------------->
 
+    public Map(List<DungeonPiece<Room>> rooms) {
+        this.rooms = rooms;
+    }
 
-
-
+    
     // <-----------------------Methods----------------------->
 
     /**
@@ -55,4 +64,36 @@ public class Map implements DungeonPiece<Map> {
         // TODO: create a collection of Occupants (preferably of the same type as the one in Tiles) and append all tiles to it.
         throw new UnsupportedOperationException("Unimplemented method 'getOccupants'");
     }
+
+    /**
+     * adds a {@link Room} to rooms.
+     * 
+     * @param tile {@link DungeonPiece}<{@link Tile}> a {@link Tile} to add
+     */
+    public boolean addRoom(DungeonPiece<Room> room) {
+        // TODO: Decide on a collection type or make one and implement an add method here
+        throw new UnsupportedOperationException("Unimplemented method 'addRoom'");
+    }
+
+    /**
+     * returns the {@link Room current Room} that the character is in <p>
+     * 
+     * This will need to change to work with mulitple users
+     * 
+     * @return {@link DungeonPiece}<{@link Room}>
+     */
+    public DungeonPiece<Room> getCurrentRoom() {
+        return currentRoom;
+    }
+
+    /**
+     * 
+     * 
+     * @param currentRoom
+     */
+    public void setCurrentRoom(DungeonPiece<Room> currentRoom) {
+        this.currentRoom = currentRoom;
+    }
+
+    
 }
