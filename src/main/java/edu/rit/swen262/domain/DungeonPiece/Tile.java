@@ -68,7 +68,6 @@ public class Tile implements DungeonPiece<Tile> {
      */
     @Override
     public List<RenderRepresentation> render() {
-<<<<<<< HEAD
         ArrayList<RenderRepresentation> atPriorityLevel = new ArrayList<>() ; // return an arrayList
         if ( hasPermanentOccupant() ) { // check if not null
             atPriorityLevel.add(permanentOccupant.render()); // then put the render representation
@@ -90,16 +89,6 @@ public class Tile implements DungeonPiece<Tile> {
             }
         }
         return atPriorityLevel ;
-=======
-        List<RenderRepresentation> renderRepresentations = new LinkedList<RenderRepresentation>();
-        if (this.permanentOccupant != null) {
-            renderRepresentations.add(this.permanentOccupant.render());
-        }
-        for (Occupant o : this.transientOccupant) {
-            renderRepresentations.add(o.render());
-        }
-        return renderRepresentations;
->>>>>>> d4f2c700349b99d26a5a07bae8d9e7d2ffa24ff0
     }
 
     /**
@@ -109,7 +98,6 @@ public class Tile implements DungeonPiece<Tile> {
      */
     @Override
     public String description() {
-<<<<<<< HEAD
         String desc = "";
         boolean trigger = false;
         if (hasPermanentOccupant()){
@@ -131,16 +119,6 @@ public class Tile implements DungeonPiece<Tile> {
             trigger = true;
         }
         return desc;
-=======
-        List<String> descriptions = new LinkedList<String>();
-        if (this.permanentOccupant != null) {
-            descriptions.add(this.permanentOccupant.description());
-        }
-        for (Occupant o : this.transientOccupant) {
-            descriptions.add(o.description());
-        }
-        return String.join(", and ", descriptions);
->>>>>>> d4f2c700349b99d26a5a07bae8d9e7d2ffa24ff0
     }
 
     /**
