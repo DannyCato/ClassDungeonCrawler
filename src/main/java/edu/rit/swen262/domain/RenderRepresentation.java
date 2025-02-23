@@ -24,9 +24,9 @@ public enum RenderRepresentation implements Comparator<RenderRepresentation> {
     EMPTY('.', Integer.MIN_VALUE),
     HIDDENTRAP(EMPTY.representation, 1),
     TRAP('T'),
-    VWALL('|', 100),
-    HWALL('-', 100),
-    CORNER('+', 1000);
+    VWALL('|', false, 100),
+    HWALL('-',false, 100),
+    CORNER('+', false, 1000);
 
     /**
      * Holds the character as listed above

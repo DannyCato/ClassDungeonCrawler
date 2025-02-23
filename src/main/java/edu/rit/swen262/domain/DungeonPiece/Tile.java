@@ -221,4 +221,24 @@ public class Tile implements DungeonPiece<Tile> {
     public boolean hasPermanentOccupant() {
         return permanentOccupant != null;
     }
+
+    /**
+     * True if transientOccpant is not empty.
+     * 
+     * @return boolean
+     */
+    public boolean hasTransientOccupant() {
+        return !transientOccupant.isEmpty();
+    }
+
+    /**
+     * True if transientOccupant has tOccupant
+     * 
+     * @param tOccupant the occupant
+     * 
+     * @return boolean
+     */
+    public boolean containsTransientOccupantOf(Occupant tOccupant) {
+        return transientOccupant.contains(tOccupant);
+    }
 }
