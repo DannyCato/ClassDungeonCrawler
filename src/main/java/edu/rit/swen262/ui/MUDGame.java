@@ -37,17 +37,33 @@ import edu.rit.swen262.service.KeystrokeListener;
  * @author Victor Bovat
  */
 public class MUDGame implements GameObserver {
+    private KeystrokeListener keystrokeListener;
     private Screen screen;
+
+    public MUDGame(KeystrokeListener keystrokeListener) {
+        this.keystrokeListener = keystrokeListener;
+    }
+
     /**
      * {@inheritDoc}
      */
     public void update(GameEvent event) {
-        if (event.getType().equals(GameEventType.QUIT_GAME)) {
-            try {
-                this.screen.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        switch (event.getType()) {
+            case GameEventType.MOVE_PLAYER:
+                break;
+            case GameEventType.TIME_CHANGED:
+                break;
+            case GameEventType.DAMAGE_TAKEN:
+                break;
+            case GameEventType.QUIT_GAME:
+                try {
+                    this.screen.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+            default:
+                break;
         }
     }
 
@@ -153,6 +169,7 @@ public class MUDGame implements GameObserver {
             */
             Button submitButton = new Button("Submit", () -> {
                 statusDisplay.setText(userInput.getText());
+                this.keystrokeListener.receivedInput(userInput.getText());
                 userInput.setText(""); // Clear the text
                 textGUI.setActiveWindow(window);
                 userInput.takeFocus();         // refocus user input box

@@ -18,7 +18,7 @@ public class MoveAction implements Action {
      * {@inheritDoc}
      */
     public void performAction() {
-        // gameState.movePlayer(this.direction) ?
+        gameState.movePlayer(this.direction);
     }
 }
 

@@ -64,6 +64,40 @@ public class GameState implements IObservable {
     }
 
     /**
+     * attacks the specified character on the map
+     * 
+     * @param c the character that is being attacked
+     */
+    public void attackCharacter(Character c) {
+        this.notifyObservers(null);
+    }
+
+    /**
+     *  opens the inventory of the player character
+     */
+    public void openInventory() {
+        this.notifyObservers(null); 
+    }
+
+    /**
+     *  uses the item found in player character Inventory
+     * 
+     * needs an @param item the player character is using
+     */
+    public void useItem(String item) {
+        this.notifyObservers(null); 
+    }
+
+    /**
+     * disarms the trap found in a cardinal direction away from player character in room
+     * 
+     * needs an @param trap the player character is deactivating in a cardinal direction
+     */
+    public void disarmTrap(String trap) {
+        this.notifyObservers(null); 
+    }
+
+    /**
      * stop operation of the game and return the terminal to its normal state
      */
     public void quit() {
@@ -71,7 +105,7 @@ public class GameState implements IObservable {
         /*TO-DO: make a way to save objects like the current map using 
         Serializable interface */
 
-        this.notifyObservers(null);
+        this.notifyObservers(new GameEvent(GameEventType.QUIT_GAME));
     }
 
     /**

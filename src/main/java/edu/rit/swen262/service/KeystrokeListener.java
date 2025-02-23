@@ -14,26 +14,34 @@ public class KeystrokeListener {
 
     public void receivedInput(String text) {
         char input = text.toLowerCase().charAt(0);
+        Action action = null;
         
         switch (input) {
             case 'm':
                 //reference Menu
                 //moveAction will generate menu
+                System.out.println("I AM MOVING!");
                 break;
             case 'a':
                 //attackAction will generate menu
+                System.out.println("I AM ATTACKING!");
                 break;
             case 'i':
                 //inventoryAction will generate menu
+                System.out.println("I AM OPENING MY INVENTORY");
                 break;
             case 'c':
                 //chestAction
+                System.out.println("I AM OPENING THIS CHEST");
                 break;
             case 'd':
                 //disarmTrapAction will generate menu
+                System.out.println("I AM DISARMING THIS TRAP");
                 break;
             case 'q':
                 //quit
+                System.out.println("I QUIT!");
+                action = keystrokes.get("q");
                 break;
             case '1':
                 break;
@@ -54,5 +62,6 @@ public class KeystrokeListener {
             default:
                 break;
         }
+        action.performAction();
     }  
 }

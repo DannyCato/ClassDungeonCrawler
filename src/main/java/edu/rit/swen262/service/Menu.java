@@ -14,6 +14,6 @@ public class Menu {
         }
         //key stroke listener 
         //resolve menu(e)
-        return "bu";
+        return "a menu?";
     }
 }

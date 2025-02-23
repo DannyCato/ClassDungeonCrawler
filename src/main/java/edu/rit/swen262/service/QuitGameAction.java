@@ -15,6 +15,6 @@ public class QuitGameAction implements Action {
      * {@inheritDoc}
      */
     public void performAction() {
-        
+        gameState.quit();
     }
 }

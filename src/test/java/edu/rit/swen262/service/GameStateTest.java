@@ -58,6 +58,7 @@ class GameStateTest {
         gameState.register(mockObserverA);
         gameState.register(mockObserverB);
 
-        
+        assertTrue(gameState.getObservers().contains(mockObserverA));
+        assertTrue(gameState.getObservers().contains(mockObserverB));
 	}
 }
