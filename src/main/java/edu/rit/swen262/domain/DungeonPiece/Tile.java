@@ -17,7 +17,7 @@ import edu.rit.swen262.domain.RenderRepresentation;
  * would reasonably remove it from the Tile. That is, a charater moving, enemy being defeated, or a Chest being used (<--- ALL TRANSIENT).
  * While a permanemt would realistically always be there, like a boulder or an exit.
  *                         (v LIST YOUR NAME HERE WHEN YOU WORK ON IT v)
- * @authors Danny Catorcini, 
+ * @authors Danny Catorcini, Eric Manning
  */
 public class Tile implements DungeonPiece<Tile> {
 
@@ -215,7 +215,7 @@ public class Tile implements DungeonPiece<Tile> {
      * @return boolean if the add was successful or not
      */
     public boolean addOccupant(Occupant tOccupant) {
-        if (!transientOccupant.contains(tOccupant)) {
+        if (stackable && !transientOccupant.contains(tOccupant)) {
             transientOccupant.add(tOccupant);
             return true;
         }
