@@ -4,7 +4,6 @@ import java.util.List;
 
 public class Inventory {
 
-    private List<Item> contents;
     private List<Bag> bags;
     private int capacity;
 
@@ -13,25 +12,19 @@ public class Inventory {
         this.capacity = capacity;
     }
 
-    public boolean addItem(Item item){
+    public boolean addBag(Bag bag) {
 
-        if (contents.size() < capacity) {
-            return contents.add(item);
+        if (bags.size() < capacity) {
+            return bags.add(bag);
         }
         return false;
 
     }
 
-    public boolean removeItem(Item item){
-        
-        return contents.remove(item);
+    public boolean removeBag(Bag bag) {
 
-    }
+        return bags.remove(bag);
 
-    public List<Item> getItems() {
-
-        return contents;
-        
     }
 
     public List<Bag> getBags() {
@@ -39,5 +32,5 @@ public class Inventory {
         return bags;
 
     }
-    
+
 }

@@ -14,8 +14,13 @@ public class Armor implements Item {
         this.value = value;
     }
 
-    public String getName(){return name;}
-    public int getDefense(){return defense;}
+    public String getName() {
+        return name;
+    }
+
+    public int getDefense() {
+        return defense;
+    }
 
     @Override
     public String getDescription() {
@@ -26,5 +31,5 @@ public class Armor implements Item {
     public Gold getValue() {
         return value;
     }
-    
+
 }

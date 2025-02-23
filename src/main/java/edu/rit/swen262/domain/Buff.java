@@ -20,11 +20,25 @@ public class Buff implements Item {
         this.value = value;
     }
 
-    public String getName(){return name;}
-    public float getDuration(){return duration;}
-    public int getAttack(){return attack;}
-    public int getDefense(){return defense;}
-    public int getHp(){return hp;}
+    public String getName() {
+        return name;
+    }
+
+    public float getDuration() {
+        return duration;
+    }
+
+    public int getAttack() {
+        return attack;
+    }
+
+    public int getDefense() {
+        return defense;
+    }
+
+    public int getHp() {
+        return hp;
+    }
 
     @Override
     public String getDescription() {

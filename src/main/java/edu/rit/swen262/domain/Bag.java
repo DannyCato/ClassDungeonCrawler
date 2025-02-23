@@ -7,12 +7,12 @@ public class Bag {
     private List<Item> contents;
     private int capacity;
 
-    public Bag(List<Item> contents, int capacity){
+    public Bag(List<Item> contents, int capacity) {
         this.contents = contents;
         this.capacity = capacity;
     }
 
-    public boolean addItem(Item item){
+    public boolean addItem(Item item) {
 
         if (contents.size() < capacity) {
             return contents.add(item);
@@ -21,16 +21,16 @@ public class Bag {
 
     }
 
-    public boolean removeItem(Item item){
+    public boolean removeItem(Item item) {
 
         return contents.remove(item);
-    
+
     }
 
     public List<Item> getItems() {
 
         return contents;
-        
+
     }
-    
+
 }

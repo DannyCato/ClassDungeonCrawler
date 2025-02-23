@@ -13,9 +13,14 @@ public class Food implements Item {
         this.hp = hp;
         this.value = value;
     }
-    
-    public String getName(){return name;}
-    public int getHp(){return hp;}
+
+    public String getName() {
+        return name;
+    }
+
+    public int getHp() {
+        return hp;
+    }
 
     @Override
     public String getDescription() {
@@ -26,5 +31,5 @@ public class Food implements Item {
     public Gold getValue() {
         return value;
     }
-    
+
 }

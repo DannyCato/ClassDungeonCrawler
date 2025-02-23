@@ -7,15 +7,20 @@ public class Weapon implements Item {
     private int attack;
     private Gold value;
 
-    public Weapon(String name, String description, int attack, Gold value){
+    public Weapon(String name, String description, int attack, Gold value) {
         this.name = name;
         this.description = description;
         this.attack = attack;
         this.value = value;
     }
 
-    public String getName(){return name;}
-    public int getAttack(){return attack;}
+    public String getName() {
+        return name;
+    }
+
+    public int getAttack() {
+        return attack;
+    }
 
     @Override
     public String getDescription() {
@@ -26,5 +31,5 @@ public class Weapon implements Item {
     public Gold getValue() {
         return value;
     }
-    
+
 }
