@@ -2,6 +2,7 @@ package edu.rit.swen262.ui;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.SimpleTheme;
@@ -17,9 +18,10 @@ import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 
-import edu.rit.swen262.domain.PlayerCharacter;
+import edu.rit.swen262.service.Action;
 import edu.rit.swen262.service.GameObserver;
 import edu.rit.swen262.service.GameState;
+import edu.rit.swen262.service.KeystrokeListener;
 
 /**
  * The class responsible for rendering the current state of the MUD game to
@@ -28,6 +30,7 @@ import edu.rit.swen262.service.GameState;
  * @author Victor Bovat
  */
 public class MUDGame implements GameObserver {
+    private KeystrokeListener keystrokeListener;
     /**
      * {@inheritDoc}
      */
@@ -124,6 +127,8 @@ public class MUDGame implements GameObserver {
             // create panel recieving input (spans entire screen)
             Panel inputPanel = new Panel(new GridLayout(1));
             TextBox userInput = new TextBox().setLayoutData(GridLayout.createHorizontallyFilledLayoutData());
+            userInput.setTextChangeListener(null);
+            
             inputPanel.addComponent(userInput);
 
             // add child panels to container in top-down display order

@@ -1,5 +1,8 @@
 package edu.rit.swen262;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -8,7 +11,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import edu.rit.swen262.domain.PlayerCharacter;
+import edu.rit.swen262.service.Action;
 import edu.rit.swen262.service.GameState;
+import edu.rit.swen262.service.KeystrokeListener;
+import edu.rit.swen262.service.QuitGameAction;
 import edu.rit.swen262.ui.MUDGame;
 
 @SpringBootApplication
@@ -37,6 +43,11 @@ class SampleCommandLineRunner implements CommandLineRunner {
 		PlayerCharacter player = new PlayerCharacter("Bobert", "can lift at least 5 worms.");
 		GameState gameState = new GameState(player);
 		gameState.register(client);
+
+		Map<String, Action> keystrokes = new HashMap<String, Action>() {{
+			put("q", new QuitGameAction(gameState));
+		}};
+		KeystrokeListener keystrokeListener = new KeystrokeListener(keystrokes);
 
 		client.start();
 	}
