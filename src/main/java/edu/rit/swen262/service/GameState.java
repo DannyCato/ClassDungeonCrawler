@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * Both receives and manages commands as well as updates all interested observers
  * whenever a change in the game's state has occurred.
  * 
- * @author Victor Bovat
+ * @author Victor Bovat, Philip Rubbo
  */
 public class GameState implements IObservable {
     private List<GameObserver> observers;

@@ -68,7 +68,7 @@ public class MUDGame implements GameObserver {
     }
 
     /**
-     * 
+     * initializes all fields relevent to booting up the UI
      */
     public void initialize() {
         /* TO-DO: have this class instantiate all concrete commands +
@@ -87,18 +87,13 @@ public class MUDGame implements GameObserver {
         System.out.println("game initialized!");
 
         this.drawUI();
-        /*try {
-            this.testUI();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
     }
 
     /**
      * takes control of the console and draws the main screen which displays all of the information currently
      * available to the player (map, turn number, etc.)
      */
-    public void drawUI() {
+    private void drawUI() {
         DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory();
         this.screen = null;
 

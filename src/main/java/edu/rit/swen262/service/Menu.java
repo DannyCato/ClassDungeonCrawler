@@ -3,6 +3,11 @@ package edu.rit.swen262.service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A helper class which holds all suboptions avaialble for applicable 
+ * {@link Action concrete commands}, generated when the {@link KeyStrokeListener}
+ * is parsing input
+ */
 public class Menu {
     private List<String> optionsList;
     //key stroke listener here;

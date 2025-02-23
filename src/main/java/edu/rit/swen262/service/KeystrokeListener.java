@@ -3,15 +3,30 @@ package edu.rit.swen262.service;
 import java.util.Map;
 
 /**
+ * A class which parses input from the user, mapping the given String
+ * to its corrosponding {@link Action}
  * 
+ * @author Victor Bovat, Philip Rubbo
  */
 public class KeystrokeListener {
     private Map<String, Action> keystrokes;
 
+    /**
+     * creates a new KeystrokeListener with the provided map of single
+     * characters bound to specific {@link Action concrete commands} 
+     * 
+     * @param keystrokes map between characters and their matching commands
+     */
     public KeystrokeListener(Map<String, Action> keystrokes) {
         this.keystrokes = keystrokes;
     }
 
+    /**
+     * given an input string from the {@link MUDGame UI class}, parses the
+     * input and generates the appropriate command, then executes it
+     * 
+     * @param text the text inputted by the user
+     */
     public void receivedInput(String text) {
         char input = text.toLowerCase().charAt(0);
         Action action = null;
@@ -62,6 +77,8 @@ public class KeystrokeListener {
             default:
                 break;
         }
+
+        // once action has been fully constructed, execute the command
         action.performAction();
     }  
 }
