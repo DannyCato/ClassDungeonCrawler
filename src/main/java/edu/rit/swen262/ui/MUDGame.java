@@ -17,7 +17,8 @@ import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 
-import edu.rit.swen262.domain.PlayerCharacter;
+import edu.rit.swen262.service.GameEvent;
+import edu.rit.swen262.service.GameEventType;
 import edu.rit.swen262.service.GameObserver;
 import edu.rit.swen262.service.GameState;
 
@@ -28,11 +29,18 @@ import edu.rit.swen262.service.GameState;
  * @author Victor Bovat
  */
 public class MUDGame implements GameObserver {
+    private Screen screen;
     /**
      * {@inheritDoc}
      */
-    public void update(GameState g) {
-        System.out.println("client notified! game state has been updated");
+    public void update(GameEvent event) {
+        if (event.getType().equals(GameEventType.QUIT_GAME)) {
+            try {
+                this.screen.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -63,14 +71,14 @@ public class MUDGame implements GameObserver {
      */
     public void drawUI() {
         DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory();
-        Screen screen = null;
+        this.screen = null;
 
         try {
             // create screen component
-            screen = terminalFactory.createScreen();
-            screen.startScreen();
+            this.screen = terminalFactory.createScreen();
+            this.screen.startScreen();
 
-            final WindowBasedTextGUI textGUI = new MultiWindowTextGUI(screen);
+            final WindowBasedTextGUI textGUI = new MultiWindowTextGUI(this.screen);
             
             // set tui color scheme
             Theme theme = SimpleTheme.makeTheme(
@@ -143,9 +151,9 @@ public class MUDGame implements GameObserver {
             e.printStackTrace();
         } finally {
             // if control over the window has not already been yielded, do so
-            if(screen != null) {
+            if(this.screen != null) {
                 try {
-                    screen.close();
+                    this.screen.close();
                 }
                 catch(IOException e) {
                     e.printStackTrace();
