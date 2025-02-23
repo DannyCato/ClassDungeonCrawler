@@ -16,18 +16,23 @@ import edu.rit.swen262.domain.RenderRepresentation;
 public class Room implements DungeonPiece<Room> {
     
     /**
-     * Storage for {@link Tile tiles}. <p>
+     * Storage for {@link Tile tiles}. (Recommended to be {@link ArrayList}) <p>
      * 
-     * not sure if this is 1- or 2-dimensional yet. Probably good to discuss before a decision is made
+     * This is a 1D array that is set up to be of size width * height. It can be read in the following comments
      */
     private List<DungeonPiece<Tile>> tiles;
+    // Instead of a List<List<DungeonPiece<Tile>>> we can do List<DungeonPiece<Tile>> Here's how:                         | |
+    //               Y                               mutliply wanted height by width then add a width offset for equation V V 
+    //              0| 0 1 2                                   __0__|__1__|__2__ <-Functionally a Y index       Tile =  wanted height * width of line + width offset        
+    //              1| 3 4 5                      real index-> 0 1 2|3 4 5|6 7 8                                     = wanted Y index * width of line + wanted X index 
+    //              2| 6 7 8                                   -----+-----+-----
+    //               +------ X                      X offset-> 0 1 2|0 1 2|0 1 2
+    //                 0 1 2                      
 
     /**
-     * storage for general classes. unsure how this will effect everything else as of now <p>
-     * 
-     * same discussion as tiles
+     * storage for indicies of tiles. Integers so we don't save the same thing twice
      */
-    private List<DungeonPiece<Tile>> exitsTiles;
+    private List<Integer> exitsTiles;
 
 
     private final int width;
@@ -50,7 +55,7 @@ public class Room implements DungeonPiece<Room> {
      * @param tiles {@link DungeonPiece}<{@link Tile}>
      * @param exitTiles {@link DungeonPiece}<{@link Tile}> must be different from tiles
      */
-    public Room(int width, int height, String description, List<DungeonPiece<Tile>> tiles, List<DungeonPiece<Tile>> exitTiles)
+    public Room(int width, int height, String description, List<DungeonPiece<Tile>> tiles, List<Integer> exitTiles)
     {
         this.width = width;
         this.height = height;
@@ -130,12 +135,19 @@ public class Room implements DungeonPiece<Room> {
     /**
      * adds a {@link Tile} to tiles. If addedTile is also an exit tile then it will be automatically added to exitTiles
      * 
-     * @param tile {@link DungeonPiece}<{@link Tile}> a {@link Tile} to add
+     * @param addTile {@link DungeonPiece}<{@link Tile}> a {@link Tile} to add
+     * 
+     * @return boolean if 
      */
-    public void addTile(DungeonPiece<Tile> addedTile) {
-        // TODO: Decide on a collection type or make one and implement an add method here
-        // if the added tile is an exit then automatically add it to exitTiles
-        throw new UnsupportedOperationException("Unimplemented method 'addTile'");
+    public boolean addTile(DungeonPiece<Tile> addTile) {
+        if (!tiles.contains(addTile)) { // if tiles has addTile
+            tiles.add(addTile); // add
+            if (((Tile)addTile).isExit()) { // check if addTile is an exit tile
+                exitsTiles.add(tiles.indexOf(addTile)); // Add the index of Exit Tiles
+            }
+            return true;
+        }
+        return false;
     }
  
     // TODO: Discuss if Room should hold position information about Occupants external of Tile

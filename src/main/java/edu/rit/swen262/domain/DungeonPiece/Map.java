@@ -33,7 +33,7 @@ public class Map implements DungeonPiece<Map> {
     // <-----------------------Methods----------------------->
 
     /**
-     * Return a formatted {@link Room} based on RenderRepresenations
+     * Return a formatted {@link Room} based on {@link RenderRepresenations}
      * 
      * @return List<{@link RenderRepresentation}>
      */

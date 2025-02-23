@@ -172,7 +172,6 @@ public class Tile implements DungeonPiece<Tile> {
     }
 
     /**
-     * 
      * @return boolean of what isExit is set to
      */
     public boolean isExit() {
@@ -191,7 +190,7 @@ public class Tile implements DungeonPiece<Tile> {
     /**
      * get whether an {@link Occupant Occupant} can move to this {@link Tile Tile}
      * 
-     * @return stackable
+     * @return boolean stackable
      */
     public boolean isStackable() {
         return stackable;
@@ -200,7 +199,7 @@ public class Tile implements DungeonPiece<Tile> {
     /**
      * set whether an {@link Occupant Occupant} can move to this {@link Tile Tile}
      * 
-     * @param stackable
+     * @param stackable boolean
      */
     public void setStackable(boolean stackable) {
         this.stackable = stackable;
