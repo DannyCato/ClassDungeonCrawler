@@ -16,14 +16,14 @@ import java.util.Comparator;
  * @author Danny Catorcini
  */
 public enum RenderRepresentation implements Comparator<RenderRepresentation> {
-    CHARACTER('c', 10),
-    ENEMY('e', 5),
+    CHARACTER('c', false, 10),
+    ENEMY('e', false, 5),
     EXIT('X'),
-    HIDDENTRAP('.'),
-    TRAP('T'),
-    OBSTACLE('B'),
+    OBSTACLE('B', false),
     CHEST('C'),
-    EMPTY('.', -1),
+    EMPTY('.', Integer.MIN_VALUE),
+    HIDDENTRAP(EMPTY.representation, 1),
+    TRAP('T'),
     VWALL('|', 100),
     HWALL('-', 100),
     CORNER('+', 1000);
@@ -32,6 +32,11 @@ public enum RenderRepresentation implements Comparator<RenderRepresentation> {
      * Holds the character as listed above
      */
     public final char representation;
+
+    /**
+     * If the occupant allows others occupants to move to
+     */
+    public final boolean stackable;
 
     /**
      * Which character should be rendered on top <p>
@@ -46,9 +51,18 @@ public enum RenderRepresentation implements Comparator<RenderRepresentation> {
      * @param representation char that holds what the object will like on camera
      * @param priority int that sets the priority when rendered
      */
-    private RenderRepresentation(char representation, int priority) {
+    private RenderRepresentation(char representation, boolean stackable, int priority) {
         this.representation = representation;
+        this.stackable = stackable;
         this.priority = priority;
+    }
+
+    private RenderRepresentation(char representation, boolean stackable) {
+        this(representation, stackable, 0);
+    }
+
+    private RenderRepresentation(char representation, int priority) {
+        this(representation, true, priority);
     }
 
     /**
@@ -57,7 +71,7 @@ public enum RenderRepresentation implements Comparator<RenderRepresentation> {
      * @param representation char that holds what the object will like on camera
      */
     private RenderRepresentation(char representation) {
-        this(representation, 0);
+        this(representation, true, 0);
     }
 
     public char render() {

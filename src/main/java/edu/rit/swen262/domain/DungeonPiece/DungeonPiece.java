@@ -1,6 +1,8 @@
 package edu.rit.swen262.domain.DungeonPiece;
 
+import java.lang.reflect.Constructor;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import edu.rit.swen262.domain.Occupant;
@@ -33,7 +35,29 @@ public interface DungeonPiece<T> {
     /**
     * Return a list of all {@link Occupant Occupants}
     * 
-    @return list of {@link Occupant Occupants} to be displayed 
+    * @return list of {@link Occupant Occupants} to be displayed 
     */
     public Collection<Occupant> getOccupants();
+
+    /**
+     * Creates a new Collection of the same type as col. If it cannot, then a new {@link HashSet} is returned
+     * 
+     * @param col a Collection<{@link Occupant}> that will have its type cloned
+     * @return a new EMPTY Collection<{@link Occupant}> of the same type as col
+     */
+    @SuppressWarnings("unchecked") // thrown at newCol = (Collection<Occupant>) colConstructor.newInstance(transientOccupant); 
+    // ^Java cannot guarantee a cast to a Collection<Occupant> but, by definition it has to be one for this entire class to be usable so it's just a nonsense error.
+    public static Collection<Occupant> getNewCollectionOfType(Collection<Occupant> col) {
+        Collection<Occupant> newCol = new HashSet<Occupant>(); // default implementation so at least something is there
+        try { // in case any number of errors are thrown for some reason
+            Constructor<?> colConstructor = col.getClass().getDeclaredConstructor(); // Get empty constructor
+            if (colConstructor != null) {
+                newCol = (Collection<Occupant>) colConstructor.newInstance(); // create a new instance of the class
+            }
+        } catch (Exception e) { // print error and stack trace without stopping execution
+            System.err.println("Could not create a new collection of the same type. Defaulting to HashSet");
+            e.printStackTrace();
+        }
+        return newCol;
+    }
 }
