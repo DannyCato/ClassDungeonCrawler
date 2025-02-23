@@ -124,13 +124,14 @@ public class Tile implements DungeonPiece<Tile> {
      */
     @Override
     public String description() {
-        List<String> descriptions = new LinkedList<>(); // make empty list for descriptions
+        LinkedList<String> descriptions = new LinkedList<>(); // make empty list for descriptions
         if (hasPermanentOccupant()){
             descriptions.add(permanentOccupant.description()); // add permanent occupant description
         }
         for (Occupant occupant : transientOccupant) { // add each transient occupant description
             descriptions.add(occupant.description());
         }
+        descriptions.add("and " + descriptions.pop());
         return String.join(", ", descriptions); // return each descriptions separated by a comma
     }
 
