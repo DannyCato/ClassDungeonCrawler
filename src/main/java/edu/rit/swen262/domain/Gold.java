@@ -2,6 +2,7 @@ package edu.rit.swen262.domain;
 
 public class Gold {
 
+    @SuppressWarnings("unused")
     private int value;
 
     public Gold(int value) {
