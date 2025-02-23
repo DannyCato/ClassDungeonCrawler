@@ -1,5 +1,10 @@
 package edu.rit.swen262.service;
 
+/**
+ * 
+ * 
+ * @auhor Victor Bovat, Philip Rubbo
+ */
 public class MoveAction implements Action {
     private GameState gameState;
     private String direction;

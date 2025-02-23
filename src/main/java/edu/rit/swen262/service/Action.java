@@ -4,7 +4,7 @@ package edu.rit.swen262.service;
  * defines the interface for an Action that can be performed by
  * the User
  * 
- * @author Victor Bovat
+ * @author Victor Bovat, Philip Rubbo
  */
 public interface Action {
     /**

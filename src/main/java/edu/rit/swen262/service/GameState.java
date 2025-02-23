@@ -53,6 +53,28 @@ public class GameState implements IObservable {
     }
 
     /**
+     * move the player one tile on the map in the specified direction
+     * 
+     * @param direction the direction to move in on the map
+     */
+    public void movePlayer(String direction) {
+        //
+
+        this.notifyObservers();
+    }
+
+    /**
+     * stop operation of the game and return the terminal to its normal state
+     */
+    public void quit() {
+        // shut down all relevent components
+        /*TO-DO: make a way to save objects like the current map using 
+        Serializable interface */
+
+        this.notifyObservers();
+    }
+
+    /**
      * fetches the list of {@link GameObserver GameObservers} currently watching
      * this GameState for any new changes
      * 
