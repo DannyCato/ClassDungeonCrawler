@@ -25,5 +25,5 @@ public interface IObservable {
      * notifies all {@link GameObserver GameObservers} within the list of observers that
      * a change has occurred
      */
-    public void notifyObservers();
+    public void notifyObservers(GameEvent event);
 }

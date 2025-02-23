@@ -46,9 +46,9 @@ public class GameState implements IObservable {
     /**
      * {@inheritDoc}
      */
-    public void notifyObservers() {
+    public void notifyObservers(GameEvent event) {
         for (GameObserver o : observers) {
-            o.update(this);
+            o.update(event);
         }
     }
 
