@@ -37,6 +37,7 @@ import edu.rit.swen262.service.KeystrokeListener;
  * @author Victor Bovat
  */
 public class MUDGame implements GameObserver {
+    private Screen screen;
     /**
      * {@inheritDoc}
      */

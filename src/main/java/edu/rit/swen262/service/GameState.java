@@ -60,7 +60,7 @@ public class GameState implements IObservable {
     public void movePlayer(String direction) {
         //
 
-        this.notifyObservers();
+        this.notifyObservers(null);
     }
 
     /**
@@ -71,7 +71,7 @@ public class GameState implements IObservable {
         /*TO-DO: make a way to save objects like the current map using 
         Serializable interface */
 
-        this.notifyObservers();
+        this.notifyObservers(null);
     }
 
     /**
