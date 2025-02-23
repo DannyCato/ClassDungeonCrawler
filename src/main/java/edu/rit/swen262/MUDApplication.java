@@ -38,16 +38,16 @@ class SampleCommandLineRunner implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		System.out.println("Hello World! :D");
-		MUDGame client = new MUDGame();
 		
 		PlayerCharacter player = new PlayerCharacter("Bobert", "can lift at least 5 worms.");
 		GameState gameState = new GameState(player);
-		gameState.register(client);
 
 		Map<String, Action> keystrokes = new HashMap<String, Action>() {{
 			put("q", new QuitGameAction(gameState));
 		}};
 		KeystrokeListener keystrokeListener = new KeystrokeListener(keystrokes);
+		MUDGame client = new MUDGame(keystrokeListener);
+		gameState.register(client);
 
 		client.start();
 	}

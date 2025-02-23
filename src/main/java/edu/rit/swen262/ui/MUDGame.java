@@ -4,17 +4,22 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.SimpleTheme;
 import com.googlecode.lanterna.graphics.Theme;
 import com.googlecode.lanterna.gui2.BasicWindow;
+import com.googlecode.lanterna.gui2.Button;
+import com.googlecode.lanterna.gui2.Direction;
 import com.googlecode.lanterna.gui2.GridLayout;
 import com.googlecode.lanterna.gui2.Label;
+import com.googlecode.lanterna.gui2.LinearLayout;
 import com.googlecode.lanterna.gui2.MultiWindowTextGUI;
 import com.googlecode.lanterna.gui2.Panel;
 import com.googlecode.lanterna.gui2.TextBox;
 import com.googlecode.lanterna.gui2.Window;
 import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
+import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 
@@ -31,6 +36,11 @@ import edu.rit.swen262.service.KeystrokeListener;
  */
 public class MUDGame implements GameObserver {
     private KeystrokeListener keystrokeListener;
+
+    public MUDGame(KeystrokeListener keystrokeListener) {
+        this.keystrokeListener = keystrokeListener;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -58,6 +68,11 @@ public class MUDGame implements GameObserver {
         System.out.println("game initialized!");
 
         this.drawUI();
+        /*try {
+            this.testUI();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
     }
 
     /**
@@ -87,16 +102,17 @@ public class MUDGame implements GameObserver {
                 TextColor.ANSI.BLACK              // GUI background
             );
 
-            textGUI.setTheme(theme);
+            //textGUI.setTheme(theme);
 
             // set no shadow decorations for panels + full screen
             Window.Hint[] windowHints = new Window.Hint[] {
                 //Window.Hint.NO_DECORATIONS,
-                Window.Hint.NO_POST_RENDERING,
+                //Window.Hint.NO_POST_RENDERING,
                 Window.Hint.EXPANDED};
 
             final Window window = new BasicWindow("MUD Game");
             window.setHints(Arrays.asList(windowHints));
+            window.setStrictFocusChange(true);
 
             // create panel container
             Panel contentPanel = new Panel(new GridLayout(1));
@@ -127,9 +143,20 @@ public class MUDGame implements GameObserver {
             // create panel recieving input (spans entire screen)
             Panel inputPanel = new Panel(new GridLayout(1));
             TextBox userInput = new TextBox().setLayoutData(GridLayout.createHorizontallyFilledLayoutData());
-            userInput.setTextChangeListener(null);
+            
+            /* TextBox won't clear text + update statusDisplay unless 
+             * submitted through a button, so current cmd entry is
+             * <keystroke> -> enter (to focus on button) -> enter (to "click" button/submit input)
+            */
+            Button submitButton = new Button("Submit", () -> {
+                statusDisplay.setText(userInput.getText());
+                userInput.setText(""); // Clear the text
+                textGUI.setActiveWindow(window);
+                userInput.takeFocus();         // refocus user input box
+            });
             
             inputPanel.addComponent(userInput);
+            inputPanel.addComponent(submitButton);
 
             // add child panels to container in top-down display order
             contentPanel.addComponent(turnPanel);
