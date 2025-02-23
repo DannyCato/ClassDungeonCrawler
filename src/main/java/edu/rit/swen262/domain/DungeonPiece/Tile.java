@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 
 import edu.rit.swen262.domain.Occupant;
@@ -123,27 +124,15 @@ public class Tile implements DungeonPiece<Tile> {
      */
     @Override
     public String description() {
-        String desc = "";
-        boolean trigger = false;
+        LinkedList<String> descriptions = new LinkedList<>(); // make empty list for descriptions
         if (hasPermanentOccupant()){
-            desc += permanentOccupant.description();
-            trigger = true;
+            descriptions.add(permanentOccupant.description()); // add permanent occupant description
         }
-
-        for (Occupant occupant : transientOccupant) {
-            if (trigger) {
-                desc += ", ";
-            }
-            String compStr = occupant.description(); 
-            if (compStr.equals(""))
-            {
-                trigger = false;
-                continue;
-            }
-            desc += compStr;
-            trigger = true;
+        for (Occupant occupant : transientOccupant) { // add each transient occupant description
+            descriptions.add(occupant.description());
         }
-        return desc;
+        descriptions.add("and " + descriptions.pop());
+        return String.join(", ", descriptions); // return each descriptions separated by a comma
     }
 
     /**
