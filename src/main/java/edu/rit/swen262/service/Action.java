@@ -11,5 +11,5 @@ public interface Action {
      * executes the single action contained within an {@link Action} object
      * upon the {@link GameState}
      */
-    public void performAction(); 
+    public void performAction();
 }
