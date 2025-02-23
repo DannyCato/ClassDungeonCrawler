@@ -4,7 +4,6 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 
 import edu.rit.swen262.domain.Occupant;
@@ -50,12 +49,38 @@ public class Tile implements DungeonPiece<Tile> {
      * 
      * @param pOccupant {@link Occupant} that can never be removed from the {@link Tile}
      * @param stackable whether the {@link Tile} can have other {@link Occupant Occupants} stacked on it
-     * @param tOccupantCol Collection<{@link Occupant}> the collection to be used for {@link Occupant transientOccupant} so that it can be passed through as needed
+     * @param tOccupantCol Collection<{@link Occupant}> (Recommend an unordered collection like {@link HashSet} for now) the collection to be used for {@link Occupant transientOccupant} so that it can be passed through as needed
      */
     public Tile(Occupant pOccupant, boolean stackable, Collection<Occupant> tOccupantCol) {
         this.permanentOccupant = pOccupant;
         this.stackable = stackable;
         this.transientOccupant = tOccupantCol ;
+    }
+
+    /**
+     * Create a {@link Tile} with given information. tOccupantCol is set to be a {@link HashSet}
+     * 
+     * @param pOccupant {@link Occupant} that can never be removed from the {@link Tile}
+     * @param stackable whether the {@link Tile} can have other {@link Occupant Occupants} stacked on it
+     */
+    public Tile(Occupant pOccupant, boolean stackable) {
+        this(pOccupant, stackable, new HashSet<Occupant>());
+    }
+
+    /**
+     * Create an empty {@link Tile}. tOccupantCol is set to be a {@link HashSet}
+     */
+    public Tile() {
+        this(null, true);
+    }
+
+    /**
+     * Create an empty {@link Tile}. tOccupantCol is set to be a {@link HashSet}
+     * 
+     * @param tOccupantCol Collection<{@link Occupant}> (Recommend an unordered collection like {@link HashSet} for now) the collection to be used for {@link Occupant transientOccupant} so that it can be passed through as needed
+     */
+    public Tile(Collection<Occupant> tOccupantCol) {
+        this(null, true, tOccupantCol);
     }
 
 
@@ -136,7 +161,7 @@ public class Tile implements DungeonPiece<Tile> {
             if (colConstructor != null) {
                 newCol = (Collection<Occupant>) colConstructor.newInstance(); // create a new instance of the class
             }
-        } catch (Exception e) {
+        } catch (Exception e) { // print error and stack trace without stopping execution
             System.err.println("Could not create a new collection of the same type. Defaulting to HashSet");
             e.printStackTrace();
         }
@@ -190,8 +215,11 @@ public class Tile implements DungeonPiece<Tile> {
      * @return boolean if the add was successful or not
      */
     public boolean addOccupant(Occupant tOccupant) {
-        // TODO: Decide on a collection type or make one and implement an add method here
-        throw new UnsupportedOperationException("Unimplemented method 'addOccupant'");
+        if (!transientOccupant.contains(tOccupant)) {
+            transientOccupant.add(tOccupant);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -199,11 +227,14 @@ public class Tile implements DungeonPiece<Tile> {
      * 
      * @param tOccupant to remove
      * 
-     * @return {@link Occupant Occupant} that was removed
+     * @return {@link Occupant Occupant} that was removed. Null if none was removed
      */
     public Occupant removeOccupant(Occupant tOccupant) {
-        // TODO: Decide on a collection type or make one and implement a remove method here.
-        throw new UnsupportedOperationException("Unimplemented method 'removeOccupant'");
+        if (transientOccupant.contains(tOccupant)) {
+            transientOccupant.remove(tOccupant);
+            return tOccupant;
+        }
+        return null;
     }
 
     /**

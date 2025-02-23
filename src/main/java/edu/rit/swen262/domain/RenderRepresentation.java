@@ -57,8 +57,7 @@ public enum RenderRepresentation implements Comparator<RenderRepresentation> {
      * @param representation char that holds what the object will like on camera
      */
     private RenderRepresentation(char representation) {
-        this.representation = representation;
-        this.priority = 0;
+        this(representation, 0);
     }
 
     public char render() {
