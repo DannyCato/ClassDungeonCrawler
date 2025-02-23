@@ -2,13 +2,14 @@ package edu.rit.swen262.domain;
 
 import java.util.List;
 
-public class Bag {
+public class Inventory {
 
     private List<Item> contents;
+    private List<Bag> bags;
     private int capacity;
 
-    public Bag(List<Item> contents, int capacity){
-        this.contents = contents;
+    public Inventory(List<Bag> bags, int capacity) {
+        this.bags = bags;
         this.capacity = capacity;
     }
 
@@ -22,15 +23,21 @@ public class Bag {
     }
 
     public boolean removeItem(Item item){
-
+        
         return contents.remove(item);
-    
+
     }
 
     public List<Item> getItems() {
 
         return contents;
         
+    }
+
+    public List<Bag> getBags() {
+
+        return bags;
+
     }
     
 }
