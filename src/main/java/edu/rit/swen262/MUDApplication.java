@@ -7,6 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import edu.rit.swen262.domain.PlayerCharacter;
+import edu.rit.swen262.service.GameState;
 import edu.rit.swen262.ui.MUDGame;
 
 @SpringBootApplication
@@ -31,6 +33,11 @@ class SampleCommandLineRunner implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		System.out.println("Hello World! :D");
 		MUDGame client = new MUDGame();
+		
+		PlayerCharacter player = new PlayerCharacter("Bobert", "can lift at least 5 worms.");
+		GameState gameState = new GameState(player);
+		gameState.register(client);
+
 		client.start();
 	}
 }

@@ -1,26 +1,14 @@
 package edu.rit.swen262.ui;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.TimeZone;
 
-import org.springframework.boot.autoconfigure.task.TaskExecutionProperties.Simple;
-import org.w3c.dom.Text;
-
-import com.googlecode.lanterna.SGR;
-import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.SimpleTheme;
 import com.googlecode.lanterna.graphics.Theme;
 import com.googlecode.lanterna.gui2.BasicWindow;
-import com.googlecode.lanterna.gui2.Button;
-import com.googlecode.lanterna.gui2.ComboBox;
 import com.googlecode.lanterna.gui2.GridLayout;
 import com.googlecode.lanterna.gui2.Label;
-import com.googlecode.lanterna.gui2.LinearLayout;
 import com.googlecode.lanterna.gui2.MultiWindowTextGUI;
 import com.googlecode.lanterna.gui2.Panel;
 import com.googlecode.lanterna.gui2.TextBox;
@@ -33,23 +21,35 @@ import edu.rit.swen262.domain.PlayerCharacter;
 import edu.rit.swen262.service.GameObserver;
 import edu.rit.swen262.service.GameState;
 
+/**
+ * The class responsible for rendering the current state of the MUD game to
+ * the terminal utilizing the Lanterna Library. 
+ * 
+ * @author Victor Bovat
+ */
 public class MUDGame implements GameObserver {
-    private GameState gameState;
-
     /**
      * {@inheritDoc}
      */
     public void update(GameState g) {
-        this.gameState = g;
         System.out.println("client notified! game state has been updated");
     }
 
+    /**
+     * 
+     */
     public void initialize() {
-        PlayerCharacter p = new PlayerCharacter("Bobert", "incredibly underprepared for this dungeon life");
-        GameState g = new GameState(p);
-        this.gameState = g;
+        /* TO-DO: have this class instantiate all concrete commands +
+        bind them to their receivers here
+        (or offload that resposibility to the MUDApplication class? responsibilities 
+        may need to be rebalanced here)
+        */
     }
 
+    /**
+     * starts a new game, initializing all relevent objects then taking control
+     * of the window to draw the starting game screen
+     */
     public void start() {
         this.initialize();
         System.out.println("game initialized!");
@@ -57,6 +57,10 @@ public class MUDGame implements GameObserver {
         this.drawUI();
     }
 
+    /**
+     * takes control of the console and draws the main screen which displays all of the information currently
+     * available to the player (map, turn number, etc.)
+     */
     public void drawUI() {
         DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory();
         Screen screen = null;
@@ -73,20 +77,20 @@ public class MUDGame implements GameObserver {
                 true,               
                 TextColor.ANSI.WHITE,             // normal foreground
                 TextColor.ANSI.BLACK,             // normal background
-                TextColor.ANSI.BLACK,             // editable foreground
-                TextColor.ANSI.GREEN,              // editable background
-                TextColor.ANSI.WHITE,             // Focused foreground
-                TextColor.ANSI.CYAN_BRIGHT,       // Focused background (highlight)
+                TextColor.ANSI.GREEN,             // editable foreground
+                TextColor.ANSI.BLACK_BRIGHT,              // editable background
+                TextColor.ANSI.GREEN_BRIGHT,             // Focused foreground
+                TextColor.ANSI.BLACK_BRIGHT,       // Focused background (highlight)
                 TextColor.ANSI.BLACK              // GUI background
             );
 
-            //textGUI.setTheme(theme);
+            textGUI.setTheme(theme);
 
-            // set no borders/shadow decorations for panels
+            // set no shadow decorations for panels + full screen
             Window.Hint[] windowHints = new Window.Hint[] {
                 //Window.Hint.NO_DECORATIONS,
-                //Window.Hint.NO_POST_RENDERING,
-                Window.Hint.FULL_SCREEN};
+                Window.Hint.NO_POST_RENDERING,
+                Window.Hint.EXPANDED};
 
             final Window window = new BasicWindow("MUD Game");
             window.setHints(Arrays.asList(windowHints));
@@ -98,6 +102,9 @@ public class MUDGame implements GameObserver {
 
             // create 2-column panel displaying turn info (number/time)
             Panel turnPanel = new Panel(new GridLayout(2));
+            GridLayout turnPanelLayout = (GridLayout) turnPanel.getLayoutManager();
+            turnPanelLayout.setHorizontalSpacing(20);
+
             Label turnLabel = new Label("Turn #: 0");
             Label timeLabel = new Label("Time: Day").setLayoutData(GridLayout.createHorizontallyEndAlignedLayoutData(1));
 
@@ -131,12 +138,11 @@ public class MUDGame implements GameObserver {
             window.setComponent(contentPanel.setLayoutData(
                 GridLayout.createLayoutData(GridLayout.Alignment.CENTER, GridLayout.Alignment.CENTER)));
 
-            //window.setFixedSize(terminalSize);
-
             textGUI.addWindowAndWait(window);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
+            // if control over the window has not already been yielded, do so
             if(screen != null) {
                 try {
                     screen.close();
