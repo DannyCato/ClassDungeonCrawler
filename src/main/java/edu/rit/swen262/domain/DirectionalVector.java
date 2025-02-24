@@ -1,4 +1,4 @@
-package edu.rit.swen262.domain.DungeonPiece;
+package edu.rit.swen262.domain;
 
 /**
  * Position Vector to help Room move objects

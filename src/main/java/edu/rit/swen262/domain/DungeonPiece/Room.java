@@ -5,14 +5,15 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import edu.rit.swen262.domain.DirectionalVector;
 import edu.rit.swen262.domain.Occupant;
 import edu.rit.swen262.domain.RenderRepresentation;
 
 
 /**
  * A representation of {@link Room} {@link DungeonPiece} a composite of {@link Tile Tiles}
- *                         (v LIST YOUR NAME HERE WHEN YOU WORK ON IT v)
- * @authors Danny Catorcini, 
+ *                         
+ * @authors Danny Catorcini 
  */
 public class Room implements DungeonPiece<Room> {
     

@@ -17,7 +17,7 @@ public class Map implements DungeonPiece<Map> {
 
     private DungeonPiece<Tile> startTile;
 
-    private DungeonPiece<Room> startRoom;
+    private DungeonPiece<Room> startRoom; 
     private DungeonPiece<Room> goal;
 
     private DungeonPiece<Room> currentRoom;
@@ -85,15 +85,5 @@ public class Map implements DungeonPiece<Map> {
     public DungeonPiece<Room> getCurrentRoom() {
         return currentRoom;
     }
-
-    /**
-     * 
-     * 
-     * @param currentRoom
-     */
-    public void setCurrentRoom(DungeonPiece<Room> currentRoom) {
-        this.currentRoom = currentRoom;
-    }
-
     
 }
