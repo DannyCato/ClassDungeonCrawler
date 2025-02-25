@@ -98,9 +98,30 @@ public class Room implements DungeonPiece<Room> {
      */
     @Override
     public List<RenderRepresentation> render() {
-        // TODO: Do what the comment says
-        // leaving this for later as it will be complicated
-        throw new UnsupportedOperationException("Unimplemented method 'render'");
+        List<RenderRepresentation> room = new ArrayList<>();
+        room.add(RenderRepresentation.CORNER); // top left corner
+        for (int i = 0; i < this.width; i++) { // top walls
+            room.add(RenderRepresentation.HWALL);
+        }
+        room.add(RenderRepresentation.CORNER); // top right corner
+        for (int i = 0; i < this.height; i++) {
+            room.add(RenderRepresentation.VWALL); // wall to the left
+            for (int j = 0; j < this.width; j++) {
+                DungeonPiece<Tile> currentTile = tiles.get(i * width + j); // get the tile at the current i, j
+
+                // String.join(" ", currentTile.render().stream().map(r -> String.valueOf(r.render())).toList()
+                // ^ turns list of render representations into comma separated list, if we choose to display multiple at once
+
+                room.add(currentTile.render().get(currentTile.render().size() - 1)); // add the top priority occupant render
+            }
+            room.add(RenderRepresentation.VWALL); // wall to the right
+        }
+        room.add(RenderRepresentation.CORNER); // bottom left corner
+        for (int i = 0; i < this.width; i++) { // bottom walls
+            room.add(RenderRepresentation.HWALL);
+        }
+        room.add(RenderRepresentation.CORNER); // bottom right corner
+        return room;
     }
 
     /**
