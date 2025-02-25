@@ -12,6 +12,15 @@ public class Bag {
         this.capacity = capacity;
     }
 
+    public Item findItem(Item item) {
+        for (Item each: contents) {
+            if (each.equals(item)) {
+                return each;
+            }
+        }
+        return null;
+    }
+
     public boolean addItem(Item item) {
 
         if (contents.size() < capacity) {
