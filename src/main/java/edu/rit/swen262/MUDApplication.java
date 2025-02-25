@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Profile;
 import edu.rit.swen262.domain.PlayerCharacter;
 import edu.rit.swen262.service.Action;
 import edu.rit.swen262.service.GameState;
-import edu.rit.swen262.service.KeystrokeListener;
+import edu.rit.swen262.service.InputParser;
 import edu.rit.swen262.service.QuitGameAction;
 import edu.rit.swen262.ui.MUDGame;
 
@@ -40,11 +40,12 @@ class SampleCommandLineRunner implements CommandLineRunner {
 		PlayerCharacter player = new PlayerCharacter("Bobert", "can lift at least 5 worms.");
 		GameState gameState = new GameState(player);
 
-		Map<String, Action> keystrokes = new HashMap<String, Action>() {{
-			put("q", new QuitGameAction(gameState));
+		Map<Character, Action> keystrokes = new HashMap<Character, Action>() {{
+			put('q', new QuitGameAction(gameState));
 		}};
-		KeystrokeListener keystrokeListener = new KeystrokeListener(keystrokes);
-		MUDGame client = new MUDGame(keystrokeListener);
+		
+		InputParser inputParser = new InputParser(keystrokes, null);
+		MUDGame client = new MUDGame(inputParser);
 		gameState.register(client);
 
 		client.start();

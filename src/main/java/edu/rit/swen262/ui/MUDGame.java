@@ -28,7 +28,7 @@ import edu.rit.swen262.service.GameEvent;
 import edu.rit.swen262.service.GameEventType;
 import edu.rit.swen262.service.GameObserver;
 import edu.rit.swen262.service.GameState;
-import edu.rit.swen262.service.KeystrokeListener;
+import edu.rit.swen262.service.InputParser;
 
 /**
  * The class responsible for rendering the current state of the MUD game to
@@ -37,11 +37,11 @@ import edu.rit.swen262.service.KeystrokeListener;
  * @author Victor Bovat
  */
 public class MUDGame implements GameObserver {
-    private KeystrokeListener keystrokeListener;
+    private InputParser inputParser;
     private Screen screen;
 
-    public MUDGame(KeystrokeListener keystrokeListener) {
-        this.keystrokeListener = keystrokeListener;
+    public MUDGame(InputParser inputParser) {
+        this.inputParser = inputParser;
     }
 
     /**
@@ -163,8 +163,11 @@ public class MUDGame implements GameObserver {
              * <keystroke> -> enter (to focus on button) -> enter (to "click" button/submit input)
             */
             Button submitButton = new Button("Submit", () -> {
-                statusDisplay.setText(userInput.getText());
-                this.keystrokeListener.receivedInput(userInput.getText());
+                String inputString = userInput.getText();
+                if (!inputString.isBlank()) {
+                    statusDisplay.setText(inputString);
+                    this.inputParser.receivedInput(userInput.getText());
+                }
                 userInput.setText(""); // Clear the text
                 textGUI.setActiveWindow(window);
                 userInput.takeFocus();         // refocus user input box
