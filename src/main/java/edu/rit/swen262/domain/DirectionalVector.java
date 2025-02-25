@@ -23,5 +23,4 @@ public enum DirectionalVector {
         this.x = x;
         this.y = y;
     }
-    
 }
