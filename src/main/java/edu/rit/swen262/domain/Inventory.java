@@ -11,7 +11,7 @@ public class Inventory {
         this.bags = bags;
         this.capacity = capacity;
     }
-    
+
     public boolean addBag(Bag bag) {
 
         if (bags.size() < capacity) {

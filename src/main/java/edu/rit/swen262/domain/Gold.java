@@ -1,15 +1,12 @@
 package edu.rit.swen262.domain;
 
-public class Gold implements Item {
+public class Gold extends Item {
 
     private int value;
     private int count;
-    private String name;
-    private String description;
 
     public Gold(int value, int count) {
-        this.name = "Gold";
-        this.description = "This item is a form of currency.";
+        super("Gold", "This item is a form of currency.", null);
         this.value = value;
         this.count = count;
     }
@@ -29,21 +26,12 @@ public class Gold implements Item {
         }
     }
 
+    @Override
     public Gold getValue() {
         return this;
     }
 
     public int getCount() {
         return count;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public String getDescription() {
-        return description;
     }
 }
