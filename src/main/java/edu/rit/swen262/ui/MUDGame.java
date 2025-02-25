@@ -94,11 +94,11 @@ public class MUDGame implements GameObserver {
      * available to the player (map, turn number, etc.)
      */
     private void drawUI() {
-        DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory();
         this.screen = null;
 
         try {
             // create screen component
+            DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory();
             this.screen = terminalFactory.createScreen();
             this.screen.startScreen();
 
