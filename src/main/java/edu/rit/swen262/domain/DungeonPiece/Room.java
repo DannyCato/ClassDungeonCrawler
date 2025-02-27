@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import edu.rit.swen262.domain.DirectionalVector;
+import edu.rit.swen262.domain.ExitDirection;
 import edu.rit.swen262.domain.Occupant;
 import edu.rit.swen262.domain.RenderRepresentation;
 
@@ -100,27 +101,49 @@ public class Room implements DungeonPiece<Room> {
     public List<RenderRepresentation> render() {
         List<RenderRepresentation> room = new ArrayList<>();
         room.add(RenderRepresentation.CORNER); // top left corner
+
         for (int i = 0; i < this.width; i++) { // top walls
             room.add(RenderRepresentation.HWALL);
         }
         room.add(RenderRepresentation.CORNER); // top right corner
+
         for (int i = 0; i < this.height; i++) {
             room.add(RenderRepresentation.VWALL); // wall to the left
             for (int j = 0; j < this.width; j++) {
-                DungeonPiece<Tile> currentTile = tiles.get(i * width + j); // get the tile at the current i, j
+                Tile currentTile = (Tile) tiles.get(i * width + j); // get the tile at the current i, j
+                List<RenderRepresentation> tileRender = currentTile.render();
+                room.add(tileRender.get(tileRender.size() - 1)); // add the top priority occupant render
 
-                // String.join(" ", currentTile.render().stream().map(r -> String.valueOf(r.render())).toList()
-                // ^ turns list of render representations into comma separated list, if we choose to display multiple at once
+                if (currentTile.isExit()) {
+                    ExitDirection exitDirection = currentTile.getExitDirection();
+                    int exitIndex = room.size() - 1; // Current tile's position in room list
 
-                room.add(currentTile.render().get(currentTile.render().size() - 1)); // add the top priority occupant render
+                    // Determine where to place EXIT based on direction
+                    switch (exitDirection) {
+                        case NORTH:
+                            room.set(exitIndex - (this.width + 2), RenderRepresentation.EXIT);
+                            break;
+                        case SOUTH:
+                            room.set(exitIndex + (this.width + 2), RenderRepresentation.EXIT);
+                            break;
+                        case EAST:
+                            room.set(exitIndex + 1, RenderRepresentation.EXIT);
+                            break;
+                        case WEST:
+                            room.set(exitIndex - 1, RenderRepresentation.EXIT);
+                            break;
+                    }
+                }
             }
             room.add(RenderRepresentation.VWALL); // wall to the right
         }
+
         room.add(RenderRepresentation.CORNER); // bottom left corner
         for (int i = 0; i < this.width; i++) { // bottom walls
             room.add(RenderRepresentation.HWALL);
         }
         room.add(RenderRepresentation.CORNER); // bottom right corner
+
         return room;
     }
 

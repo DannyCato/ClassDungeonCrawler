@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import edu.rit.swen262.domain.Exit;
+import edu.rit.swen262.domain.ExitDirection;
 import edu.rit.swen262.domain.Occupant;
 import edu.rit.swen262.domain.RenderRepresentation;
 
@@ -240,5 +242,19 @@ public class Tile implements DungeonPiece<Tile> {
      */
     public boolean containsTransientOccupantOf(Occupant tOccupant) {
         return transientOccupant.contains(tOccupant);
+    }
+
+    /**
+     * Return the {@link ExitDirection} of the last {@link Exit} in transientOccupant if the {@link Tile} is an exit. Otherwise return null
+     * 
+     * @return the {@link ExitDirection} of the last {@link Exit} in transientOccupant if the {@link Tile} is an exit. Otherwise return null
+     */
+    public ExitDirection getExitDirection() {
+        if (this.isExit()) {
+            Exit exit = (Exit) transientOccupant.toArray()[transientOccupant.size() - 1];
+            return exit.getExitDirection();
+        } else {
+            return null;
+        }
     }
 }

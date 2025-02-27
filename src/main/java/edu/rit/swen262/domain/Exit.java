@@ -35,4 +35,14 @@ public class Exit implements Occupant {
     public String description() {
         return description;
     }
+
+    /**
+     * Returns the direction of the exit. This is used to determine which of the possible 4
+     * adjacent tiles the exit is connected to.
+     * 
+     * @return the direction of the exit
+     */
+    public ExitDirection getExitDirection() {
+        return exitDirection;
+    }
 }
