@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 class ArmorTest {
 
     @Test
-    public void test_ItemConstructor() {
+    public void test_ArmorConstructor() {
         Gold gold = new Gold(10, 1);
         Armor armor = new Armor("Armor", "Armor Description", 0, gold);
 
@@ -20,7 +20,7 @@ class ArmorTest {
     }
 
     @Test
-    public void test_ItemEquals() {
+    public void test_ArmorEquals() {
         Gold gold = new Gold(10, 1);
         Armor armor = new Armor("Armor", "Armor Description", 0, gold);
         Armor armor2 = new Armor("Armor", "Armor Description", 0, gold);
@@ -30,7 +30,7 @@ class ArmorTest {
     }
 
     @Test
-    public void test_ItemNotEquals() {
+    public void test_ArmorNotEquals() {
         Gold gold = new Gold(10, 1);
         Armor armor = new Armor("Armor", "Armor Description", 0, gold);
         Armor armor2 = new Armor("Cool Armor", "Armor Description", 0, gold);

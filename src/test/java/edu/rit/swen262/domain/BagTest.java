@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 class BagTest {
 
     @Test
-    public void test_ItemConstructor() {
+    public void test_BagConstructor() {
         List<Item> contents = new ArrayList<>();
         int capacity = 10;
         Bag bag = new Bag(contents, capacity);
@@ -22,7 +22,7 @@ class BagTest {
     }
 
     @Test
-    public void test_ItemEquals() {
+    public void test_BagEquals() {
         List<Item> contents = new ArrayList<>();
         int capacity = 10;
 
