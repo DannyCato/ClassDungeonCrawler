@@ -1,5 +1,6 @@
 package edu.rit.swen262.service;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -9,8 +10,8 @@ import java.util.Map;
  * @author Victor Bovat, Philip Rubbo
  */
 public class InputParser {
-    private Menu currentMenu;
-    private Map<Character, Action> keystrokes;
+    private MenuState currentMenu;
+    private HashMap<MenuState, HashMap<Character, Action>> keystrokes;
 
     /**
      * creates a new InputParser with the provided map of single
@@ -18,9 +19,9 @@ public class InputParser {
      * 
      * @param keystrokes map between characters and their matching commands
      */
-    public InputParser(Map<Character, Action> keystrokes, Menu menu) {
+    public InputParser(HashMap<MenuState, HashMap<Character, Action>> keystrokes) {
         this.keystrokes = keystrokes;
-        this.currentMenu = menu;
+        this.currentMenu = MenuState.DEFAULT;
     }
 
     /**
@@ -35,11 +36,15 @@ public class InputParser {
         }
 
         char input = text.toLowerCase().charAt(0);
-        Action action = keystrokes.get(input);
+        Action action = keystrokes.get(currentMenu).get(input);
         
         // once action has been fully constructed, execute the command
         if (action != null) {
             action.performAction();
         }
     }  
+
+    public void setMenu(MenuState menu) {
+        this.currentMenu = menu;
+    }
 }

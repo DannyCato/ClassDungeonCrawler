@@ -39,6 +39,7 @@ import edu.rit.swen262.service.InputParser;
 public class MUDGame implements GameObserver {
     private InputParser inputParser;
     private Screen screen;
+    private Label menuDisplay;
 
     public MUDGame(InputParser inputParser) {
         this.inputParser = inputParser;
@@ -49,6 +50,11 @@ public class MUDGame implements GameObserver {
      */
     public void update(GameEvent event) {
         switch (event.getType()) {
+            case GameEventType.DISPLAY_SUBMENU:
+                //update status panel w/ menu options
+                System.out.println(event.getData("menuType"));
+                this.redrawMenu((String) event.getData("menuText"));
+                break;
             case GameEventType.MOVE_PLAYER:
                 break;
             case GameEventType.TIME_CHANGED:
@@ -95,6 +101,7 @@ public class MUDGame implements GameObserver {
      */
     private void drawUI() {
         this.screen = null;
+        this.menuDisplay = null;
 
         try {
             // create screen component
@@ -138,7 +145,7 @@ public class MUDGame implements GameObserver {
             GridLayout turnPanelLayout = (GridLayout) turnPanel.getLayoutManager();
             turnPanelLayout.setHorizontalSpacing(20);
 
-            Label turnLabel = new Label("Turn #: 0");
+            Label turnLabel = new Label("Turn #: 1");
             Label timeLabel = new Label("Time: Day").setLayoutData(GridLayout.createHorizontallyEndAlignedLayoutData(1));
 
             turnPanel.addComponent(turnLabel);
@@ -158,6 +165,11 @@ public class MUDGame implements GameObserver {
             Panel inputPanel = new Panel(new GridLayout(1));
             TextBox userInput = new TextBox().setLayoutData(GridLayout.createHorizontallyFilledLayoutData());
             
+            // create panel displaying current menu of possible actions to select
+            Panel menuPanel = new Panel(new GridLayout(1));
+            this.menuDisplay = new Label("");
+            menuPanel.addComponent(this.menuDisplay);
+
             /* TextBox won't clear text + update statusDisplay unless 
              * submitted through a button, so current cmd entry is
              * <keystroke> -> enter (to focus on button) -> enter (to "click" button/submit input)
@@ -185,6 +197,8 @@ public class MUDGame implements GameObserver {
             contentPanel.addComponent(inputPanel.setLayoutData(
                         GridLayout.createLayoutData(GridLayout.Alignment.FILL, GridLayout.Alignment.END)));
 
+            contentPanel.addComponent(menuPanel);
+
             window.setComponent(contentPanel.setLayoutData(
                 GridLayout.createLayoutData(GridLayout.Alignment.CENTER, GridLayout.Alignment.CENTER)));
 
@@ -202,5 +216,9 @@ public class MUDGame implements GameObserver {
                 }
             }
         }
+    }
+
+    private void redrawMenu(String displayText) {
+        this.menuDisplay.setText(displayText);
     }
 }

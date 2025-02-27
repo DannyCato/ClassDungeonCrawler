@@ -26,7 +26,20 @@ public class GameEvent {
         this.data.put(key, value);
     }
 
+    /**
+     * 
+     * @return a GameEventType enum value
+     */
     public GameEventType getType() {
         return this.eventType;
+    }
+
+    /**
+     * 
+     * @param key 
+     * @return Object that is stored with the associated key
+     */
+    public Object getData(String key) {
+        return this.data.get(key);
     }
 }

@@ -109,6 +109,20 @@ public class GameState implements IObservable {
     }
 
     /**
+     * 
+     */
+    public void displayMenu(DisplayMenuType menuType, String menuText) {
+        // show a sub-menu + wait for further input
+
+        GameEvent event = new GameEvent(GameEventType.DISPLAY_SUBMENU);
+        event.addData("menuType", menuType);
+        event.addData("menuText", menuText);
+
+        //update UI w/ menu
+        this.notifyObservers(event);
+    }
+
+    /**
      * fetches the list of {@link GameObserver GameObservers} currently watching
      * this GameState for any new changes
      * 

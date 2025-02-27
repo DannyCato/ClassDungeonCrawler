@@ -1,12 +1,12 @@
 package edu.rit.swen262.service;
 
 /**
- * represents a single {@link Action} which is responsible for moving
- * the PlayerCharacter on the map in the MUD game
+ * represents a single {@link Action} which is responsible for initiating a single
+ *  diretcional attack by the {@link PlayerCharacter} on the map in the MUD game
  * 
- * @auhor Victor Bovat, Philip Rubbo
+ * @author Victor Bovat, Philip Rubbo
  */
-public class MoveAction implements Action {
+public class AttackAction implements Action {
     private GameState gameState;
     private String direction;
 
@@ -16,7 +16,7 @@ public class MoveAction implements Action {
      * @param gameState object containing the current state of the game
      * @param direction the direction in which to move the Player
      */
-    public MoveAction(GameState gameState, String direction) {
+    public AttackAction(GameState gameState, String direction) {
         this.gameState = gameState;
         this.direction = direction;
     }
@@ -26,11 +26,6 @@ public class MoveAction implements Action {
      */
     public void performAction() {
         gameState.movePlayer(this.direction);
-    }
-
-    @Override
-    public String toString() {
-        return this.direction;
     }
 }
 

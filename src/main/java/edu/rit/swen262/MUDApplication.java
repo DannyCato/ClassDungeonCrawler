@@ -12,9 +12,14 @@ import org.springframework.context.annotation.Profile;
 
 import edu.rit.swen262.domain.PlayerCharacter;
 import edu.rit.swen262.service.Action;
+import edu.rit.swen262.service.DisplayMenuAction;
+import edu.rit.swen262.service.DisplayMenuType;
 import edu.rit.swen262.service.GameState;
 import edu.rit.swen262.service.InputParser;
+import edu.rit.swen262.service.MenuState;
 import edu.rit.swen262.service.QuitGameAction;
+import edu.rit.swen262.service.MoveAction;
+import edu.rit.swen262.service.AttackAction;
 import edu.rit.swen262.ui.MUDGame;
 
 @SpringBootApplication
@@ -34,17 +39,75 @@ class SampleCommandLineRunner implements CommandLineRunner {
 	SampleCommandLineRunner() {
 		// TODO:
 	}
+	
+	/**
+	 * instantiates all concrete commands and binds them to the {@link InputParser}
+	 * at run-time
+	 * 
+	 * @param gameState the current state of the game
+	 * @return a nested hashmap connecting the menu state to a list of relevent commands to execute
+	 */
+	public HashMap<MenuState, HashMap<Character, Action>> bindCommands(GameState gameState) {
+		HashMap<MenuState, HashMap<Character, Action>> keystrokes = new HashMap<>();
+
+		HashMap<Character, Action> moveKeystrokes = new HashMap<>() {{
+			put('1', new MoveAction(gameState, "North East"));
+			put('2', new MoveAction(gameState, "North"));
+			put('3', new MoveAction(gameState, "North West"));
+			put('4', new MoveAction(gameState, "East"));
+			put('5', new MoveAction(gameState, "West"));
+			put('6', new MoveAction(gameState, "South East"));
+			put('7', new MoveAction(gameState, "South"));
+			put('8', new MoveAction(gameState, "South West"));
+		}};
+
+		HashMap<Character, Action> attackKeystrokes = new HashMap<>() {{
+			put('1', new AttackAction(gameState, "North East"));
+			put('2', new AttackAction(gameState, "North"));
+			put('3', new AttackAction(gameState, "North West"));
+			put('4', new AttackAction(gameState, "East"));
+			put('5', new AttackAction(gameState, "West"));
+			put('6', new AttackAction(gameState, "South East"));
+			put('7', new AttackAction(gameState, "South"));
+			put('8', new AttackAction(gameState, "South West"));
+		}};
+
+		String moveMenuString = this.buildMenuString(moveKeystrokes);
+		String attackMenuString = this.buildMenuString(moveKeystrokes);
+
+		HashMap<Character, Action> defaultKeystrokes = new HashMap<>() {{
+			put('q', new QuitGameAction(gameState));
+			put('m', new DisplayMenuAction(gameState, DisplayMenuType.MOVE, moveMenuString));
+			put('a', new DisplayMenuAction(gameState, DisplayMenuType.ATTACK, attackMenuString));
+		}};
+
+		keystrokes.put(MenuState.DEFAULT, defaultKeystrokes);
+		keystrokes.put(MenuState.MOVE, moveKeystrokes);
+		keystrokes.put(MenuState.ATTACK, attackKeystrokes);
+
+		return keystrokes;
+	}
+
+	/**
+	 * 
+	 */
+	public String buildMenuString(HashMap<Character, Action> commandMap) {
+        StringBuilder displayText = new StringBuilder();
+        commandMap.forEach((key, value) -> 
+			displayText.append(String.format("[%s] %s\n", key, value))
+		);
+		
+		return displayText.toString();
+	}
 
 	@Override
 	public void run(String... args) throws Exception {
 		PlayerCharacter player = new PlayerCharacter("Bobert", "can lift at least 5 worms.");
 		GameState gameState = new GameState(player);
 
-		Map<Character, Action> keystrokes = new HashMap<Character, Action>() {{
-			put('q', new QuitGameAction(gameState));
-		}};
+		HashMap<MenuState, HashMap<Character, Action>> keystrokes = this.bindCommands(gameState);
 		
-		InputParser inputParser = new InputParser(keystrokes, null);
+		InputParser inputParser = new InputParser(keystrokes);
 		MUDGame client = new MUDGame(inputParser);
 		gameState.register(client);
 
