@@ -23,13 +23,27 @@ public class Inventory {
 
     public boolean removeBag(Bag bag) {
 
-        return bags.remove(bag);
-
+        if (bags.size() > 0) {
+            return bags.remove(bag);
+        }
+        return false;
     }
 
     public List<Bag> getBags() {
 
         return bags;
+
+    }
+
+    public int getTotalBags() {
+
+        return bags.size();
+
+    }
+
+    public int getCapacity() {
+
+        return capacity;
 
     }
 
