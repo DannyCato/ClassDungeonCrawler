@@ -110,10 +110,10 @@ public class GameState implements IObservable {
 
     /**
      * updates the display of the menu component in the UI to show
-     * the current actions
+     * the current actions available to take
      * 
-     * @param menuType 
-     * @param menuText String representation of all the 
+     * @param menuType Enum value that dictates the type of menu
+     * @param menuText String representation of all the actions the user can take
      */
     public void displayMenu(DisplayMenuType menuType, String menuText) {
         // build event with additional data of type + display text
