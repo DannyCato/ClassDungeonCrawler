@@ -56,10 +56,12 @@ public class MUDGameUI implements GameObserver {
                 this.redrawMenu((String) event.getData("menuText"));
                 break;
             case GameEventType.MOVE_PLAYER:
+                this.redrawMenu("");
                 break;
-            case GameEventType.TIME_CHANGED:
+            case GameEventType.CHANGE_TIME:
                 break;
-            case GameEventType.DAMAGE_TAKEN:
+            case GameEventType.TAKE_DAMAGE:
+                this.redrawMenu("");
                 break;
             case GameEventType.QUIT_GAME:
                 try {

@@ -7,8 +7,8 @@ package edu.rit.swen262.service;
 public enum GameEventType {
     DISPLAY_SUBMENU,
     MOVE_PLAYER,
-    DAMAGE_TAKEN,
-    TIME_CHANGED,
+    TAKE_DAMAGE,
+    CHANGE_TIME,
     USE_ITEM,
     QUIT_GAME
 }

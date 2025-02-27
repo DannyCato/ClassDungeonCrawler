@@ -1,6 +1,7 @@
-package edu.rit.swen262.service;
+package edu.rit.swen262.service.Action;
 
 import edu.rit.swen262.domain.PlayerCharacter;
+import edu.rit.swen262.service.GameState;
 
 /**
  * represents a single {@link Action} which is responsible for updating the

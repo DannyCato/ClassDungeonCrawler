@@ -61,7 +61,7 @@ public class GameState implements IObservable {
     public void movePlayer(String direction) {
         //
 
-        this.notifyObservers(null);
+        this.notifyObservers(new GameEvent(GameEventType.MOVE_PLAYER));
     }
 
     /**
@@ -70,7 +70,7 @@ public class GameState implements IObservable {
      * @param c the character that is being attacked
      */
     public void attackCharacter(Character c) {
-        this.notifyObservers(null);
+        this.notifyObservers(new GameEvent(GameEventType.TAKE_DAMAGE));
     }
 
     /**
@@ -86,7 +86,7 @@ public class GameState implements IObservable {
      * needs an @param item the player character is using
      */
     public void useItem(String item) {
-        this.notifyObservers(null); 
+        this.notifyObservers(new GameEvent(GameEventType.USE_ITEM)); 
     }
 
     /**
