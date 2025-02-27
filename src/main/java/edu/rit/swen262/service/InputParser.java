@@ -3,6 +3,8 @@ package edu.rit.swen262.service;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.rit.swen262.service.Action.Action;
+
 /**
  * A class which parses input from the user, mapping the given String
  * to its corrosponding {@link Action}

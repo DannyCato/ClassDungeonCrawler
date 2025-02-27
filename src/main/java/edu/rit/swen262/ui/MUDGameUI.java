@@ -23,12 +23,12 @@ import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 
-import edu.rit.swen262.service.Action;
 import edu.rit.swen262.service.GameEvent;
 import edu.rit.swen262.service.GameEventType;
 import edu.rit.swen262.service.GameObserver;
 import edu.rit.swen262.service.GameState;
 import edu.rit.swen262.service.InputParser;
+import edu.rit.swen262.service.Action.Action;
 
 /**
  * The class responsible for rendering the current state of the MUD game to

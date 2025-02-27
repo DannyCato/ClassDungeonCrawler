@@ -1,4 +1,4 @@
-package edu.rit.swen262.service;
+package edu.rit.swen262.service.Action;
 
 /**
  * enum which represents a single type of menu that the UI can display

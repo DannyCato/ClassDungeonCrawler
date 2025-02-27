@@ -1,4 +1,6 @@
-package edu.rit.swen262.service;
+package edu.rit.swen262.service.Action;
+
+import edu.rit.swen262.service.GameState;
 
 /**
  * defines the interface for an Action that can be performed by

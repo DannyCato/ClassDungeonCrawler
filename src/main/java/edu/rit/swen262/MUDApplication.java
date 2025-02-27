@@ -11,15 +11,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import edu.rit.swen262.domain.PlayerCharacter;
-import edu.rit.swen262.service.Action;
-import edu.rit.swen262.service.DisplayMenuAction;
-import edu.rit.swen262.service.DisplayMenuType;
 import edu.rit.swen262.service.GameState;
 import edu.rit.swen262.service.InputParser;
 import edu.rit.swen262.service.MenuState;
-import edu.rit.swen262.service.QuitGameAction;
-import edu.rit.swen262.service.MoveAction;
-import edu.rit.swen262.service.AttackAction;
+import edu.rit.swen262.service.Action.Action;
+import edu.rit.swen262.service.Action.AttackAction;
+import edu.rit.swen262.service.Action.DisplayMenuAction;
+import edu.rit.swen262.service.Action.DisplayMenuType;
+import edu.rit.swen262.service.Action.MoveAction;
+import edu.rit.swen262.service.Action.QuitGameAction;
 import edu.rit.swen262.ui.MUDGameUI;
 
 @SpringBootApplication
