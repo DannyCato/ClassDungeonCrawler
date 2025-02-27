@@ -42,4 +42,19 @@ public class Bag {
 
     }
 
+    public int getCapacity() {
+        return capacity;
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Bag) {
+            Bag other = (Bag) obj;
+            return (contents.equals(other.contents)) && capacity == other.capacity;
+        } else {
+            return false;
+        }
+    }
+
 }
