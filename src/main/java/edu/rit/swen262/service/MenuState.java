@@ -1,12 +1,9 @@
 package edu.rit.swen262.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * A enum which defines the current menu the UI is in, transitioning to
  * a sub-menu or cycling back to the default one based upon what keystroke
- * input is inputted
+ * is inputted
  * 
  * @author Victor Bovat
  */

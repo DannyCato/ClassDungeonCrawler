@@ -26,7 +26,7 @@ public class InputParser {
     }
 
     /**
-     * given an input string from the {@link MUDGame UI class}, parses the
+     * given an input string from the {@link MUDGameUI UI class}, parses the
      * input and generates the appropriate {@link Action command}, then 
      * executes it
      * 

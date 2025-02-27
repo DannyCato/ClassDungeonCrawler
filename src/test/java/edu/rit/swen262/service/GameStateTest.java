@@ -10,7 +10,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import edu.rit.swen262.domain.PlayerCharacter;
-import edu.rit.swen262.ui.MUDGame;
+import edu.rit.swen262.ui.MUDGameUI;
 
 @SpringBootTest(properties = "spring.profiles.active:test")
 class GameStateTest {

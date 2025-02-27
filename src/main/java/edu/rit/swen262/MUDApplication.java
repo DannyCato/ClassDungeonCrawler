@@ -20,7 +20,7 @@ import edu.rit.swen262.service.MenuState;
 import edu.rit.swen262.service.QuitGameAction;
 import edu.rit.swen262.service.MoveAction;
 import edu.rit.swen262.service.AttackAction;
-import edu.rit.swen262.ui.MUDGame;
+import edu.rit.swen262.ui.MUDGameUI;
 
 @SpringBootApplication
 public class MUDApplication {
@@ -107,8 +107,9 @@ class SampleCommandLineRunner implements CommandLineRunner {
 	 * {@link Action commands}, producing a list in the format of:
 	 * '[n] <Action>' for every command and its associated number value
 	 * 
-	 * @param commandMap
-	 * @return
+	 * @param commandMap map which associates a set of {@link Action commands}
+	 * with a different keystroke
+	 * @return a String representation of the given command hashmap
 	 */
 	public String buildMenuString(HashMap<Character, Action> commandMap) {
         StringBuilder displayText = new StringBuilder();
@@ -128,7 +129,7 @@ class SampleCommandLineRunner implements CommandLineRunner {
 		HashMap<MenuState, HashMap<Character, Action>> keystrokes = this.bindCommands(gameState);
 		
 		InputParser inputParser = new InputParser(keystrokes);
-		MUDGame client = new MUDGame(inputParser);
+		MUDGameUI client = new MUDGameUI(inputParser);
 		gameState.register(client);
 
 		client.start();

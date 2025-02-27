@@ -4,7 +4,7 @@ import edu.rit.swen262.domain.PlayerCharacter;
 
 /**
  * represents a single {@link Action} which is responsible for updating the
- * menu panel within the {@link MUDGame UI}
+ * menu panel within the {@link MUDGameUI UI}
  * 
  * @author Victor Bovat, Philip Rubbo
  */

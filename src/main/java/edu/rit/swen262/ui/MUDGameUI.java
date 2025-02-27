@@ -36,12 +36,12 @@ import edu.rit.swen262.service.InputParser;
  * 
  * @author Victor Bovat
  */
-public class MUDGame implements GameObserver {
+public class MUDGameUI implements GameObserver {
     private InputParser inputParser;
     private Screen screen;
     private Label menuDisplay;
 
-    public MUDGame(InputParser inputParser) {
+    public MUDGameUI(InputParser inputParser) {
         this.inputParser = inputParser;
     }
 
