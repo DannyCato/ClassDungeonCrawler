@@ -54,5 +54,40 @@ public class InventoryTest {
         assertEquals(inventory.getTotalBags(), 2);
 
     }
+
+    @Test
+    public void test_AddBagAtCapacity() {
+
+        List<Bag> contents = new ArrayList<>();
+        int capacity = 2;
+        Inventory inventory = new Inventory(contents, capacity);
+        Bag bag = new Bag(null, 0);
+
+        inventory.addBag(bag);
+        inventory.addBag(bag);
+        inventory.addBag(bag);
+
+        // Should be 2, regardless of adding 3
+        assertEquals(inventory.getTotalBags(), 2);
+
+
+    }
+
+    @Test
+    public void test_RemoveBagAtZero() {
+
+        List<Bag> contents = new ArrayList<>();
+        int capacity = 1;
+        Inventory inventory = new Inventory(contents, capacity);
+        Bag bag = new Bag(null, 0);
+
+        inventory.removeBag(bag);
+        inventory.removeBag(bag);
+        inventory.removeBag(bag);
+
+        // Should be 0, regardless of removing 3
+        assertEquals(inventory.getTotalBags(), 0);
+
+    }
     
 }
