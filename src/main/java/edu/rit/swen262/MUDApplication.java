@@ -37,7 +37,7 @@ class SampleCommandLineRunner implements CommandLineRunner {
 
 	@Autowired
 	SampleCommandLineRunner() {
-		// TODO:
+		// TODO: don't
 	}
 	
 	/**
@@ -72,24 +72,43 @@ class SampleCommandLineRunner implements CommandLineRunner {
 			put('8', new AttackAction(gameState, "South West"));
 		}};
 
+		/*inv command map should change based upon what's in the inventory?
+		 AKA Bags/Individual Items
+
+		 (generation of these maps may need to move to another class depending upon
+		 integraton)
+		 */
+		HashMap<Character, Action> inventoryKeystrokes = new HashMap<>() {{
+			// put('1', new UseItemAction(gameState, "North East"));
+			// put('2', new UseItemAction(gameState, "North"));
+		}};
+
 		String moveMenuString = this.buildMenuString(moveKeystrokes);
-		String attackMenuString = this.buildMenuString(moveKeystrokes);
+		String attackMenuString = this.buildMenuString(attackKeystrokes);
+		String inventoryMenuString = this.buildMenuString(moveKeystrokes);
 
 		HashMap<Character, Action> defaultKeystrokes = new HashMap<>() {{
 			put('q', new QuitGameAction(gameState));
 			put('m', new DisplayMenuAction(gameState, DisplayMenuType.MOVE, moveMenuString));
 			put('a', new DisplayMenuAction(gameState, DisplayMenuType.ATTACK, attackMenuString));
+			put('i', new DisplayMenuAction(gameState, DisplayMenuType.INVENTORY, inventoryMenuString));
 		}};
 
 		keystrokes.put(MenuState.DEFAULT, defaultKeystrokes);
 		keystrokes.put(MenuState.MOVE, moveKeystrokes);
 		keystrokes.put(MenuState.ATTACK, attackKeystrokes);
+		//keystrokes.put(MenuState.INVENTORY, inventoryMenuString);
 
 		return keystrokes;
 	}
 
 	/**
+	 * helper method which produces a string representation of a hash map of
+	 * {@link Action commands}, producing a list in the format of:
+	 * '[n] <Action>' for every command and its associated number value
 	 * 
+	 * @param commandMap
+	 * @return
 	 */
 	public String buildMenuString(HashMap<Character, Action> commandMap) {
         StringBuilder displayText = new StringBuilder();
@@ -100,6 +119,7 @@ class SampleCommandLineRunner implements CommandLineRunner {
 		return displayText.toString();
 	}
 
+	
 	@Override
 	public void run(String... args) throws Exception {
 		PlayerCharacter player = new PlayerCharacter("Bobert", "can lift at least 5 worms.");

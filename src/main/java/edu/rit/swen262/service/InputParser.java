@@ -14,8 +14,9 @@ public class InputParser {
     private HashMap<MenuState, HashMap<Character, Action>> keystrokes;
 
     /**
-     * creates a new InputParser with the provided map of single
-     * characters bound to specific {@link Action concrete commands} 
+     * creates a new InputParser with the provided nested map of menu types to
+     * another map linking single characters to specific 
+     * {@link Action concrete commands} 
      * 
      * @param keystrokes map between characters and their matching commands
      */
@@ -26,7 +27,8 @@ public class InputParser {
 
     /**
      * given an input string from the {@link MUDGame UI class}, parses the
-     * input and generates the appropriate command, then executes it
+     * input and generates the appropriate {@link Action command}, then 
+     * executes it
      * 
      * @param text the text inputted by the user
      */
@@ -43,7 +45,12 @@ public class InputParser {
             action.performAction();
         }
     }  
-
+    /**
+     * transitions the state of the input parser to the 
+     * specified {@link MenuState menu}
+     * 
+     * @param menu the menu that is selected to be set
+     */
     public void setMenu(MenuState menu) {
         this.currentMenu = menu;
     }

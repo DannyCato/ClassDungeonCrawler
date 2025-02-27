@@ -18,25 +18,29 @@ public class GameEvent {
     }
 
     /**
+     * adds a single {@link Object data value} to the event's data map
      * 
-     * @param key
-     * @param value
+     * @param key String of the type of data that is being inputted
+     * @param value the data {@link Object object} to be added
      */
     public void addData(String key, Object value) {
         this.data.put(key, value);
     }
 
     /**
+     * fetches the event's type
      * 
-     * @return a GameEventType enum value
+     * @return a {@link GameEventType} value
      */
     public GameEventType getType() {
         return this.eventType;
     }
 
     /**
+     * fetches a single {@link Object data value} from the Event
+     * associated with the given key
      * 
-     * @param key 
+     * @param key the String identifier for the data
      * @return Object that is stored with the associated key
      */
     public Object getData(String key) {

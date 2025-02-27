@@ -74,22 +74,10 @@ public class MUDGame implements GameObserver {
     }
 
     /**
-     * initializes all fields relevent to booting up the UI
-     */
-    public void initialize() {
-        /* TO-DO: have this class instantiate all concrete commands +
-        bind them to their receivers here
-        (or offload that resposibility to the MUDApplication class? responsibilities 
-        may need to be rebalanced here)
-        */
-    }
-
-    /**
      * starts a new game, initializing all relevent objects then taking control
      * of the window to draw the starting game screen
      */
     public void start() {
-        this.initialize();
         System.out.println("game initialized!");
 
         this.drawUI();
@@ -218,6 +206,12 @@ public class MUDGame implements GameObserver {
         }
     }
 
+    /**
+     * updates the text displayed in the menu panel to display the user's
+     * current action options
+     * 
+     * @param displayText the new text to display on the menu panel
+     */
     private void redrawMenu(String displayText) {
         this.menuDisplay.setText(displayText);
     }

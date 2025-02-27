@@ -78,9 +78,9 @@ public class GameState implements IObservable {
     public void openInventory() {
         this.notifyObservers(null); 
     }
-
+    
     /**
-     *  uses the item found in player character Inventory
+     * uses the item found in player character Inventory
      * 
      * needs an @param item the player character is using
      */
@@ -109,11 +109,14 @@ public class GameState implements IObservable {
     }
 
     /**
+     * updates the display of the menu component in the UI to show
+     * the current actions
      * 
+     * @param menuType 
+     * @param menuText String representation of all the 
      */
     public void displayMenu(DisplayMenuType menuType, String menuText) {
-        // show a sub-menu + wait for further input
-
+        // build event with additional data of type + display text
         GameEvent event = new GameEvent(GameEventType.DISPLAY_SUBMENU);
         event.addData("menuType", menuType);
         event.addData("menuText", menuText);

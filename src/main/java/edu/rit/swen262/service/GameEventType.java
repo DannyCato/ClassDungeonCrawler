@@ -9,5 +9,6 @@ public enum GameEventType {
     MOVE_PLAYER,
     DAMAGE_TAKEN,
     TIME_CHANGED,
+    USE_ITEM,
     QUIT_GAME
 }
