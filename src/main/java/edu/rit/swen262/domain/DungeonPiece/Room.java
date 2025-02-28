@@ -2,6 +2,7 @@ package edu.rit.swen262.domain.DungeonPiece;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,12 +30,22 @@ public class Room implements DungeonPiece<Room> {
     // 1| 3 4 5                      real index-> 0 1 2|3 4 5|6 7 8                                     = wanted Y index * width of line + wanted X index 
     // 2| 6 7 8                                   -----+-----+-----
     //  +------ X                      X offset-> 0 1 2|0 1 2|0 1 2
-    //    0 1 2                      
+    //    0 1 2
+    
+    /**
+     * A quick lookup table to find the index of a Tile. Recommended to be a HashMap
+     */
+    private java.util.Map<DungeonPiece<Tile>, Integer> lookupTiles;
 
     /**
      * storage for indicies of tiles. Integers so we don't save the same thing twice
      */
     private List<Integer> exitsTiles;
+
+    /**
+     * the roomnode that relates to the class
+     */
+    private final RoomNode rn;
 
 
     private final int width;
@@ -57,13 +68,17 @@ public class Room implements DungeonPiece<Room> {
      * @param tiles {@link DungeonPiece}<{@link Tile}>
      * @param exitTiles {@link DungeonPiece}<{@link Tile}> must be different from tiles
      */
-    public Room(int width, int height, String description, List<DungeonPiece<Tile>> tiles, List<Integer> exitTiles)
+    public Room(int width, int height, String description, List<DungeonPiece<Tile>> tiles, List<Integer> exitTiles, java.util.Map<DungeonPiece<Tile>,Integer> lookupTiles)
     {
         this.width = width;
         this.height = height;
         this.description = description;
         this.tiles = tiles;
         this.exitsTiles = exitTiles;
+        this.lookupTiles = lookupTiles;
+        
+
+        this.rn = new RoomNode(this);
     }
 
     /**
@@ -74,7 +89,7 @@ public class Room implements DungeonPiece<Room> {
      * @param description String
      */
     public Room(int width, int height, String description) {
-        this(width, height, description, new ArrayList<>(), new ArrayList<>());
+        this(width, height, description, new ArrayList<>(), new ArrayList<>(), new HashMap<>());
     }
 
     /**
@@ -176,6 +191,7 @@ public class Room implements DungeonPiece<Room> {
             tiles.add(addTile); // add
             if (((Tile)addTile).isExit()) { // check if addTile is an exit tile
                 exitsTiles.add(tiles.indexOf(addTile)); // Add the index of Exit Tiles
+                lookupTiles.put(addTile, tiles.size() - 1);
             }
             return true;
         }
@@ -215,6 +231,40 @@ public class Room implements DungeonPiece<Room> {
         return true;
     }
 
+    public DirectionalVector occupantOnEdge(Occupant o) {
+        Tile t = null;
+        for (DungeonPiece<Tile> ti : tiles) {
+            t = (Tile) ti;
+            if (t.containsTransientOccupantOf(o)) {
+                break;
+            }
+        }
+        if (t == null) {
+            return null;
+        }
+        int index = lookupTiles.get(t);
+        if (index < width) {
+            return DirectionalVector.NORTH;
+        } else if ((index % width) == (width - 1)) {
+            return DirectionalVector.EAST;
+        } else if (index > (height - 1) * width) {
+            return DirectionalVector.SOUTH;
+        } else if ((index % width) == 0) {
+            return DirectionalVector.WEST;
+        } else {
+            return null;
+        }
+    }
+
+    public boolean occupantOnExit(Occupant o) {
+        for (Integer i : exitsTiles) {
+            if (((Tile)tiles.get(i)).containsTransientOccupantOf(o)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Helper method to find a {@link Tile} in the direction described by a {@link DirectionalVector}
      * 
@@ -230,5 +280,31 @@ public class Room implements DungeonPiece<Room> {
         }
         return index + ((dir.y * width) + dir.x); // adjacent tile formula
     }
-    // TODO: Figure out how Exiting works because it seems like that should work on a Room or Map level. It's still a little hazy to actually see though
+
+    /**
+     * Returns all 
+     * 
+     * @param t
+     * @param returnCol
+     * @return
+     */
+    public Collection<DungeonPiece<Tile>> getAllAdjacentTiles(DungeonPiece<Tile> t, Collection<DungeonPiece<Tile>> returnCol) {
+        Integer index = lookupTiles.get(t);
+        if (index == null) {
+            return null;
+        }
+        for (DirectionalVector dir : DirectionalVector.directions) {
+            int adjIndex = getAdjactentTileInDir(index, dir);
+            if (adjIndex != index) {
+                returnCol.add(tiles.get(adjIndex));
+            } else {
+                returnCol.add(null);
+            }
+        }
+        return returnCol;
+    }
+
+    public RoomNode getRoomNode() {
+        return this.rn;
+    }
 }

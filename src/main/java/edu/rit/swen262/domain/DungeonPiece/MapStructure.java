@@ -10,14 +10,18 @@ import edu.rit.swen262.domain.DirectionalVector;
 public class MapStructure {
     private HashMap<RoomNode, RoomNode> rooms;
 
-    public MapStructure(Room root) {
+    public MapStructure() {
         this.rooms = new HashMap<>();
+    }
+
+    public RoomNode addLooseRoom(RoomNode room) {
+        return rooms.put(room, room);
     }
 
     public boolean addRoom(RoomNode key, RoomNode value, DirectionalVector dir) {
         RoomNode room = getRoom(key);
         if (room == null) {
-            room = rooms.put(key, key);
+            room = addLooseRoom(key);;
         }
         return room.setConnection(value, dir);
     }

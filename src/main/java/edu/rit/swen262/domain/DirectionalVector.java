@@ -1,5 +1,8 @@
 package edu.rit.swen262.domain;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 /**
  * Position Vector to help Room move objects
  * 
@@ -19,8 +22,14 @@ public enum DirectionalVector {
 
     public int y;
 
+    public static ArrayList<DirectionalVector> directions = new ArrayList<>(Arrays.asList(DirectionalVector.values()));
+
     private DirectionalVector(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+
+    public static DirectionalVector getOppositeDirection(DirectionalVector dir) {
+        return directions.get((directions.indexOf(dir) + 4) % 8);
     }
 }

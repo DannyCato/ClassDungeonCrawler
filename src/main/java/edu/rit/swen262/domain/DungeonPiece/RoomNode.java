@@ -3,14 +3,14 @@ package edu.rit.swen262.domain.DungeonPiece;
 import edu.rit.swen262.domain.DirectionalVector;
 
 public class RoomNode {
-    private Room room;
+    private DungeonPiece<Room> room;
 
     private RoomNode north;
     private RoomNode east;
     private RoomNode south;
     private RoomNode west;
     
-    public RoomNode(Room room) {
+    public RoomNode(DungeonPiece<Room> room) {
         this.room = room ;   
     }
 
@@ -34,7 +34,7 @@ public class RoomNode {
         return true;
     }
         
-    public RoomNode getConnection(Room room, DirectionalVector dir) {
+    public RoomNode getConnection(DirectionalVector dir) {
         switch (dir) {
             case DirectionalVector.NORTH:
                 return north;
@@ -49,7 +49,7 @@ public class RoomNode {
         }
     }
 
-    public Room getRoom() {
+    public DungeonPiece<Room> getRoom() {
         return room;
     }
 }

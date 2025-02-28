@@ -3,6 +3,7 @@ package edu.rit.swen262.domain.DungeonPiece;
 import java.util.Collection;
 import java.util.List;
 
+import edu.rit.swen262.domain.DirectionalVector;
 import edu.rit.swen262.domain.Occupant;
 import edu.rit.swen262.domain.RenderRepresentation;
 
@@ -13,11 +14,11 @@ import edu.rit.swen262.domain.RenderRepresentation;
  */
 public class Map implements DungeonPiece<Map> {
     
-    private List<DungeonPiece<Room>> rooms;
+    private final MapStructure rooms;
 
     private DungeonPiece<Tile> startTile;
 
-    private DungeonPiece<Room> startRoom; 
+    private final DungeonPiece<Room> startRoom; 
     private DungeonPiece<Room> goal;
 
     private DungeonPiece<Room> currentRoom;
@@ -25,8 +26,13 @@ public class Map implements DungeonPiece<Map> {
 
     // <-----------------------Constructors----------------------->
 
-    public Map(List<DungeonPiece<Room>> rooms) {
-        this.rooms = rooms;
+    public Map(DungeonPiece<Room> root, DungeonPiece<Tile> startTile) {
+        this.rooms = new MapStructure();
+        this.startRoom = root;
+        this.currentRoom = root;
+
+        this.startTile = startTile;
+        rooms.addLooseRoom(((Room) root).getRoomNode());
     }
 
     
@@ -39,8 +45,7 @@ public class Map implements DungeonPiece<Map> {
      */
     @Override
     public List<RenderRepresentation> render() {
-        // TODO: Do what the comment says
-        throw new UnsupportedOperationException("Unimplemented method 'render'");
+        return currentRoom.render();
     }
 
     /**
@@ -50,8 +55,7 @@ public class Map implements DungeonPiece<Map> {
      */
     @Override
     public String description() {
-        // TODO: do what the comment says
-        throw new UnsupportedOperationException("Unimplemented method 'description'");
+        return currentRoom.description();
     }
 
     /**
@@ -61,8 +65,7 @@ public class Map implements DungeonPiece<Map> {
      */
     @Override
     public Collection<Occupant> getOccupants() {
-        // TODO: create a collection of Occupants (preferably of the same type as the one in Tiles) and append all tiles to it.
-        throw new UnsupportedOperationException("Unimplemented method 'getOccupants'");
+        return currentRoom.getOccupants();
     }
 
     /**
@@ -70,9 +73,17 @@ public class Map implements DungeonPiece<Map> {
      * 
      * @param tile {@link DungeonPiece}<{@link Tile}> a {@link Tile} to add
      */
-    public boolean addRoom(DungeonPiece<Room> room) {
-        // TODO: Decide on a collection type or make one and implement an add method here
-        throw new UnsupportedOperationException("Unimplemented method 'addRoom'");
+    public boolean addRoom(DungeonPiece<Room> from, DungeonPiece<Room> to, DirectionalVector dir, boolean isGoal) {
+        RoomNode foundFrom = rooms.getRoom(((Room)from).getRoomNode());
+        RoomNode foundTo = rooms.getRoom(((Room)to).getRoomNode());
+        if (foundFrom == null || foundTo == null ) {
+            return false;
+        }
+        boolean success = rooms.addRoom(foundFrom, foundTo, dir);
+        if (success && isGoal) {
+            this.goal = to;
+        }
+        return success;
     }
 
     /**
@@ -84,6 +95,16 @@ public class Map implements DungeonPiece<Map> {
      */
     public DungeonPiece<Room> getCurrentRoom() {
         return currentRoom;
+    }
+
+    public boolean canExitRoom(DirectionalVector dir) {
+        return (((Room) currentRoom).getRoomNode().getConnection(dir)) != null;
+    }
+
+    public void exitRoom(Occupant o, DirectionalVector dir) {
+        if(!((Room)currentRoom).occupantOnExit(o)) {
+            
+        }
     }
     
 }
