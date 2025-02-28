@@ -3,15 +3,16 @@ package edu.rit.swen262.domain;
 /**
  * A representation of the {@link Exit} between two {@link Tile} {@link DungeonPiece}s <p>
  * 
- * @authors Eric Manning,
+ * @authors Eric Manning, Danny Catorcini
  */
 public class Exit implements Occupant {
-    private static final RenderRepresentation RENDER_REPRESENTATION = RenderRepresentation.EXIT;
+    // private static final RenderRepresentation RENDER_REPRESENTATION = RenderRepresentation.EXIT;
     private static final boolean STACKABLE = true;
     private String description;
-    private ExitDirection exitDirection;
+    // private ExitDirection exitDirection;
+    private DirectionalVector exitDirection;
 
-    public Exit(String description, ExitDirection exitDirection) {
+    public Exit(String description, DirectionalVector exitDirection) {
         this.description = description;
         this.exitDirection = exitDirection;
     }
@@ -23,7 +24,7 @@ public class Exit implements Occupant {
      */
     @Override
     public RenderRepresentation render() {
-        return Exit.RENDER_REPRESENTATION;
+        return RenderRepresentation.EXIT; // this is static anyways so just directly return it from RenderRepresentation
     }
 
     /**
@@ -42,7 +43,8 @@ public class Exit implements Occupant {
      * 
      * @return the direction of the exit
      */
-    public ExitDirection getExitDirection() {
+    // public ExitDirection getExitDirection() {
+    public DirectionalVector getExitDirection() {
         return exitDirection;
     }
 }

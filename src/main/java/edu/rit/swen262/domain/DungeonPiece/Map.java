@@ -103,7 +103,7 @@ public class Map implements DungeonPiece<Map> {
 
     public void exitRoom(Occupant o, DirectionalVector dir) {
         if(!((Room)currentRoom).occupantOnExit(o)) {
-            
+            //TODO: FINISH MEEEEEE
         }
     }
     

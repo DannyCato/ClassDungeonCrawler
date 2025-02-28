@@ -14,6 +14,13 @@ public class RoomNode {
         this.room = room ;   
     }
 
+    /**
+     * sets a connection between r and this
+     * 
+     * @param r {@link RoomNode}
+     * @param dir {@link DirectionalVector}
+     * @return a boolean of whether the connection was successful or not
+     */
     public boolean setConnection(RoomNode r, DirectionalVector dir) {
         switch (dir) {
             case DirectionalVector.NORTH:
@@ -33,7 +40,12 @@ public class RoomNode {
         }
         return true;
     }
-        
+    
+    /**
+     * Get a {@link RoomNode} in a {@link DirectionalVector}
+     * @param dir {@link DirectionalVector}
+     * @return {@link RoomNode} in direction. Null, if none has been placed yet
+     */
     public RoomNode getConnection(DirectionalVector dir) {
         switch (dir) {
             case DirectionalVector.NORTH:
@@ -49,6 +61,10 @@ public class RoomNode {
         }
     }
 
+    /**
+     * Get the {@link DungeonPiece}<{@link Room}> associated with this {@link RoomNode}
+     * @return {@link DungeonPiece}<{@link Room}>
+     */
     public DungeonPiece<Room> getRoom() {
         return room;
     }

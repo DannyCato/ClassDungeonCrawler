@@ -29,7 +29,24 @@ public enum DirectionalVector {
         this.y = y;
     }
 
+    /**
+     * Get the opposite {@link DirectionalVector} of a given {@link DirectionalVector}
+     * 
+     * @param dir {@link DirectionalVector}
+     * @return {@link DirectionalVector} the opposite of dir
+     */
     public static DirectionalVector getOppositeDirection(DirectionalVector dir) {
         return directions.get((directions.indexOf(dir) + 4) % 8);
+    }
+
+    /**
+     * Returns whether two given {@link DirectionalVector DirectionalVectors} are opposite from one another
+     * 
+     * @param d1 {@link DirectionalVector}
+     * @param d2 {@link DirectionalVector}
+     * @return a boolean of whether they were opposites or not
+     */
+    public static boolean directionsAreOpposite(DirectionalVector d1, DirectionalVector d2) {
+        return (Math.abs(directions.indexOf(d1) - directions.indexOf(d2)) == 4);
     }
 }

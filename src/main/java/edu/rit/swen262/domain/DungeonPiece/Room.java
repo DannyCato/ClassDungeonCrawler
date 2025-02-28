@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import edu.rit.swen262.domain.DirectionalVector;
-import edu.rit.swen262.domain.ExitDirection;
 import edu.rit.swen262.domain.Occupant;
 import edu.rit.swen262.domain.RenderRepresentation;
 
@@ -129,26 +128,26 @@ public class Room implements DungeonPiece<Room> {
                 List<RenderRepresentation> tileRender = currentTile.render();
                 room.add(tileRender.get(tileRender.size() - 1)); // add the top priority occupant render
 
-                if (currentTile.isExit()) {
-                    ExitDirection exitDirection = currentTile.getExitDirection();
-                    int exitIndex = room.size() - 1; // Current tile's position in room list
+                // if (currentTile.isExit()) {      <---- Should be handled by priority system - Danny
+                //     ExitDirection exitDirection = currentTile.getExitDirection();
+                //     int exitIndex = room.size() - 1; // Current tile's position in room list
 
-                    // Determine where to place EXIT based on direction
-                    switch (exitDirection) {
-                        case NORTH:
-                            room.set(exitIndex - (this.width + 2), RenderRepresentation.EXIT);
-                            break;
-                        case SOUTH:
-                            room.set(exitIndex + (this.width + 2), RenderRepresentation.EXIT);
-                            break;
-                        case EAST:
-                            room.set(exitIndex + 1, RenderRepresentation.EXIT);
-                            break;
-                        case WEST:
-                            room.set(exitIndex - 1, RenderRepresentation.EXIT);
-                            break;
-                    }
-                }
+                //     // Determine where to place EXIT based on direction
+                //     switch (exitDirection) {
+                //         case NORTH:
+                //             room.set(exitIndex - (this.width + 2), RenderRepresentation.EXIT);
+                //             break;
+                //         case SOUTH:
+                //             room.set(exitIndex + (this.width + 2), RenderRepresentation.EXIT);
+                //             break;
+                //         case EAST:
+                //             room.set(exitIndex + 1, RenderRepresentation.EXIT);
+                //             break;
+                //         case WEST:
+                //             room.set(exitIndex - 1, RenderRepresentation.EXIT);
+                //             break;
+                //     }
+                // }
             }
             room.add(RenderRepresentation.VWALL); // wall to the right
         }
@@ -254,6 +253,12 @@ public class Room implements DungeonPiece<Room> {
         return true;
     }
 
+    /**
+     * Determines whether an {@link Occupant} is on an edge 
+     * 
+     * @param o {@link Occupant}
+     * @return {@link DirectionalVector} of what direction the edge is or null if an error occured
+     */
     public DirectionalVector occupantOnEdge(Occupant o) {
         Tile t = null;
         for (DungeonPiece<Tile> ti : tiles) {
@@ -279,6 +284,12 @@ public class Room implements DungeonPiece<Room> {
         }
     }
 
+    /**
+     * Detemine whether an {@link Occupant} is on an exit {@link Tile}
+     * 
+     * @param o {@link Occupant}
+     * @return boolean of whether the occupant is on an exit or not. Will return false if occupant was not found
+     */
     public boolean occupantOnExit(Occupant o) {
         for (Integer i : exitsTiles) {
             if (((Tile)tiles.get(i)).containsTransientOccupantOf(o)) {
@@ -305,11 +316,11 @@ public class Room implements DungeonPiece<Room> {
     }
 
     /**
-     * Returns all 
+     * Returns all adjacent {@link Tile Tiles} to a given {@link Tile}. Tiles that are out of bounds are null
      * 
-     * @param t
-     * @param returnCol
-     * @return
+     * @param t {@link DungeonPiece}<{@link Tile}>
+     * @param returnCol Collection<{@link DungeonPiece}<{@link Tile}>>
+     * @return Collection<{@link DungeonPiece}<{@link Tile}>> of type return col filled with 9 elements of {@link DungeonPiece}<{@link Tile}> or null if the {@link Tile} was invalid
      */
     public Collection<DungeonPiece<Tile>> getAllAdjacentTiles(DungeonPiece<Tile> t, Collection<DungeonPiece<Tile>> returnCol) {
         Integer index = lookupTiles.get(t);
@@ -327,6 +338,10 @@ public class Room implements DungeonPiece<Room> {
         return returnCol;
     }
 
+    /**
+     * Get {@link RoomNode} for this {@link Room}
+     * @return {@link RoomNode}
+     */
     public RoomNode getRoomNode() {
         return this.rn;
     }
