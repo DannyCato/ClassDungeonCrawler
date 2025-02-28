@@ -252,8 +252,11 @@ public class Tile implements DungeonPiece<Tile> {
     public DirectionalVector getExitDirection() {
         if (!this.isExit()) {
             return null;
-            
         } 
         return ((Exit) permanentOccupant).getExitDirection();
+    }
+
+    public Occupant getPermanentOccupant() {
+        return permanentOccupant;
     }
 }

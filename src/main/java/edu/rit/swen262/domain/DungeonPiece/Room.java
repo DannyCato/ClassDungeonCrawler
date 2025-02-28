@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import edu.rit.swen262.domain.DirectionalVector;
+import edu.rit.swen262.domain.Exit;
 import edu.rit.swen262.domain.Occupant;
 import edu.rit.swen262.domain.RenderRepresentation;
 
@@ -229,14 +230,7 @@ public class Room implements DungeonPiece<Room> {
      */
     public boolean moveOccupant(Occupant o, DirectionalVector dir) {
         int index = 0;
-        Tile t = null;
-        for (DungeonPiece<Tile> itfTile : tiles) { // find Tile that contains o in transientOccupant
-            t = (Tile) itfTile;
-            if (t.containsTransientOccupantOf(o)) {
-                break;
-            }
-            ++index;
-        }
+        Tile t = (Tile) getTileOfOccpant(o);
         if (t == null) { // if a tile with TransientOccupant o is not found
             return false;
         }
@@ -344,5 +338,31 @@ public class Room implements DungeonPiece<Room> {
      */
     public RoomNode getRoomNode() {
         return this.rn;
+    }
+
+    /**
+     * gets the {@link DungeonPiece}<{@link Tile}> that the {@link Occupant} is on
+     * 
+     * @param o {@link Occupant}
+     * @return {@link DungeonPiece}<{@link Tile}> of {@link Occupant}. null otherwise.
+     */
+    public DungeonPiece<Tile> getTileOfOccpant(Occupant o) {
+        for (DungeonPiece<Tile> t : tiles) {
+            if (t.getOccupants().contains(o)) {
+                return t;
+            }
+        }
+        return null;
+    }
+
+    public DungeonPiece<Tile> getExitTileByDirection(DirectionalVector dir) {
+        for (Integer i : exitsTiles) {
+            Tile et = (Tile) tiles.get(i);
+            Exit exit = (Exit) et.getPermanentOccupant();
+            if (exit.getExitDirection() == dir) {
+                return et;
+            }
+        }
+        return null;
     }
 }

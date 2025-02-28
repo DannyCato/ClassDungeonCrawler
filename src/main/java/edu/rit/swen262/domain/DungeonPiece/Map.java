@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import edu.rit.swen262.domain.DirectionalVector;
+import edu.rit.swen262.domain.Exit;
 import edu.rit.swen262.domain.Occupant;
 import edu.rit.swen262.domain.RenderRepresentation;
 
@@ -101,10 +102,42 @@ public class Map implements DungeonPiece<Map> {
         return (((Room) currentRoom).getRoomNode().getConnection(dir)) != null;
     }
 
-    public void exitRoom(Occupant o, DirectionalVector dir) {
-        if(!((Room)currentRoom).occupantOnExit(o)) {
-            //TODO: FINISH MEEEEEE
+    /**
+     * exit from {@link DungeonPiece}<{@link Room}> to {@link DungeonPiece}<{@link Room}>
+     * 
+     * @param o {@link Occupant}
+     * @param dir {@link DirectionalVector}
+     * @return boolean
+     */
+    public boolean exitRoom(Occupant o, DirectionalVector dir) {
+        Room r = (Room) this.currentRoom;
+        if (!r.occupantOnExit(o)) { // if the occupant is on an exit
+            return false;
         }
+        if (!canExitRoom(dir)) { // if they can exit from the direction given
+            return false;
+        }
+        Tile exitTile = (Tile)r.getTileOfOccpant(o);
+        Occupant thisExit = exitTile.getPermanentOccupant();
+        if (!(thisExit instanceof Exit)) { // if the permanent occupant is an exit then pass
+            return false;
+        }
+        if (dir != exitTile.getExitDirection()) { // if the exit direction and the given direction are the same
+            return false;
+        }
+        Room otherRoom = (Room) r.getRoomNode().getConnection(dir).getRoom();
+        Tile otherTile = (Tile) otherRoom.getExitTileByDirection(DirectionalVector.getOppositeDirection(dir));
+        if (otherTile == null) { // if associated tile exists
+            return false;
+        }
+        Exit otherExit = (Exit) otherTile.getPermanentOccupant();
+        if (DirectionalVector.getOppositeDirection(otherExit.getExitDirection()) != dir) { // if the opposite of the other Exit's direction is the given direction
+            return false;
+        }
+        exitTile.removeOccupant(o); // finally do process
+        otherTile.addOccupant(o);
+        currentRoom = otherRoom;
+        return true;
     }
     
 }
