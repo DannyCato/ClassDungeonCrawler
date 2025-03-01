@@ -126,12 +126,12 @@ public class MUDGameUI implements GameObserver {
                 TextColor.ANSI.BLACK              // GUI background
             );
 
-            //textGUI.setTheme(theme);
+            textGUI.setTheme(theme);
 
             // set no shadow decorations for panels + full screen
             Window.Hint[] windowHints = new Window.Hint[] {
-                //Window.Hint.NO_DECORATIONS,
-                //Window.Hint.NO_POST_RENDERING,
+                Window.Hint.NO_DECORATIONS,
+                Window.Hint.NO_POST_RENDERING,
                 Window.Hint.EXPANDED};
 
             final Window window = new BasicWindow("MUD Game");

@@ -3,6 +3,7 @@ package edu.rit.swen262.service;
 import java.util.List;
 
 import edu.rit.swen262.domain.PlayerCharacter;
+import edu.rit.swen262.domain.DungeonPiece.Map;
 import edu.rit.swen262.service.Action.DisplayMenuType;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 public class GameState implements IObservable {
     private List<GameObserver> observers;
     private PlayerCharacter player;
+    private Map map;
     private int turnNumber;
 
     /**
