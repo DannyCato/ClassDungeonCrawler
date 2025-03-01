@@ -103,6 +103,13 @@ public class Map implements DungeonPiece<Map> {
     }
 
     /**
+     * 
+     */
+    public boolean move(Occupant o, DirectionalVector dir) {
+        return ((Room)currentRoom).moveOccupant(o, dir);
+    }
+
+    /**
      * exit from {@link DungeonPiece}<{@link Room}> to {@link DungeonPiece}<{@link Room}>
      * 
      * @param o {@link Occupant}
