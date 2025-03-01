@@ -14,10 +14,13 @@ public enum MenuState {
             switch(keystroke) {
                 case 'm':
                     p.setMenu(MOVE);
+                    break;
                 case 'a':
                     p.setMenu(ATTACK);
+                    break;
                 case 'i':
                     p.setMenu(INVENTORY);
+                    break;
                 default:
                     break;
             }

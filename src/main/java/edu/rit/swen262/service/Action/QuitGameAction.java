@@ -24,7 +24,6 @@ public class QuitGameAction implements Action {
      * {@inheritDoc}
      */
     public void performAction() {
-        System.out.println("quit quit quit");
         gameState.quit();
     }
 }

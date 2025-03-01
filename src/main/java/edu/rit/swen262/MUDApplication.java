@@ -85,7 +85,7 @@ class SampleCommandLineRunner implements CommandLineRunner {
 
 		String moveMenuString = this.buildMenuString(moveKeystrokes);
 		String attackMenuString = this.buildMenuString(attackKeystrokes);
-		String inventoryMenuString = this.buildMenuString(moveKeystrokes);
+		String inventoryMenuString = this.buildMenuString(inventoryKeystrokes);
 
 		HashMap<Character, Action> defaultKeystrokes = new HashMap<>() {{
 			put('q', new QuitGameAction(gameState));
@@ -97,7 +97,7 @@ class SampleCommandLineRunner implements CommandLineRunner {
 		keystrokes.put(MenuState.DEFAULT, defaultKeystrokes);
 		keystrokes.put(MenuState.MOVE, moveKeystrokes);
 		keystrokes.put(MenuState.ATTACK, attackKeystrokes);
-		//keystrokes.put(MenuState.INVENTORY, inventoryMenuString);
+		keystrokes.put(MenuState.INVENTORY, inventoryKeystrokes);
 
 		return keystrokes;
 	}

@@ -16,7 +16,7 @@ public class AttackAction implements Action {
      * instantiates a {@link Action concrete command} with the given {@link GameState}
      * 
      * @param gameState object containing the current state of the game
-     * @param direction the direction in which to move the Player
+     * @param direction the direction in which to attempt an attack
      */
     public AttackAction(GameState gameState, String direction) {
         this.gameState = gameState;
@@ -27,7 +27,7 @@ public class AttackAction implements Action {
      * {@inheritDoc}
      */
     public void performAction() {
-        gameState.movePlayer(this.direction);
+        gameState.attackCharacter(direction);
     }
 
     @Override

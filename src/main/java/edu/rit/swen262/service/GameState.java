@@ -60,16 +60,15 @@ public class GameState implements IObservable {
      */
     public void movePlayer(String direction) {
         //
-
         this.notifyObservers(new GameEvent(GameEventType.MOVE_PLAYER));
     }
 
     /**
      * attacks the specified character on the map
      * 
-     * @param c the character that is being attacked
+     * @param c the direction in which to attempt an attack
      */
-    public void attackCharacter(Character c) {
+    public void attackCharacter(String direction) {
         this.notifyObservers(new GameEvent(GameEventType.TAKE_DAMAGE));
     }
 

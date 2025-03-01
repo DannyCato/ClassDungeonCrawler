@@ -40,6 +40,7 @@ public class MUDGameUI implements GameObserver {
     private InputParser inputParser;
     private Screen screen;
     private Label menuDisplay;
+    private Label statusDisplay;
 
     public MUDGameUI(InputParser inputParser) {
         this.inputParser = inputParser;
@@ -52,16 +53,17 @@ public class MUDGameUI implements GameObserver {
         switch (event.getType()) {
             case GameEventType.DISPLAY_SUBMENU:
                 //update status panel w/ menu options
-                System.out.println(event.getData("menuType"));
                 this.redrawMenu((String) event.getData("menuText"));
                 break;
             case GameEventType.MOVE_PLAYER:
-                this.redrawMenu("");
+                this.redrawStatus("you moved.");
+                this.redrawMenuDefault();
                 break;
             case GameEventType.CHANGE_TIME:
                 break;
             case GameEventType.TAKE_DAMAGE:
-                this.redrawMenu("");
+                this.redrawStatus("something took damage.");
+                this.redrawMenuDefault();
                 break;
             case GameEventType.QUIT_GAME:
                 try {
@@ -92,6 +94,7 @@ public class MUDGameUI implements GameObserver {
     private void drawUI() {
         this.screen = null;
         this.menuDisplay = null;
+        this.statusDisplay = null;
 
         try {
             // create screen component
@@ -100,7 +103,7 @@ public class MUDGameUI implements GameObserver {
             this.screen.startScreen();
 
             final WindowBasedTextGUI textGUI = new MultiWindowTextGUI(this.screen);
-            
+
             // set tui color scheme
             Theme theme = SimpleTheme.makeTheme(
                 true,               
@@ -148,8 +151,8 @@ public class MUDGameUI implements GameObserver {
 
             // create panel displaying game status update messages
             Panel statusPanel = new Panel(new GridLayout(2));
-            Label statusDisplay = new Label("something happened.");
-            statusPanel.addComponent(statusDisplay);
+            this.statusDisplay = new Label("something happened.");
+            statusPanel.addComponent(this.statusDisplay);
 
             // create panel recieving input (spans entire screen)
             Panel inputPanel = new Panel(new GridLayout(1));
@@ -158,6 +161,7 @@ public class MUDGameUI implements GameObserver {
             // create panel displaying current menu of possible actions to select
             Panel menuPanel = new Panel(new GridLayout(1));
             this.menuDisplay = new Label("");
+            this.redrawMenuDefault();
             menuPanel.addComponent(this.menuDisplay);
 
             /* TextBox won't clear text + update statusDisplay unless 
@@ -167,7 +171,7 @@ public class MUDGameUI implements GameObserver {
             Button submitButton = new Button("Submit", () -> {
                 String inputString = userInput.getText();
                 if (!inputString.isBlank()) {
-                    statusDisplay.setText(inputString);
+                    //statusDisplay.setText(inputString);
                     this.inputParser.receivedInput(userInput.getText());
                 }
                 userInput.setText(""); // Clear the text
@@ -216,5 +220,28 @@ public class MUDGameUI implements GameObserver {
      */
     private void redrawMenu(String displayText) {
         this.menuDisplay.setText(displayText);
+    }
+
+    /**
+     * updates the menu display to the default list of actions
+     */
+    private void redrawMenuDefault() {
+        String defaultOptions = """
+                [m] Move
+                [a] Attack
+                [i] Open inventory
+                [q] Quit
+                """;
+        this.redrawMenu(defaultOptions);
+    }
+
+    /**
+     * updates the text displayed in the status panel to display the response to
+     * the most recent action(s) taken
+     * 
+     * @param displayText the new text to display on the status panel
+     */
+    private void redrawStatus(String displayText) {
+        this.statusDisplay.setText(displayText);
     }
 }
