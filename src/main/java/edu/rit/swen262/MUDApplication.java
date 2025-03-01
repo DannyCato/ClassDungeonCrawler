@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import edu.rit.swen262.domain.DirectionalVector;
 import edu.rit.swen262.domain.PlayerCharacter;
 import edu.rit.swen262.service.GameState;
 import edu.rit.swen262.service.InputParser;
@@ -50,25 +51,25 @@ class SampleCommandLineRunner implements CommandLineRunner {
 		HashMap<MenuState, HashMap<Character, Action>> keystrokes = new HashMap<>();
 
 		HashMap<Character, Action> moveKeystrokes = new HashMap<>() {{
-			put('1', new MoveAction(gameState, "North East"));
-			put('2', new MoveAction(gameState, "North"));
-			put('3', new MoveAction(gameState, "North West"));
-			put('4', new MoveAction(gameState, "East"));
-			put('5', new MoveAction(gameState, "West"));
-			put('6', new MoveAction(gameState, "South East"));
-			put('7', new MoveAction(gameState, "South"));
-			put('8', new MoveAction(gameState, "South West"));
+			put('1', new MoveAction(gameState, DirectionalVector.NORTH));
+			put('2', new MoveAction(gameState, DirectionalVector.NORTHEAST));
+			put('3', new MoveAction(gameState, DirectionalVector.EAST));
+			put('4', new MoveAction(gameState, DirectionalVector.SOUTHEAST));
+			put('5', new MoveAction(gameState, DirectionalVector.SOUTH));
+			put('6', new MoveAction(gameState, DirectionalVector.SOUTHWEST));
+			put('7', new MoveAction(gameState, DirectionalVector.WEST));
+			put('8', new MoveAction(gameState, DirectionalVector.NORTHWEST));
 		}};
 
 		HashMap<Character, Action> attackKeystrokes = new HashMap<>() {{
-			put('1', new AttackAction(gameState, "North East"));
-			put('2', new AttackAction(gameState, "North"));
-			put('3', new AttackAction(gameState, "North West"));
-			put('4', new AttackAction(gameState, "East"));
-			put('5', new AttackAction(gameState, "West"));
-			put('6', new AttackAction(gameState, "South East"));
-			put('7', new AttackAction(gameState, "South"));
-			put('8', new AttackAction(gameState, "South West"));
+			put('1', new AttackAction(gameState, DirectionalVector.NORTH));
+			put('2', new AttackAction(gameState, DirectionalVector.NORTHEAST));
+			put('3', new AttackAction(gameState, DirectionalVector.EAST));
+			put('4', new AttackAction(gameState, DirectionalVector.SOUTHEAST));
+			put('5', new AttackAction(gameState, DirectionalVector.SOUTH));
+			put('6', new AttackAction(gameState, DirectionalVector.SOUTHWEST));
+			put('7', new AttackAction(gameState, DirectionalVector.WEST));
+			put('8', new AttackAction(gameState, DirectionalVector.NORTHWEST));
 		}};
 
 		/*inv command map should change based upon what's in the inventory?

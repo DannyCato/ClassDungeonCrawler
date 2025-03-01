@@ -6,7 +6,7 @@ package edu.rit.swen262.domain;
  * 
  * @author Victor Bovat
  */
-public abstract class Character {
+public abstract class Character implements Occupant, java.io.Serializable {
     String name;
     String description;
     int health;

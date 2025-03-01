@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.io.Serializable;
 
 import edu.rit.swen262.domain.Occupant;
 import edu.rit.swen262.domain.RenderRepresentation;
@@ -15,7 +16,7 @@ import edu.rit.swen262.domain.RenderRepresentation;
  * 
  * @author Danny Catorcini
  */
-public interface DungeonPiece<T> {
+public interface DungeonPiece<T extends Serializable> {
     //Try to edit this as little as possible
 
     /**

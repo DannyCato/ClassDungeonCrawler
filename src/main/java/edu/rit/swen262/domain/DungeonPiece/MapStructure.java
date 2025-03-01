@@ -7,7 +7,7 @@ import edu.rit.swen262.domain.DirectionalVector;
 /**
  * Helper Class to manage the layout of Map
  */
-public class MapStructure {
+public class MapStructure implements java.io.Serializable {
     private HashMap<RoomNode, RoomNode> rooms;
 
     public MapStructure() {

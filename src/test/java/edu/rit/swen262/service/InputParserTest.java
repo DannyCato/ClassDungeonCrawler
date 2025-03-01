@@ -15,6 +15,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import edu.rit.swen262.domain.DirectionalVector;
 import edu.rit.swen262.domain.PlayerCharacter;
 import edu.rit.swen262.service.Action.*;
 import edu.rit.swen262.ui.MUDGameUI;
@@ -32,9 +33,9 @@ class InputParserTest {
         this.keystrokes = new HashMap<MenuState, HashMap<Character, Action>>();
         
         //init spies of commands in map
-        MoveAction moveAction = new MoveAction(gameState, "North");
+        MoveAction moveAction = new MoveAction(gameState, DirectionalVector.NORTH);
         MoveAction spyMoveAction = spy(moveAction);
-        AttackAction attackAction = new AttackAction(gameState, "North");
+        AttackAction attackAction = new AttackAction(gameState, DirectionalVector.NORTH);
         AttackAction spyAttackAction = spy(attackAction);
         DisplayMenuAction displayMenuAction = new DisplayMenuAction(gameState, DisplayMenuType.ATTACK, "dummy text");
         DisplayMenuAction spyDisplayMenuAction = spy(displayMenuAction);

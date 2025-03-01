@@ -13,7 +13,7 @@ import edu.rit.swen262.domain.RenderRepresentation;
  *                         (v LIST YOUR NAME HERE WHEN YOU WORK ON IT v)
  * @authors Danny Catorcini, 
  */
-public class Map implements DungeonPiece<Map> {
+public class Map implements DungeonPiece<Map>, java.io.Serializable {
     
     private final MapStructure rooms;
 

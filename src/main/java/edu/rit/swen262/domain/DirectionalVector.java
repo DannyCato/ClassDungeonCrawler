@@ -22,6 +22,8 @@ public enum DirectionalVector {
 
     public int y;
 
+    private String displayName;
+
     public static ArrayList<DirectionalVector> directions = new ArrayList<>(Arrays.asList(DirectionalVector.values()));
 
     private DirectionalVector(int x, int y) {
@@ -48,5 +50,13 @@ public enum DirectionalVector {
      */
     public static boolean directionsAreOpposite(DirectionalVector d1, DirectionalVector d2) {
         return (Math.abs(directions.indexOf(d1) - directions.indexOf(d2)) == 4);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return displayName;
     }
 }

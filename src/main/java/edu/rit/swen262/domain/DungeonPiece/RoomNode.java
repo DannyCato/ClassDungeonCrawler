@@ -2,7 +2,7 @@ package edu.rit.swen262.domain.DungeonPiece;
 
 import edu.rit.swen262.domain.DirectionalVector;
 
-public class RoomNode {
+public class RoomNode implements java.io.Serializable {
     private DungeonPiece<Room> room;
 
     private RoomNode north;

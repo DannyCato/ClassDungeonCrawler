@@ -1,5 +1,6 @@
 package edu.rit.swen262.service.Action;
 
+import edu.rit.swen262.domain.DirectionalVector;
 import edu.rit.swen262.service.GameState;
 
 /**
@@ -10,7 +11,7 @@ import edu.rit.swen262.service.GameState;
  */
 public class MoveAction implements Action {
     private GameState gameState;
-    private String direction;
+    private DirectionalVector direction;
 
     /**
      * instantiates a {@link Action concrete command} with the given {@link GameState}
@@ -18,7 +19,7 @@ public class MoveAction implements Action {
      * @param gameState object containing the current state of the game
      * @param direction the direction in which to move the Player
      */
-    public MoveAction(GameState gameState, String direction) {
+    public MoveAction(GameState gameState, DirectionalVector direction) {
         this.gameState = gameState;
         this.direction = direction;
     }
@@ -44,13 +45,13 @@ public class MoveAction implements Action {
      * 
      * @return the Direction String executing the command
      */
-    public String getDirection() {
+    public DirectionalVector getDirection() {
         return this.direction;
     }
 
     @Override
     public String toString() {
-        return this.direction;
+        return this.direction.toString();
     }
 }
 

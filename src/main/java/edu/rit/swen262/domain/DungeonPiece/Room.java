@@ -17,7 +17,7 @@ import edu.rit.swen262.domain.RenderRepresentation;
  *                         
  * @authors Danny Catorcini 
  */
-public class Room implements DungeonPiece<Room> {
+public class Room implements DungeonPiece<Room>, java.io.Serializable {
     
     /**
      * Storage for {@link Tile tiles}. (Recommended to be {@link ArrayList}) <p>
@@ -49,8 +49,8 @@ public class Room implements DungeonPiece<Room> {
     private final RoomNode rn;
 
 
-    private final int width;
-    private final int height;
+    public final int width;
+    public final int height;
 
     /**
      * a String description of the room. 

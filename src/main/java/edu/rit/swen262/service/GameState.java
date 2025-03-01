@@ -2,11 +2,17 @@ package edu.rit.swen262.service;
 
 import java.util.List;
 
+import edu.rit.swen262.domain.DirectionalVector;
+import edu.rit.swen262.domain.Occupant;
 import edu.rit.swen262.domain.PlayerCharacter;
+import edu.rit.swen262.domain.DungeonPiece.DungeonPiece;
 import edu.rit.swen262.domain.DungeonPiece.Map;
+import edu.rit.swen262.domain.DungeonPiece.Room;
+import edu.rit.swen262.domain.DungeonPiece.Tile;
 import edu.rit.swen262.service.Action.DisplayMenuType;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  * The class which represents the current state of the game being played.
@@ -30,6 +36,7 @@ public class GameState implements IObservable {
     public GameState(PlayerCharacter player) {
         this.observers = new ArrayList<>();
         this.player = player;
+        this.map = this.buildMap();
     }
 
     /**
@@ -55,12 +62,26 @@ public class GameState implements IObservable {
         }
     }
 
+    private Map buildMap() {
+        /*HashSet<Occupant> initOccupants = new HashSet<>();
+        initOccupants.add(this.player);
+
+        Room root = new Room(2, 2, "test starting room");
+        Tile startTile = new Tile();
+        startTile.addOccupant(this.player);
+
+        Map newMap = new Map(root, startTile);
+
+        return newMap;*/
+        return null;
+    }
+
     /**
      * move the player one tile on the map in the specified direction
      * 
      * @param direction the direction to move in on the map
      */
-    public void movePlayer(String direction) {
+    public void movePlayer(DirectionalVector direction) {
         GameEvent event = new GameEvent(GameEventType.MOVE_PLAYER);
         event.addData("direction", direction);
 
@@ -72,7 +93,7 @@ public class GameState implements IObservable {
      * 
      * @param direction the direction in which to attempt an attack
      */
-    public void attackCharacter(String direction) {
+    public void attackCharacter(DirectionalVector direction) {
         GameEvent event = new GameEvent(GameEventType.TAKE_DAMAGE);
         event.addData("direction", direction);
         
