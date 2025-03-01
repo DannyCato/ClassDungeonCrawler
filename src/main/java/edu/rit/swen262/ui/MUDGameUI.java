@@ -84,6 +84,10 @@ public class MUDGameUI implements GameObserver {
         this.drawUI();
     }
 
+    /**
+     * exits private mode (clearing away the text window) and yields control
+     * back to the main terminal, then exits on success code 0
+     */
     public void stop() {
         try {
             this.screen.close();
