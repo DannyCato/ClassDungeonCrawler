@@ -39,6 +39,7 @@ import edu.rit.swen262.service.Action.Action;
 public class MUDGameUI implements GameObserver {
     private InputParser inputParser;
     private Screen screen;
+    private Window window;
     private Label menuDisplay;
     private Label statusDisplay;
 
@@ -66,11 +67,7 @@ public class MUDGameUI implements GameObserver {
                 this.redrawMenuDefault();
                 break;
             case GameEventType.QUIT_GAME:
-                try {
-                    this.screen.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                this.stop();
                 break;
             default:
                 break;
@@ -85,6 +82,15 @@ public class MUDGameUI implements GameObserver {
         System.out.println("game initialized!");
 
         this.drawUI();
+    }
+
+    public void stop() {
+        try {
+            this.screen.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.exit(0);
     }
 
     /**
@@ -202,12 +208,7 @@ public class MUDGameUI implements GameObserver {
         } finally {
             // if control over the window has not already been yielded, do so
             if(this.screen != null) {
-                try {
-                    this.screen.close();
-                }
-                catch(IOException e) {
-                    e.printStackTrace();
-                }
+                this.stop();
             }
         }
     }
