@@ -1,6 +1,7 @@
 package edu.rit.swen262.service;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * encapsulates all relevent information regarding a single change that occurs
@@ -45,5 +46,9 @@ public class GameEvent {
      */
     public Object getData(String key) {
         return this.data.get(key);
+    }
+
+    public Map<String, Object> getAllData() {
+        return this.data;
     }
 }
