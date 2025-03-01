@@ -92,6 +92,12 @@
       <scope>test</scope>
     </dependency>
     <!-- END: Unit testing libraries -->
+    <!--START: Lanterna Library for UI processing-->
+    <dependency>
+      <groupId>com.googlecode.lanterna</groupId>
+      <artifactId>lanterna</artifactId>
+      <version>3.1.2</version>
+    </dependency>
 
 	</dependencies>
 
