@@ -30,6 +30,24 @@ public class MoveAction implements Action {
         gameState.movePlayer(this.direction);
     }
 
+    /**
+     * fetches the {@link GameState} that the action is bound to
+     * 
+     * @return the {@link GameState} object executing the command
+     */
+    public GameState getGameState() {
+        return this.gameState;
+    }
+
+    /**
+     * fetches the Direction String that the action is bound to
+     * 
+     * @return the Direction String executing the command
+     */
+    public String getDirection() {
+        return this.direction;
+    }
+
     @Override
     public String toString() {
         return this.direction;

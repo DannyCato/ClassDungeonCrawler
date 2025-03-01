@@ -59,23 +59,29 @@ public class GameState implements IObservable {
      * @param direction the direction to move in on the map
      */
     public void movePlayer(String direction) {
-        //
-        this.notifyObservers(new GameEvent(GameEventType.MOVE_PLAYER));
+        GameEvent event = new GameEvent(GameEventType.MOVE_PLAYER);
+        event.addData("direction", direction);
+
+        this.notifyObservers(event);
     }
 
     /**
      * attacks the specified character on the map
      * 
-     * @param c the direction in which to attempt an attack
+     * @param direction the direction in which to attempt an attack
      */
     public void attackCharacter(String direction) {
-        this.notifyObservers(new GameEvent(GameEventType.TAKE_DAMAGE));
+        GameEvent event = new GameEvent(GameEventType.TAKE_DAMAGE);
+        event.addData("direction", direction);
+        
+        this.notifyObservers(event);
     }
 
     /**
      *  opens the inventory of the player character
      */
     public void openInventory() {
+        //still waiting on integration w/ inventory subsystem
         this.notifyObservers(null); 
     }
     
@@ -85,7 +91,8 @@ public class GameState implements IObservable {
      * needs an @param item the player character is using
      */
     public void useItem(String item) {
-        this.notifyObservers(new GameEvent(GameEventType.USE_ITEM)); 
+        //still waiting on integration w/ inventory subsystem
+        //this.notifyObservers(new GameEvent(GameEventType.USE_ITEM)); 
     }
 
     /**

@@ -1,7 +1,6 @@
 package edu.rit.swen262.service;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import edu.rit.swen262.service.Action.Action;
 
@@ -12,7 +11,7 @@ import edu.rit.swen262.service.Action.Action;
  * @author Victor Bovat, Philip Rubbo
  */
 public class InputParser {
-    private MenuState currentMenu;
+    protected MenuState currentMenu;
     private HashMap<MenuState, HashMap<Character, Action>> keystrokes;
 
     /**
@@ -48,7 +47,8 @@ public class InputParser {
         }
 
         this.currentMenu.handleInput(this, input);
-    }  
+    } 
+
     /**
      * transitions the state of the input parser to the 
      * specified {@link MenuState menu}

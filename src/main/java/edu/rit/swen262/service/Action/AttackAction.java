@@ -30,6 +30,24 @@ public class AttackAction implements Action {
         gameState.attackCharacter(direction);
     }
 
+    /**
+     * fetches the {@link GameState} that the action is bound to
+     * 
+     * @return the {@link GameState} object executing the command
+     */
+    public GameState getGameState() {
+        return this.gameState;
+    }
+
+    /**
+     * fetches the direction to attempt an attack in
+     * 
+     * @return the direction vector for the attack
+     */
+    public String getDirection() {
+        return this.direction;
+    }
+
     @Override
     public String toString() {
         return this.direction;
