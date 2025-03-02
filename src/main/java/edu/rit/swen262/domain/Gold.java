@@ -2,17 +2,11 @@ package edu.rit.swen262.domain;
 
 public class Gold extends Item {
 
-    private int value;
     private int count;
 
-    public Gold(int value, int count) {
+    public Gold(int count) {
         super("Gold", "This item is a form of currency.", null);
-        this.value = value;
         this.count = count;
-    }
-
-    public int getStack() {
-        return value * count;
     }
 
     public void increaseCount() {
