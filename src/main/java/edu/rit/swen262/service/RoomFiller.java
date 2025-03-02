@@ -16,7 +16,6 @@ import edu.rit.swen262.domain.DungeonPiece.RoomNode;
 import edu.rit.swen262.domain.DungeonPiece.Tile;
 
 public class RoomFiller {
-    //this is so broken dude
     private static final Random rand = new Random();
 
     /**

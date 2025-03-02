@@ -68,6 +68,7 @@ public class GameState implements IObservable {
         initOccupants.add(this.player);
 
         Room root = new Room(2, 2, "test starting room");
+        RoomFiller.fill(root, 0);
         Tile startTile = new Tile();
         startTile.addOccupant(this.player);
 

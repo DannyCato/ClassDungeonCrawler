@@ -54,11 +54,11 @@ public class MUDGameUI implements GameObserver {
         switch (event.getType()) {
             case GameEventType.DISPLAY_SUBMENU:
                 //update status panel w/ menu options
-                this.redrawMenu((String) event.getData("menuText"));
+                this.redrawMenu(event.getData("menuText").toString());
                 break;
             case GameEventType.MOVE_PLAYER:
                 this.redrawStatus("you moved.");
-                //this.redrawMap("");
+                this.redrawMap(event.getData("currentRoom").toString());
                 this.redrawMenuDefault();
                 break;
             case GameEventType.CHANGE_TIME:
@@ -183,7 +183,6 @@ public class MUDGameUI implements GameObserver {
             Button submitButton = new Button("Submit", () -> {
                 String inputString = userInput.getText();
                 if (!inputString.isBlank()) {
-                    //statusDisplay.setText(inputString);
                     this.inputParser.receivedInput(userInput.getText());
                 }
                 userInput.setText(""); // Clear the text
@@ -226,7 +225,7 @@ public class MUDGameUI implements GameObserver {
      * @param displayText the new text to display on the menu panel
      */
     private void redrawMenu(String displayText) {
-        this.menuDisplay.setText(displayText);
+        this.menuDisplay.setText("Select an Option:\n" + displayText);
     }
 
     /**
@@ -259,6 +258,6 @@ public class MUDGameUI implements GameObserver {
      * @param displayText
      */
     private void redrawMap(String displayText) {
-        
+        this.mapDisplay.setText(displayText);
     }
 }
