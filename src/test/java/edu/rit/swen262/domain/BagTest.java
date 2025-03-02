@@ -39,7 +39,7 @@ class BagTest {
         List<Item> contents_bag2 = new ArrayList<>();
         int capacity = 10;
 
-        Gold gold = new Gold(10, 1);
+        Gold gold = new Gold(10);
         Weapon item = new Weapon("Name", "Description", 0, gold);
 
         contents_bag2.add(item);
@@ -57,7 +57,7 @@ class BagTest {
         List<Item> contents_bag2 = new ArrayList<>();
         int capacity = 10;
 
-        Gold gold = new Gold(10, 1);
+        Gold gold = new Gold(10);
         Weapon item = new Weapon("Name", "Description", 0, gold);
 
         contents_bag1.add(item);

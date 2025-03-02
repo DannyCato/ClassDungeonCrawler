@@ -9,7 +9,7 @@ class ArmorTest {
 
     @Test
     public void test_ArmorConstructor() {
-        Gold gold = new Gold(10, 1);
+        Gold gold = new Gold(10);
         Armor armor = new Armor("Armor", "Armor Description", 0, gold);
 
         assertEquals(gold, gold.getValue());
@@ -21,7 +21,7 @@ class ArmorTest {
 
     @Test
     public void test_ArmorEquals() {
-        Gold gold = new Gold(10, 1);
+        Gold gold = new Gold(10);
         Armor armor = new Armor("Armor", "Armor Description", 0, gold);
         Armor armor2 = new Armor("Armor", "Armor Description", 0, gold);
 
@@ -31,7 +31,7 @@ class ArmorTest {
 
     @Test
     public void test_ArmorNotEquals() {
-        Gold gold = new Gold(10, 1);
+        Gold gold = new Gold(10);
         Armor armor = new Armor("Armor", "Armor Description", 0, gold);
         Armor armor2 = new Armor("Cool Armor", "Armor Description", 0, gold);
 
@@ -41,7 +41,7 @@ class ArmorTest {
 
     @Test
     public void test_ArmorIsItem() {
-        Gold gold = new Gold(10, 1);
+        Gold gold = new Gold(10);
         Armor armor = new Armor("Armor", "Armor Description", 0, gold);
 
         assertEquals(armor instanceof Item, true);
