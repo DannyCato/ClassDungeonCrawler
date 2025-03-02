@@ -40,6 +40,8 @@ public class MUDGameUI implements GameObserver {
     private InputParser inputParser;
     private Screen screen;
     private Window window;
+    private Label turnDisplay;
+    private Label timeDisplay;
     private Label menuDisplay;
     private Label statusDisplay;
 
@@ -60,7 +62,11 @@ public class MUDGameUI implements GameObserver {
                 this.redrawStatus("you moved.");
                 this.redrawMenuDefault();
                 break;
+            case GameEventType.FINISH_TURN:
+                this.redrawTurn(event.getData("turnNumber").toString());
+                break;
             case GameEventType.CHANGE_TIME:
+                this.redrawTime(event.getData("time").toString());
                 break;
             case GameEventType.TAKE_DAMAGE:
                 this.redrawStatus("something took damage.");
@@ -103,6 +109,8 @@ public class MUDGameUI implements GameObserver {
      */
     private void drawUI() {
         this.screen = null;
+        this.turnDisplay = null;
+        this.timeDisplay = null;
         this.menuDisplay = null;
         this.statusDisplay = null;
 
@@ -148,11 +156,11 @@ public class MUDGameUI implements GameObserver {
             GridLayout turnPanelLayout = (GridLayout) turnPanel.getLayoutManager();
             turnPanelLayout.setHorizontalSpacing(20);
 
-            Label turnLabel = new Label("Turn #: 1");
-            Label timeLabel = new Label("Time: Day").setLayoutData(GridLayout.createHorizontallyEndAlignedLayoutData(1));
+            this.turnDisplay = new Label("Turn #: 1");
+            this.timeDisplay = new Label("Time: Day").setLayoutData(GridLayout.createHorizontallyEndAlignedLayoutData(1));
 
-            turnPanel.addComponent(turnLabel);
-            turnPanel.addComponent(timeLabel);
+            turnPanel.addComponent(this.turnDisplay);
+            turnPanel.addComponent(this.timeDisplay);
 
             // create panel displaying map
             Panel mapPanel = new Panel(new GridLayout(2));
@@ -248,5 +256,23 @@ public class MUDGameUI implements GameObserver {
      */
     private void redrawStatus(String displayText) {
         this.statusDisplay.setText(displayText);
+    }
+
+    /**
+     * updates the text displayed in the turn panel to display the correct turn number
+     * 
+     * @param turnNumber the turn number to be displayed on the turn panel's turn field
+     */
+    private void redrawTurn(String turnNumber) {
+        this.turnDisplay.setText("Turn: " + turnNumber);
+    }
+
+    /**
+     * updates the text displayed in the turn panel to display the correct time of day
+     * 
+     * @param displayText the new text to be displayed on the turn panel's time field
+     */
+    private void redrawTime(String displayText) {
+        this.timeDisplay.setText("Time: " + displayText);
     }
 }

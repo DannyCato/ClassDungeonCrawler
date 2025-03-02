@@ -67,6 +67,8 @@ public class GameState implements IObservable {
         event.addData("direction", direction);
 
         this.notifyObservers(event);
+
+        //this.playerTurnFinished();
     }
 
     /**
@@ -113,7 +115,7 @@ public class GameState implements IObservable {
      */
     public void quit() {
         // shut down all relevent components
-        /*TO-DO: make a way to save objects like the current map using 
+        /*TODO: make a way to save objects like the current map using 
         Serializable interface */
 
         this.notifyObservers(new GameEvent(GameEventType.QUIT_GAME));
@@ -136,8 +138,30 @@ public class GameState implements IObservable {
         this.notifyObservers(event);
     }
 
+    /**
+     * sets the current time  to the specified {@link TimePeriod}
+     * 
+     * @param time the time to change to
+     */
     public void setTime(TimePeriod time) {
         this.currentTime = time;
+
+        GameEvent event = new GameEvent(GameEventType.CHANGE_TIME);
+        event.addData("time", time.toString());
+        this.notifyObservers(event);
+    }
+
+    /**
+     * executed when the user executes an action that consumes a turn:
+     * moving, attacking, opening a chest, disarming a trap
+     */
+    public void playerTurnFinished() {
+        this.turnNumber++;
+        this.currentTime.handlePlayerTurn();
+
+        GameEvent event = new GameEvent(GameEventType.FINISH_TURN);
+        event.addData("turnNumber", this.turnNumber);
+        this.notifyObservers(event);
     }
 
     /**

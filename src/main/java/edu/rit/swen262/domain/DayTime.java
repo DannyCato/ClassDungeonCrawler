@@ -32,4 +32,12 @@ public class DayTime implements TimePeriod {
     public void handleApplyEnemyBuffs() {
         //TODO: add enemies to GameState's list of observes so TIME_CHANGE event can be sent
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return "Day";
+    }
 }
