@@ -3,6 +3,7 @@ package edu.rit.swen262.service;
 import java.util.List;
 
 import edu.rit.swen262.domain.PlayerCharacter;
+import edu.rit.swen262.domain.TimePeriod;
 import edu.rit.swen262.service.Action.DisplayMenuType;
 
 import java.util.ArrayList;
@@ -18,16 +19,19 @@ public class GameState implements IObservable {
     private List<GameObserver> observers;
     private PlayerCharacter player;
     private int turnNumber;
+    private TimePeriod currentTime;
 
     /**
      * creates a new GameState object with the specific player character, initializing
-     * the list of active observers to be empty by default
+     * the list of active observers to be empty by default, with the turn 
+     * counter starting at 1
      * 
      * @param player the player starting the new game
      */
     public GameState(PlayerCharacter player) {
         this.observers = new ArrayList<>();
         this.player = player;
+        this.turnNumber = 1;
     }
 
     /**
@@ -132,6 +136,10 @@ public class GameState implements IObservable {
         this.notifyObservers(event);
     }
 
+    public void setTime(TimePeriod time) {
+        this.currentTime = time;
+    }
+
     /**
      * fetches the list of {@link GameObserver GameObservers} currently watching
      * this GameState for any new changes
@@ -140,5 +148,14 @@ public class GameState implements IObservable {
      */
     public List<GameObserver> getObservers() {
         return observers;
+    }
+
+    /**
+     * fetches the turn number the game is currently on
+     * 
+     * @return the current turn number
+     */
+    public int getTurnNumber() {
+        return this.turnNumber;
     }
 }
