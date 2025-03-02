@@ -66,7 +66,6 @@ public class MUDGameUI implements GameObserver {
                 this.redrawTurn(event.getData("turnNumber").toString());
                 break;
             case GameEventType.CHANGE_TIME:
-                System.out.println("are we doing things or");
                 this.redrawTime(event.getData("time").toString());
                 break;
             case GameEventType.TAKE_DAMAGE:
