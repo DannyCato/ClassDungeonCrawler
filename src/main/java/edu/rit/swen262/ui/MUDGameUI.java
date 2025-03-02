@@ -21,7 +21,10 @@ import com.googlecode.lanterna.gui2.Window;
 import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
+import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
+import com.googlecode.lanterna.terminal.swing.SwingTerminalFrame;
+import com.googlecode.lanterna.terminal.swing.TerminalEmulatorAutoCloseTrigger;
 
 import edu.rit.swen262.service.GameEvent;
 import edu.rit.swen262.service.GameEventType;
@@ -107,9 +110,19 @@ public class MUDGameUI implements GameObserver {
         this.statusDisplay = null;
 
         try {
+            /* create a Swing-based terminal window -- UNIX-based terminal
+            works, but seems to cause graphical errors based upon the system running it
+            */
+            SwingTerminalFrame terminal = new SwingTerminalFrame(
+                "MUD Game",
+                TerminalEmulatorAutoCloseTrigger.CloseOnExitPrivateMode
+            );
+    
+            terminal.setVisible(true);
+
             // create screen component
-            DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory();
-            this.screen = terminalFactory.createScreen();
+            //DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory();
+            this.screen = new TerminalScreen(terminal);
             this.screen.startScreen();
 
             final WindowBasedTextGUI textGUI = new MultiWindowTextGUI(this.screen);
