@@ -39,7 +39,7 @@ import edu.rit.swen262.service.Action.Action;
 public class MUDGameUI implements GameObserver {
     private InputParser inputParser;
     private Screen screen;
-    private Window window;
+    private Label mapDisplay;
     private Label menuDisplay;
     private Label statusDisplay;
 
@@ -58,6 +58,7 @@ public class MUDGameUI implements GameObserver {
                 break;
             case GameEventType.MOVE_PLAYER:
                 this.redrawStatus("you moved.");
+                //this.redrawMap("");
                 this.redrawMenuDefault();
                 break;
             case GameEventType.CHANGE_TIME:
@@ -103,6 +104,7 @@ public class MUDGameUI implements GameObserver {
      */
     private void drawUI() {
         this.screen = null;
+        this.mapDisplay = null;
         this.menuDisplay = null;
         this.statusDisplay = null;
 
@@ -156,8 +158,8 @@ public class MUDGameUI implements GameObserver {
 
             // create panel displaying map
             Panel mapPanel = new Panel(new GridLayout(2));
-            Label mapDisplay = new Label("|□□|" + "\n|□□|");
-            mapPanel.addComponent(mapDisplay);
+            this.mapDisplay = new Label("|□□|" + "\n|□□|");
+            mapPanel.addComponent(this.mapDisplay);
 
             // create panel displaying game status update messages
             Panel statusPanel = new Panel(new GridLayout(2));
@@ -248,5 +250,15 @@ public class MUDGameUI implements GameObserver {
      */
     private void redrawStatus(String displayText) {
         this.statusDisplay.setText(displayText);
+    }
+
+    /**
+     * updates the text displayed in the map panel to show the change after
+     * a player turn is taken
+     * 
+     * @param displayText
+     */
+    private void redrawMap(String displayText) {
+        
     }
 }

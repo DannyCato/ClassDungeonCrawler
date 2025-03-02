@@ -25,11 +25,16 @@ public enum DirectionalVector {
     private String displayName;
 
     public static ArrayList<DirectionalVector> directions = new ArrayList<>(Arrays.asList(DirectionalVector.values()));
+    public static ArrayList<DirectionalVector> cardinal = new ArrayList<>(Arrays.asList([NORTH, EAST, SOUTH, WEST]));
 
     private DirectionalVector(int x, int y) {
         this.x = x;
         this.y = y;
     }
+
+    /*public static boolean isCardinal(DirectionalVector dir) {
+        
+    }*/
 
     /**
      * Get the opposite {@link DirectionalVector} of a given {@link DirectionalVector}

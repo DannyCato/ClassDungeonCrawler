@@ -248,6 +248,27 @@ public class Room implements DungeonPiece<Room>, java.io.Serializable {
     }
 
     /**
+     * Returns the {@link DirectionalVector} edge that the {@link Tile} would be on
+     * 
+     * @param t {@link DungeonPiece}<{@link Tile}>
+     * @return {@link DirectionalVector} if true, or null otherwise
+     */
+    public DirectionalVector tileOnEdge(DungeonPiece<Tile> t) {
+        int index = lookupTiles.get(t);
+        if (index < width) {
+            return DirectionalVector.NORTH;
+        } else if ((index % width) == (width - 1)) {
+            return DirectionalVector.EAST;
+        } else if (index > (height - 1) * width) {
+            return DirectionalVector.SOUTH;
+        } else if ((index % width) == 0) {
+            return DirectionalVector.WEST;
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * Determines whether an {@link Occupant} is on an edge 
      * 
      * @param o {@link Occupant}
@@ -264,18 +285,7 @@ public class Room implements DungeonPiece<Room>, java.io.Serializable {
         if (t == null) {
             return null;
         }
-        int index = lookupTiles.get(t);
-        if (index < width) {
-            return DirectionalVector.NORTH;
-        } else if ((index % width) == (width - 1)) {
-            return DirectionalVector.EAST;
-        } else if (index > (height - 1) * width) {
-            return DirectionalVector.SOUTH;
-        } else if ((index % width) == 0) {
-            return DirectionalVector.WEST;
-        } else {
-            return null;
-        }
+        return tileOnEdge(t);
     }
 
     /**
@@ -325,8 +335,6 @@ public class Room implements DungeonPiece<Room>, java.io.Serializable {
             int adjIndex = getAdjactentTileInDir(index, dir);
             if (adjIndex != index) {
                 returnCol.add(tiles.get(adjIndex));
-            } else {
-                returnCol.add(null);
             }
         }
         return returnCol;

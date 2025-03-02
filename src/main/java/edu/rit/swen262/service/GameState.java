@@ -5,6 +5,7 @@ import java.util.List;
 import edu.rit.swen262.domain.DirectionalVector;
 import edu.rit.swen262.domain.Occupant;
 import edu.rit.swen262.domain.PlayerCharacter;
+import edu.rit.swen262.domain.RenderRepresentation;
 import edu.rit.swen262.domain.DungeonPiece.DungeonPiece;
 import edu.rit.swen262.domain.DungeonPiece.Map;
 import edu.rit.swen262.domain.DungeonPiece.Room;
@@ -63,7 +64,7 @@ public class GameState implements IObservable {
     }
 
     private Map buildMap() {
-        /*HashSet<Occupant> initOccupants = new HashSet<>();
+        HashSet<Occupant> initOccupants = new HashSet<>();
         initOccupants.add(this.player);
 
         Room root = new Room(2, 2, "test starting room");
@@ -72,8 +73,7 @@ public class GameState implements IObservable {
 
         Map newMap = new Map(root, startTile);
 
-        return newMap;*/
-        return null;
+        return newMap;
     }
 
     /**
@@ -82,8 +82,16 @@ public class GameState implements IObservable {
      * @param direction the direction to move in on the map
      */
     public void movePlayer(DirectionalVector direction) {
+        //update map??
+        this.map.move(player, direction);
+        DungeonPiece<Room> currentRoom = this.map.getCurrentRoom();
+        
+        //convert current Room to String render, then pass along to UI
+        List<RenderRepresentation> currentRoomRender = currentRoom.render();
+
         GameEvent event = new GameEvent(GameEventType.MOVE_PLAYER);
         event.addData("direction", direction);
+        event.addData("currentRoom", currentRoomRender);
 
         this.notifyObservers(event);
     }

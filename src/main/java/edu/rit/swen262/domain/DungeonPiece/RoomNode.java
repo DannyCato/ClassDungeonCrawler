@@ -1,5 +1,8 @@
 package edu.rit.swen262.domain.DungeonPiece;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.rit.swen262.domain.DirectionalVector;
 
 public class RoomNode implements java.io.Serializable {
@@ -59,6 +62,15 @@ public class RoomNode implements java.io.Serializable {
             default:
                 return null;
         }
+    }
+
+    public ArrayList<RoomNode> getAllConnections() {
+        ArrayList<RoomNode> conns = new ArrayList<>();
+        conns.add(north);
+        conns.add(east);
+        conns.add(south);
+        conns.add(west);
+        return conns;
     }
 
     /**
