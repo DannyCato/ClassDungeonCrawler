@@ -32,4 +32,16 @@ public abstract class Item implements InventoryComponent {
             return false;
         }
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s: %s%nValue: %s", name, description, value);
+    }
+
+    public static void main(String[] args) {
+        Gold gold = new Gold(10);
+        Armor armor = new Armor("NAME", "DESC", 0, gold);
+        System.out.println(armor);
+    }
+
 }

@@ -20,12 +20,7 @@ public class Gold extends Item {
         }
     }
 
-    @Override
-    public Gold getValue() {
-        return this;
-    }
-
     public int getCount() {
-        return count;
+        return this.count;
     }
 }
