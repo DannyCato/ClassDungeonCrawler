@@ -5,10 +5,10 @@ public abstract class Item implements InventoryComponent {
     private String description;
     private Gold value;
 
-    public Item(String name, String description, Gold value) {
+    public Item(String name, String description, int value2) {
         this.name = name;
         this.description = description;
-        this.value = value;
+        this.value = value2;
     }
 
     public String getName() {
