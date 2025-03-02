@@ -335,6 +335,8 @@ public class Room implements DungeonPiece<Room>, java.io.Serializable {
             int adjIndex = getAdjactentTileInDir(index, dir);
             if (adjIndex != index) {
                 returnCol.add(tiles.get(adjIndex));
+            } else {
+                returnCol.add(null);
             }
         }
         return returnCol;
@@ -359,6 +361,19 @@ public class Room implements DungeonPiece<Room>, java.io.Serializable {
             if (t.getOccupants().contains(o)) {
                 return t;
             }
+        }
+        return null;
+    }
+
+    /**
+     * gets a {@link DungeonPiece}<{@link Tile}> by index
+     * 
+     * @param i int
+     * @return {@link DungeonPiece}<{@link Tile}> if in list. Otherwise null
+     */
+    public DungeonPiece<Tile> getTileByIndex(int i) {
+        if (i < width * height) {
+            return tiles.get(i);
         }
         return null;
     }
