@@ -2,6 +2,7 @@ package edu.rit.swen262.service;
 
 import java.util.List;
 
+import edu.rit.swen262.domain.DayTime;
 import edu.rit.swen262.domain.PlayerCharacter;
 import edu.rit.swen262.domain.TimePeriod;
 import edu.rit.swen262.service.Action.DisplayMenuType;
@@ -32,6 +33,7 @@ public class GameState implements IObservable {
         this.observers = new ArrayList<>();
         this.player = player;
         this.turnNumber = 1;
+        this.setTime(new DayTime(this));
     }
 
     /**
@@ -68,7 +70,7 @@ public class GameState implements IObservable {
 
         this.notifyObservers(event);
 
-        //this.playerTurnFinished();
+        this.playerTurnFinished();
     }
 
     /**
