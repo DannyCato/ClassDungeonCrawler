@@ -3,6 +3,8 @@ package edu.rit.swen262.ui;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
@@ -23,6 +25,7 @@ import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 
+import ch.qos.logback.core.net.QueueFactory;
 import edu.rit.swen262.service.GameEvent;
 import edu.rit.swen262.service.GameEventType;
 import edu.rit.swen262.service.GameObserver;
@@ -43,10 +46,12 @@ public class MUDGameUI implements GameObserver {
     private Label turnDisplay;
     private Label timeDisplay;
     private Label menuDisplay;
+    private Queue<String> statusMsgs;
     private Label statusDisplay;
 
     public MUDGameUI(InputParser inputParser) {
         this.inputParser = inputParser;
+        this.statusMsgs = new LinkedList<>();
     }
 
     /**
@@ -59,6 +64,7 @@ public class MUDGameUI implements GameObserver {
                 this.redrawMenu((String) event.getData("menuText"));
                 break;
             case GameEventType.MOVE_PLAYER:
+                //this.statusMsgs.offer();
                 this.redrawStatus("you moved.");
                 this.redrawMenuDefault();
                 break;
@@ -66,6 +72,7 @@ public class MUDGameUI implements GameObserver {
                 this.redrawTurn(event.getData("turnNumber").toString());
                 break;
             case GameEventType.CHANGE_TIME:
+                this.redrawStatus(null);
                 this.redrawTime(event.getData("time").toString());
                 break;
             case GameEventType.TAKE_DAMAGE:
@@ -146,10 +153,18 @@ public class MUDGameUI implements GameObserver {
             window.setHints(Arrays.asList(windowHints));
             window.setStrictFocusChange(true);
 
-            // create panel container
-            Panel contentPanel = new Panel(new GridLayout(1));
-            GridLayout gridLayout = (GridLayout) contentPanel.getLayoutManager();
+            // create 2-column panel container
+            Panel contentPanel = new Panel(new GridLayout(2));
+
+            // create 1-column panel sub-container for turn/map/input
+            Panel controlPanel = new Panel(new GridLayout(1));
+            GridLayout gridLayout = (GridLayout) controlPanel.getLayoutManager();
             gridLayout.setVerticalSpacing(1);
+
+            // create panel displaying game status update messages
+            Panel statusPanel = new Panel(new GridLayout(2));
+            this.statusDisplay = new Label("Event Log: \n\n");
+            statusPanel.addComponent(this.statusDisplay);
 
             // create 2-column panel displaying turn info (number/time)
             Panel turnPanel = new Panel(new GridLayout(2));
@@ -166,11 +181,6 @@ public class MUDGameUI implements GameObserver {
             Panel mapPanel = new Panel(new GridLayout(2));
             Label mapDisplay = new Label("|□□|" + "\n|□□|");
             mapPanel.addComponent(mapDisplay);
-
-            // create panel displaying game status update messages
-            Panel statusPanel = new Panel(new GridLayout(2));
-            this.statusDisplay = new Label("something happened.");
-            statusPanel.addComponent(this.statusDisplay);
 
             // create panel recieving input (spans entire screen)
             Panel inputPanel = new Panel(new GridLayout(1));
@@ -201,15 +211,17 @@ public class MUDGameUI implements GameObserver {
             inputPanel.addComponent(submitButton);
 
             // add child panels to container in top-down display order
-            contentPanel.addComponent(turnPanel);
-            contentPanel.addComponent(mapPanel);
-            contentPanel.addComponent(statusPanel);
+            controlPanel.addComponent(turnPanel);
+            controlPanel.addComponent(mapPanel);
 
             // align input box to bottom of screen
-            contentPanel.addComponent(inputPanel.setLayoutData(
+            controlPanel.addComponent(inputPanel.setLayoutData(
                         GridLayout.createLayoutData(GridLayout.Alignment.FILL, GridLayout.Alignment.END)));
 
-            contentPanel.addComponent(menuPanel);
+            controlPanel.addComponent(menuPanel);
+
+            contentPanel.addComponent(controlPanel);
+            contentPanel.addComponent(statusPanel);
 
             window.setComponent(contentPanel.setLayoutData(
                 GridLayout.createLayoutData(GridLayout.Alignment.CENTER, GridLayout.Alignment.CENTER)));
@@ -255,7 +267,7 @@ public class MUDGameUI implements GameObserver {
      * @param displayText the new text to display on the status panel
      */
     private void redrawStatus(String displayText) {
-        this.statusDisplay.setText(displayText);
+        this.statusDisplay.setText("Event Log: \n\n" + displayText);
     }
 
     /**
