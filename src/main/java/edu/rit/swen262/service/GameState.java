@@ -74,8 +74,10 @@ public class GameState implements IObservable {
         HashSet<Occupant> initOccupants = new HashSet<>();
         initOccupants.add(this.player);
 
-        Room root = new Room(2, 2, "test starting room");
+        Room root = new Room(6, 3, "test starting room");
         RoomFiller.fill(root, 0);
+
+        // does player actually get placed on the start tile? doesn't seem to do anything yet
         Tile startTile = new Tile(new HashSet<>(Arrays.asList(this.player)));
         startTile.addOccupant(this.player);
 

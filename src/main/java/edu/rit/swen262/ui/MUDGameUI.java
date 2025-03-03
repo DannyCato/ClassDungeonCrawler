@@ -57,7 +57,9 @@ public class MUDGameUI implements GameObserver {
                 this.redrawMenu(event.getData("menuText").toString());
                 break;
             case GameEventType.MOVE_PLAYER:
-                this.redrawStatus("you moved.");
+                if (event.getData("direction") != null) {
+                    this.redrawStatus("you moved.");
+                }
                 this.redrawMap(event.getData("currentRoom").toString());
                 this.redrawMenuDefault();
                 break;
@@ -158,7 +160,7 @@ public class MUDGameUI implements GameObserver {
 
             // create panel displaying map
             Panel mapPanel = new Panel(new GridLayout(2));
-            this.mapDisplay = new Label("|□□|" + "\n|□□|");
+            this.mapDisplay = new Label("|..|" + "\n|..|");
             mapPanel.addComponent(this.mapDisplay);
 
             // create panel displaying game status update messages
