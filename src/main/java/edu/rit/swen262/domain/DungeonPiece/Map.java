@@ -53,23 +53,20 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
     /**
      * returns a formatted {@link Room} based on render()
      * 
-     * @return List<{@link String}>
+     * @return {@link String}
      */
-    public List<String> structuredRender() {
-        ArrayList<String> returnList = new ArrayList<>();
+    public String structuredRender() {
         String s = "";
         List<RenderRepresentation> li = render();
         RenderRepresentation last = null;
         for (RenderRepresentation rr : li) {
             if (last == RenderRepresentation.HWALL && rr == RenderRepresentation.HWALL) {
-                returnList.add(s);
-                s = new String();
+                s += "\n";
             }
             s += rr.render();
             last = rr;
         }
-        returnList.add(s);
-        return returnList;
+        return s;
     }
 
     /**
