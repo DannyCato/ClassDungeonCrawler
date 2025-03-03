@@ -1,6 +1,7 @@
 package edu.rit.swen262.ui;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -46,12 +47,12 @@ public class MUDGameUI implements GameObserver {
     private Label turnDisplay;
     private Label timeDisplay;
     private Label menuDisplay;
-    private Queue<String> statusMsgs;
-    private Label statusDisplay;
+    private Queue<String> eventLogMsgs;
+    private Label eventLogDisplay;
 
     public MUDGameUI(InputParser inputParser) {
         this.inputParser = inputParser;
-        this.statusMsgs = new LinkedList<>();
+        this.eventLogMsgs = new LinkedList<>();
     }
 
     /**
@@ -64,19 +65,24 @@ public class MUDGameUI implements GameObserver {
                 this.redrawMenu((String) event.getData("menuText"));
                 break;
             case GameEventType.MOVE_PLAYER:
-                //this.statusMsgs.offer();
-                this.redrawStatus("you moved.");
+                this.eventLogMsgs.offer("You moved.");
+                this.redrawEventLog();
                 this.redrawMenuDefault();
                 break;
             case GameEventType.FINISH_TURN:
                 this.redrawTurn(event.getData("turnNumber").toString());
                 break;
             case GameEventType.CHANGE_TIME:
-                this.redrawStatus(null);
-                this.redrawTime(event.getData("time").toString());
+                String time = event.getData("time").toString();
+
+                this.eventLogMsgs.offer("time changed to " + time);
+
+                this.redrawEventLog();
+                this.redrawTime(time);
                 break;
             case GameEventType.TAKE_DAMAGE:
-                this.redrawStatus("something took damage.");
+                this.eventLogMsgs.offer("Something took damage.");
+                this.redrawEventLog();
                 this.redrawMenuDefault();
                 break;
             case GameEventType.QUIT_GAME:
@@ -119,7 +125,7 @@ public class MUDGameUI implements GameObserver {
         this.turnDisplay = null;
         this.timeDisplay = null;
         this.menuDisplay = null;
-        this.statusDisplay = null;
+        this.eventLogDisplay = null;
 
         try {
             // create screen component
@@ -163,8 +169,8 @@ public class MUDGameUI implements GameObserver {
 
             // create panel displaying game status update messages
             Panel statusPanel = new Panel(new GridLayout(2));
-            this.statusDisplay = new Label("Event Log: \n\n");
-            statusPanel.addComponent(this.statusDisplay);
+            this.eventLogDisplay = new Label("Event Log: \n\n");
+            statusPanel.addComponent(this.eventLogDisplay);
 
             // create 2-column panel displaying turn info (number/time)
             Panel turnPanel = new Panel(new GridLayout(2));
@@ -261,13 +267,39 @@ public class MUDGameUI implements GameObserver {
     }
 
     /**
-     * updates the text displayed in the status panel to display the response to
+     * updates the text displayed in the event log panel to display the response to
      * the most recent action(s) taken
      * 
-     * @param displayText the new text to display on the status panel
      */
-    private void redrawStatus(String displayText) {
-        this.statusDisplay.setText("Event Log: \n\n" + displayText);
+    private void redrawEventLog() {
+        //remove oldest event log message from the display
+        if (this.eventLogMsgs.size() > 5) {
+            this.eventLogMsgs.poll();
+        }
+
+        String displayText = this.eventLogMsgsToString();
+        this.eventLogDisplay.setText("Event Log: \n\n" + displayText);
+    }
+
+    /**
+    * helper method which converts the internal event log queue into a String,
+    * placed in reverse order with new lines after each element in the following format:
+    * <status msg>\n
+    * <status msg>\n
+    * ...
+    */
+    private String eventLogMsgsToString() {
+        if (eventLogMsgs.isEmpty()) {
+            return "";
+        }
+
+        ArrayList<String> statusMsgList = new ArrayList<String>(this.eventLogMsgs);
+        
+        StringBuilder sb = new StringBuilder();
+        for  (int i = statusMsgList.size() - 1; i >= 0; i--) {
+            sb.append(statusMsgList.get(i)).append("\n");
+        }
+        return sb.toString();
     }
 
     /**
