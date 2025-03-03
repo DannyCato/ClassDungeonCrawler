@@ -8,6 +8,7 @@ public class PlayerCharacter extends Character {
     Armor armor;
     Weapon weapon;
     Inventory inventory;
+    Gold gold;
 
     /**
      * initializes a PlayerCharacter with the given name and description. Their
@@ -17,20 +18,23 @@ public class PlayerCharacter extends Character {
      * @param description the given brief description of the player
      * @param armor the equipped armor
      * @param weapon the equipped weapon
+     * @param gold the gold 
      */
     
     public PlayerCharacter(String name, String description) {
-        super(name, description, 100, 10, 0, null);
+        super(name, description, 100, 10, 0);
         this.armor = null;
         this.weapon = null;
         this.inventory = new Inventory(6);
+        this.gold = new Gold(0);
     }
 
-    public PlayerCharacter(String name, String description, Inventory inventory) {
-        super(name, description, 100, 10, 0, null);
+    public PlayerCharacter(String name, String description, Inventory inventory, Gold gold) {
+        super(name, description, 100, 10, 0);
         this.armor = null;
         this.weapon = null;
         this.inventory = inventory;
+        this.gold = gold;
     }
 
 }
