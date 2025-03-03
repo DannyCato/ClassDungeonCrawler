@@ -57,7 +57,7 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
      */
     public String structuredRender() {
         String s = "";
-        HashSet<RenderRepresentation> linebreakTiles = new HashSet<>();
+        HashSet<RenderRepresentation> linebreakTiles = new HashSet<>(); // <- What does this do??
         List<RenderRepresentation> li = render();
         RenderRepresentation last = null;
         for (RenderRepresentation rr : li) {
