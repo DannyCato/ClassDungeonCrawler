@@ -1,6 +1,6 @@
 package edu.rit.swen262.domain;
 
-public interface InventoryComponent {
+public interface ItemComponent {
     String getName();
 
     String getDescription();

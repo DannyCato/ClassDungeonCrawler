@@ -1,6 +1,6 @@
 package edu.rit.swen262.domain;
 
-public abstract class Item implements InventoryComponent {
+public abstract class Item implements ItemComponent {
     private String name;
     private String description;
     private Gold value;
