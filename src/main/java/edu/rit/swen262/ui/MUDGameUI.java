@@ -1,8 +1,11 @@
 package edu.rit.swen262.ui;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
@@ -23,6 +26,7 @@ import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 
+import ch.qos.logback.core.net.QueueFactory;
 import edu.rit.swen262.service.GameEvent;
 import edu.rit.swen262.service.GameEventType;
 import edu.rit.swen262.service.GameObserver;
@@ -40,11 +44,15 @@ public class MUDGameUI implements GameObserver {
     private InputParser inputParser;
     private Screen screen;
     private Window window;
+    private Label turnDisplay;
+    private Label timeDisplay;
     private Label menuDisplay;
-    private Label statusDisplay;
+    private Queue<String> eventLogMsgs;
+    private Label eventLogDisplay;
 
     public MUDGameUI(InputParser inputParser) {
         this.inputParser = inputParser;
+        this.eventLogMsgs = new LinkedList<>();
     }
 
     /**
@@ -57,13 +65,24 @@ public class MUDGameUI implements GameObserver {
                 this.redrawMenu((String) event.getData("menuText"));
                 break;
             case GameEventType.MOVE_PLAYER:
-                this.redrawStatus("you moved.");
+                this.eventLogMsgs.offer("You moved.");
+                this.redrawEventLog();
                 this.redrawMenuDefault();
                 break;
+            case GameEventType.FINISH_TURN:
+                this.redrawTurn(event.getData("turnNumber").toString());
+                break;
             case GameEventType.CHANGE_TIME:
+                String time = event.getData("time").toString();
+
+                this.eventLogMsgs.offer("Time changed to " + time);
+
+                this.redrawEventLog();
+                this.redrawTime(time);
                 break;
             case GameEventType.TAKE_DAMAGE:
-                this.redrawStatus("something took damage.");
+                this.eventLogMsgs.offer("Something took damage.");
+                this.redrawEventLog();
                 this.redrawMenuDefault();
                 break;
             case GameEventType.QUIT_GAME:
@@ -103,8 +122,10 @@ public class MUDGameUI implements GameObserver {
      */
     private void drawUI() {
         this.screen = null;
+        this.turnDisplay = null;
+        this.timeDisplay = null;
         this.menuDisplay = null;
-        this.statusDisplay = null;
+        this.eventLogDisplay = null;
 
         try {
             // create screen component
@@ -138,31 +159,34 @@ public class MUDGameUI implements GameObserver {
             window.setHints(Arrays.asList(windowHints));
             window.setStrictFocusChange(true);
 
-            // create panel container
-            Panel contentPanel = new Panel(new GridLayout(1));
-            GridLayout gridLayout = (GridLayout) contentPanel.getLayoutManager();
+            // create 2-column panel container
+            Panel contentPanel = new Panel(new GridLayout(2));
+
+            // create 1-column panel sub-container for turn/map/input
+            Panel controlPanel = new Panel(new GridLayout(1));
+            GridLayout gridLayout = (GridLayout) controlPanel.getLayoutManager();
             gridLayout.setVerticalSpacing(1);
+
+            // create panel displaying game status update messages
+            Panel statusPanel = new Panel(new GridLayout(2));
+            this.eventLogDisplay = new Label("Event Log: \n\n");
+            statusPanel.addComponent(this.eventLogDisplay);
 
             // create 2-column panel displaying turn info (number/time)
             Panel turnPanel = new Panel(new GridLayout(2));
             GridLayout turnPanelLayout = (GridLayout) turnPanel.getLayoutManager();
             turnPanelLayout.setHorizontalSpacing(20);
 
-            Label turnLabel = new Label("Turn #: 1");
-            Label timeLabel = new Label("Time: Day").setLayoutData(GridLayout.createHorizontallyEndAlignedLayoutData(1));
+            this.turnDisplay = new Label("Turn #: 1");
+            this.timeDisplay = new Label("Time: Day").setLayoutData(GridLayout.createHorizontallyEndAlignedLayoutData(1));
 
-            turnPanel.addComponent(turnLabel);
-            turnPanel.addComponent(timeLabel);
+            turnPanel.addComponent(this.turnDisplay);
+            turnPanel.addComponent(this.timeDisplay);
 
             // create panel displaying map
             Panel mapPanel = new Panel(new GridLayout(2));
             Label mapDisplay = new Label("|□□|" + "\n|□□|");
             mapPanel.addComponent(mapDisplay);
-
-            // create panel displaying game status update messages
-            Panel statusPanel = new Panel(new GridLayout(2));
-            this.statusDisplay = new Label("something happened.");
-            statusPanel.addComponent(this.statusDisplay);
 
             // create panel recieving input (spans entire screen)
             Panel inputPanel = new Panel(new GridLayout(1));
@@ -193,15 +217,17 @@ public class MUDGameUI implements GameObserver {
             inputPanel.addComponent(submitButton);
 
             // add child panels to container in top-down display order
-            contentPanel.addComponent(turnPanel);
-            contentPanel.addComponent(mapPanel);
-            contentPanel.addComponent(statusPanel);
+            controlPanel.addComponent(turnPanel);
+            controlPanel.addComponent(mapPanel);
 
             // align input box to bottom of screen
-            contentPanel.addComponent(inputPanel.setLayoutData(
+            controlPanel.addComponent(inputPanel.setLayoutData(
                         GridLayout.createLayoutData(GridLayout.Alignment.FILL, GridLayout.Alignment.END)));
 
-            contentPanel.addComponent(menuPanel);
+            controlPanel.addComponent(menuPanel);
+
+            contentPanel.addComponent(controlPanel);
+            contentPanel.addComponent(statusPanel);
 
             window.setComponent(contentPanel.setLayoutData(
                 GridLayout.createLayoutData(GridLayout.Alignment.CENTER, GridLayout.Alignment.CENTER)));
@@ -241,12 +267,56 @@ public class MUDGameUI implements GameObserver {
     }
 
     /**
-     * updates the text displayed in the status panel to display the response to
+     * updates the text displayed in the event log panel to display the response to
      * the most recent action(s) taken
      * 
-     * @param displayText the new text to display on the status panel
      */
-    private void redrawStatus(String displayText) {
-        this.statusDisplay.setText(displayText);
+    private void redrawEventLog() {
+        //remove oldest event log message from the display
+        if (this.eventLogMsgs.size() > 5) {
+            this.eventLogMsgs.poll();
+        }
+
+        String displayText = this.eventLogMsgsToString();
+        this.eventLogDisplay.setText("Event Log: \n\n" + displayText);
+    }
+
+    /**
+    * helper method which converts the internal event log queue into a String,
+    * placed in reverse order with new lines after each element in the following format:
+    * <status msg>\n
+    * <status msg>\n
+    * ...
+    */
+    private String eventLogMsgsToString() {
+        if (eventLogMsgs.isEmpty()) {
+            return "";
+        }
+
+        ArrayList<String> statusMsgList = new ArrayList<String>(this.eventLogMsgs);
+        
+        StringBuilder sb = new StringBuilder();
+        for  (int i = statusMsgList.size() - 1; i >= 0; i--) {
+            sb.append(statusMsgList.get(i)).append("\n");
+        }
+        return sb.toString();
+    }
+
+    /**
+     * updates the text displayed in the turn panel to display the correct turn number
+     * 
+     * @param turnNumber the turn number to be displayed on the turn panel's turn field
+     */
+    private void redrawTurn(String turnNumber) {
+        this.turnDisplay.setText("Turn: " + turnNumber);
+    }
+
+    /**
+     * updates the text displayed in the turn panel to display the correct time of day
+     * 
+     * @param displayText the new text to be displayed on the turn panel's time field
+     */
+    private void redrawTime(String displayText) {
+        this.timeDisplay.setText("Time: " + displayText);
     }
 }
