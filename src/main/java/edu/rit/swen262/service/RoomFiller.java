@@ -101,6 +101,18 @@ public class RoomFiller {
             room.addTile(t);
         }
 
+        for (int i = 0; i < 4; i++) { // check if all needed exits were put
+            RoomNode r = rns.get(i);
+            if (r == null) {
+                continue;
+            }
+            room.getExitTileByDirection(DirectionalVector.cardinals.get(i)) ;
+            
+        }
+        
+        // TODO: ADD CHECK FOR IF ALL EXITS WERE PUT
+        // TODO: CHECK IF PROBABILITES ARE TOO SMALL
+
         if (!validateRoom(room)) {
             fill(room, obstacleChance);
         }

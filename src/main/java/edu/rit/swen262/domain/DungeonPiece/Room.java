@@ -378,10 +378,20 @@ public class Room implements DungeonPiece<Room>, java.io.Serializable {
         return null;
     }
 
+    /**
+     * gets a {@link Occupant} based off the {@link Exit} {@link DirectionalVector} of its {@link Occupant}
+     * 
+     * @param dir {@link DirectionalVector}
+     * @return {@link DungeonPiece}<{@link Tile}>
+     */
     public DungeonPiece<Tile> getExitTileByDirection(DirectionalVector dir) {
         for (Integer i : exitsTiles) {
             Tile et = (Tile) tiles.get(i);
-            Exit exit = (Exit) et.getPermanentOccupant();
+            Occupant o = et.getPermanentOccupant() ;
+            if (!(o instanceof Exit)){
+                continue;
+            }
+            Exit exit = (Exit) o;
             if (exit.getExitDirection() == dir) {
                 return et;
             }
