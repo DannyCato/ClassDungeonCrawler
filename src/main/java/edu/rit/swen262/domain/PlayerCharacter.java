@@ -29,10 +29,10 @@ public class PlayerCharacter extends Character {
         this.gold = new Gold(0);
     }
 
-    public PlayerCharacter(String name, String description, Inventory inventory, Gold gold) {
+    public PlayerCharacter(String name, String description, Armor armor, Weapon weapon, Inventory inventory, Gold gold) {
         super(name, description, 100, 10, 0);
-        this.armor = null;
-        this.weapon = null;
+        this.armor = armor;
+        this.weapon = weapon;
         this.inventory = inventory;
         this.gold = gold;
     }
