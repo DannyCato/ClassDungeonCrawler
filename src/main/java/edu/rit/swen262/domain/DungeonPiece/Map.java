@@ -68,6 +68,7 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
             s += rr.render();
             last = rr;
         }
+        returnList.add(s);
         return returnList;
     }
 
