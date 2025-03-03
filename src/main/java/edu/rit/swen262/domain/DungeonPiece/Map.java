@@ -1,6 +1,7 @@
 package edu.rit.swen262.domain.DungeonPiece;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import edu.rit.swen262.domain.DirectionalVector;
@@ -56,10 +57,13 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
      */
     public String structuredRender() {
         String s = "";
+        HashSet<RenderRepresentation> linebreakTiles = new HashSet<>();
         List<RenderRepresentation> li = render();
         RenderRepresentation last = null;
         for (RenderRepresentation rr : li) {
-            if (last == RenderRepresentation.HWALL && rr == RenderRepresentation.HWALL) {
+            if ((last == RenderRepresentation.VWALL && rr == RenderRepresentation.VWALL) 
+            || (last == RenderRepresentation.CORNER && rr == RenderRepresentation.VWALL)
+            || (last == RenderRepresentation.VWALL && rr == RenderRepresentation.CORNER)) {
                 s += "\n";
             }
             s += rr.render();
