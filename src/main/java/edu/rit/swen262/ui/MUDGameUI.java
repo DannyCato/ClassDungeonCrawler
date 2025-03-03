@@ -75,7 +75,7 @@ public class MUDGameUI implements GameObserver {
             case GameEventType.CHANGE_TIME:
                 String time = event.getData("time").toString();
 
-                this.eventLogMsgs.offer("time changed to " + time);
+                this.eventLogMsgs.offer("Time changed to " + time);
 
                 this.redrawEventLog();
                 this.redrawTime(time);
