@@ -1,5 +1,6 @@
 package edu.rit.swen262.domain.DungeonPiece;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -47,6 +48,26 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
     @Override
     public List<RenderRepresentation> render() {
         return currentRoom.render();
+    }
+
+    /**
+     * returns a formatted {@link Room} based on render()
+     * 
+     * @return List<{@link String}>
+     */
+    public List<String> structuredRender() {
+        ArrayList<String> returnList = new ArrayList<>();
+        String s = "";
+        List<RenderRepresentation> li = render();
+        RenderRepresentation last = null;
+        for (RenderRepresentation rr : li) {
+            if (last == RenderRepresentation.HWALL && rr == RenderRepresentation.HWALL) {
+                returnList.add(s);
+                s = new String();
+            }
+            s += rr.render();
+        }
+        return returnList;
     }
 
     /**
