@@ -13,6 +13,7 @@ public abstract class Character {
     int maxHP;
     int attack;
     int defense;
+    Gold gold;
 
     /**
      * initializes a {@link Character} with the given name, description, 
@@ -24,15 +25,17 @@ public abstract class Character {
      * @param health the health stat of the character
      * @param attack the attack stat of the character
      * @param defense the defense stat of the character
+     * @param gold the amount of gold they have
      */
     public Character(String name, String description, int maxHP, int attack, 
-    int defense) {
+    int defense, Gold gold) {
         this.name = name;
         this.description = description;
         this.health = maxHP;
         this.maxHP = maxHP;
         this.attack = attack;
         this.defense = defense;
+        this.gold = gold;
     }
 
     /**

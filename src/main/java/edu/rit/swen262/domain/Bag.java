@@ -1,11 +1,17 @@
 package edu.rit.swen262.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Bag {
 
     private List<Item> contents;
     private int capacity;
+
+    public Bag(int capacity) {
+        this.contents = new ArrayList<Item>();
+        this.capacity = capacity;
+    }
 
     public Bag(List<Item> contents, int capacity) {
         this.contents = contents;

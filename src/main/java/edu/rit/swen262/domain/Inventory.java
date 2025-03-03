@@ -1,11 +1,20 @@
 package edu.rit.swen262.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Inventory {
 
     private List<Bag> bags;
     private int capacity;
+
+    public Inventory(int capacity) {
+        this.bags = new ArrayList<Bag>();
+        for (int i = 0; i < capacity; i++) {
+            bags.add(new Bag(6));
+        }
+        this.capacity = capacity;
+    }
 
     public Inventory(List<Bag> bags, int capacity) {
         this.bags = bags;
@@ -46,7 +55,5 @@ public class Inventory {
         return capacity;
 
     }
-
-    
 
 }

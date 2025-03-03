@@ -5,14 +5,32 @@ package edu.rit.swen262.domain;
  * {@link Character}
  */
 public class PlayerCharacter extends Character {
+    Armor armor;
+    Weapon weapon;
+    Inventory inventory;
+
     /**
      * initializes a PlayerCharacter with the given name and description. Their
      * maxHP, attack, and defense stats are set to 100, 10, and 0 respectively by default.
      * 
      * @param name the given name of the player
      * @param description the given brief description of the player
+     * @param armor the equipped armor
+     * @param weapon the equipped weapon
      */
+    
     public PlayerCharacter(String name, String description) {
-        super(name, description, 100, 10, 0);
+        super(name, description, 100, 10, 0, null);
+        this.armor = null;
+        this.weapon = null;
+        this.inventory = new Inventory(6);
     }
+
+    public PlayerCharacter(String name, String description, Inventory inventory) {
+        super(name, description, 100, 10, 0, null);
+        this.armor = null;
+        this.weapon = null;
+        this.inventory = inventory;
+    }
+
 }
