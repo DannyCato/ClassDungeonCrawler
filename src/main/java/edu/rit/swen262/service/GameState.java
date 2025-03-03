@@ -13,6 +13,7 @@ import edu.rit.swen262.domain.DungeonPiece.Tile;
 import edu.rit.swen262.service.Action.DisplayMenuType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 
 /**
@@ -63,13 +64,19 @@ public class GameState implements IObservable {
         }
     }
 
+    /**
+     * helper/test method which builds the exact same instance of a map
+     * upon initialization
+     * 
+     * @return the completed map
+     */
     private Map buildMap() {
         HashSet<Occupant> initOccupants = new HashSet<>();
         initOccupants.add(this.player);
 
         Room root = new Room(2, 2, "test starting room");
         RoomFiller.fill(root, 0);
-        Tile startTile = new Tile();
+        Tile startTile = new Tile(new HashSet<>(Arrays.asList(this.player)));
         startTile.addOccupant(this.player);
 
         Map newMap = new Map(root, startTile);
@@ -85,10 +92,9 @@ public class GameState implements IObservable {
     public void movePlayer(DirectionalVector direction) {
         //update map??
         this.map.move(player, direction);
-        DungeonPiece<Room> currentRoom = this.map.getCurrentRoom();
         
         //convert current Room to String render, then pass along to UI
-        List<RenderRepresentation> currentRoomRender = currentRoom.render();
+        String currentRoomRender = this.map.structuredRender();
 
         GameEvent event = new GameEvent(GameEventType.MOVE_PLAYER);
         event.addData("direction", direction);
