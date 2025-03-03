@@ -78,7 +78,7 @@ public class GameState implements IObservable {
         RoomFiller.fill(root, 0);
 
         // does player actually get placed on the start tile? doesn't seem to do anything yet
-        Tile startTile = new Tile(new HashSet<>(Arrays.asList(this.player)));
+        Tile startTile = new Tile();
         startTile.addOccupant(this.player);
 
         Map newMap = new Map(root, startTile);
