@@ -12,4 +12,10 @@ public class Armor extends Item {
     public int getDefense() {
         return defense;
     }
+
+    @Override
+    public String toString() {
+        Gold gold = getValue();
+        return String.format("%s: %s%nDefense: %s%nValue: %s", getName(), getDescription(), getDefense(), gold.getCount());
+    }
 }

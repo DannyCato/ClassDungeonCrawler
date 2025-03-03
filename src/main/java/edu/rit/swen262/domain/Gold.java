@@ -28,4 +28,9 @@ public class Gold extends Item {
     public int getCount() {
         return count;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s: %s%nValue: %s", getName(), getDescription(), getCount());
+    }
 }

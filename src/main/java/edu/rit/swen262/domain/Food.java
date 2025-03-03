@@ -12,4 +12,10 @@ public class Food extends Item {
     public int getHp() {
         return hp;
     }
+
+    @Override
+    public String toString() {
+        Gold gold = getValue();
+        return String.format("%s: %s%nHp: %s%nValue: %s", getName(), getDescription(), getHp(), gold.getCount());
+    }
 }

@@ -12,4 +12,10 @@ public class Weapon extends Item {
     public int getAttack() {
         return attack;
     }
+
+    @Override
+    public String toString() {
+        Gold gold = getValue();
+        return String.format("%s: %s%nAttack: %s%nValue: %s", getName(), getDescription(), getAttack(), gold.getCount());
+    }
 }

@@ -35,13 +35,20 @@ public abstract class Item implements InventoryComponent {
 
     @Override
     public String toString() {
-        return String.format("%s: %s%nValue: %s", name, description, value);
+        return String.format("%s: %s%nValue: %s", name, description, value.getCount());
     }
 
     public static void main(String[] args) {
         Gold gold = new Gold(10);
-        Armor armor = new Armor("NAME", "DESC", 0, gold);
+        System.out.println(gold);
+        Armor armor = new Armor("Armor", "Protect", 1, gold);
         System.out.println(armor);
+        Weapon weapon = new Weapon("Weapon", "Fight", 2, gold);
+        System.out.println(weapon);
+        Food food = new Food("Food", "Heal", 3, gold);
+        System.out.println(food);
+        Buff buff = new Buff("Buff", "Helps", 4, 4, 4, 4, gold);
+        System.out.println(buff);
     }
 
 }
