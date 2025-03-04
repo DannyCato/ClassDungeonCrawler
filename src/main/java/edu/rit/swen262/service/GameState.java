@@ -2,6 +2,7 @@ package edu.rit.swen262.service;
 
 import java.util.List;
 
+import edu.rit.swen262.domain.DayTime;
 import edu.rit.swen262.domain.DirectionalVector;
 import edu.rit.swen262.domain.Occupant;
 import edu.rit.swen262.domain.PlayerCharacter;
@@ -10,6 +11,7 @@ import edu.rit.swen262.domain.DungeonPiece.DungeonPiece;
 import edu.rit.swen262.domain.DungeonPiece.Map;
 import edu.rit.swen262.domain.DungeonPiece.Room;
 import edu.rit.swen262.domain.DungeonPiece.Tile;
+import edu.rit.swen262.domain.TimePeriod;
 import edu.rit.swen262.service.Action.DisplayMenuType;
 
 import java.util.ArrayList;
@@ -28,10 +30,12 @@ public class GameState implements IObservable {
     private PlayerCharacter player;
     private Map map;
     private int turnNumber;
+    private TimePeriod currentTime;
 
     /**
      * creates a new GameState object with the specific player character, initializing
-     * the list of active observers to be empty by default
+     * the list of active observers to be empty by default, with the turn 
+     * counter starting at 1
      * 
      * @param player the player starting the new game
      */
@@ -39,6 +43,8 @@ public class GameState implements IObservable {
         this.observers = new ArrayList<>();
         this.player = player;
         this.map = this.buildMap();
+        this.turnNumber = 1;
+        this.setTime(new DayTime(this));
     }
 
     /**
@@ -103,6 +109,8 @@ public class GameState implements IObservable {
         event.addData("currentRoom", currentRoomRender);
 
         this.notifyObservers(event);
+
+        this.playerTurnFinished();
     }
 
     /**
@@ -149,7 +157,7 @@ public class GameState implements IObservable {
      */
     public void quit() {
         // shut down all relevent components
-        /*TO-DO: make a way to save objects like the current map using 
+        /*TODO: make a way to save objects like the current map using 
         Serializable interface */
 
         this.notifyObservers(new GameEvent(GameEventType.QUIT_GAME));
@@ -173,6 +181,32 @@ public class GameState implements IObservable {
     }
 
     /**
+     * sets the current time  to the specified {@link TimePeriod}
+     * 
+     * @param time the time to change to
+     */
+    public void setTime(TimePeriod time) {
+        this.currentTime = time;
+
+        GameEvent event = new GameEvent(GameEventType.CHANGE_TIME);
+        event.addData("time", time.toString());
+        this.notifyObservers(event);
+    }
+
+    /**
+     * executed when the user executes an action that consumes a turn:
+     * moving, attacking, opening a chest, disarming a trap
+     */
+    public void playerTurnFinished() {
+        this.turnNumber++;
+        this.currentTime.handlePlayerTurn();
+
+        GameEvent event = new GameEvent(GameEventType.FINISH_TURN);
+        event.addData("turnNumber", this.turnNumber);
+        this.notifyObservers(event);
+    }
+
+    /**
      * fetches the list of {@link GameObserver GameObservers} currently watching
      * this GameState for any new changes
      * 
@@ -180,5 +214,14 @@ public class GameState implements IObservable {
      */
     public List<GameObserver> getObservers() {
         return observers;
+    }
+
+    /**
+     * fetches the turn number the game is currently on
+     * 
+     * @return the current turn number
+     */
+    public int getTurnNumber() {
+        return this.turnNumber;
     }
 }
