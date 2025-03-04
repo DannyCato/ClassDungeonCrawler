@@ -316,7 +316,7 @@ public class Room implements DungeonPiece<Room>, java.io.Serializable {
             || (index < width && dir.y == -1) || (index > ((height - 1) * width) && dir.y == 1)) { // Check if moving on Y would go out of bounds
             return index;
         }
-        return index + ((dir.y * width) + dir.x); // adjacent tile formula
+        return index + ((-dir.y * width) + dir.x); // adjacent tile formula
     }
 
     /**
