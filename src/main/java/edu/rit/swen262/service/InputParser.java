@@ -45,7 +45,6 @@ public class InputParser {
         if (action != null) {
             action.performAction();
         }
-
         this.currentMenu.handleInput(this, input);
     } 
 

@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
@@ -26,7 +28,11 @@ import edu.rit.swen262.ui.MUDGameUI;
 public class MUDApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MUDApplication.class, args);
+		SpringApplicationBuilder builder = new SpringApplicationBuilder(MUDApplication.class);
+
+		builder.headless(false);
+
+		ConfigurableApplicationContext context = builder.run(args);
 	}
 
 }
