@@ -173,7 +173,12 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
     }
     
     public DungeonPiece<Tile> startUp() {
-        this.startTile = ((Room)startRoom).getTileByIndex(0);
+        int i = 0;
+        startTile = ((Room)startRoom).getTileByIndex(i);
+        while ( !( ((Tile)startTile).isStackable() )) {
+            i++;
+            startTile = ((Room)startRoom).getTileByIndex(i);
+        }
         return startTile;
     }
 }
