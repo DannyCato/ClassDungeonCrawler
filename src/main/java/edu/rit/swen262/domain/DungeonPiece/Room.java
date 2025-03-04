@@ -228,23 +228,23 @@ public class Room implements DungeonPiece<Room>, java.io.Serializable {
      * @param dir a {@link DirectionalVector}. direction to be moved in
      * @return boolean. True if Occupant was moved
      */
-    public boolean moveOccupant(Occupant o, DirectionalVector dir) {
+    public Tile moveOccupant(Occupant o, DirectionalVector dir) {
         Tile t = (Tile) getTileOfOccpant(o);
         int index = lookupTiles.get(t);
         if (t == null) { // if a tile with TransientOccupant o is not found
-            return false;
+            return null;
         }
         int adjIndex = getAdjactentTileInDir(index, dir);
         if (adjIndex == index) { // if getAdjactentTileInDir failed
-            return false;
+            return null;
         }
         Tile adjT = (Tile) tiles.get(adjIndex);
         if (!adjT.isStackable()) { // if adjacent Tile is not stackable
-            return false;
+            return null;
         }
         t.removeOccupant(o); // finally do process
         adjT.addOccupant(o);
-        return true;
+        return adjT;
     }
 
     /**

@@ -25,7 +25,6 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
 
     private DungeonPiece<Room> currentRoom;
 
-
     // <-----------------------Constructors----------------------->
 
     public Map(DungeonPiece<Room> root) {
@@ -131,7 +130,11 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
      * 
      */
     public boolean move(Occupant o, DirectionalVector dir) {
-        return ((Room)currentRoom).moveOccupant(o, dir);
+        Tile t = ((Room)currentRoom).moveOccupant(o, dir);
+        if (t != null && t.isExit()) {
+            exitRoom(o, t.getExitDirection());
+        };
+        return t != null;
     }
 
     /**

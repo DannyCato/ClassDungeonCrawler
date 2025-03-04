@@ -36,18 +36,22 @@ public class RoomFiller {
             if (i < room.width && rns.get(0) != null) {
                 if (currentWidth == midWidth) {
                     t = new Tile(new Exit("", DirectionalVector.NORTH));
+                    t.setExit(true);
                 }
             } else if ((i % room.width) == (room.width - 1) && rns.get(1) != null) {
                 if (currentHeight == midHeight) {
                     t = new Tile(new Exit("", DirectionalVector.EAST));
+                    t.setExit(true);
                 }
             } else if (i > (room.height - 1) * room.width && rns.get(2) != null) {
                 if (currentWidth == midWidth) {
                     t = new Tile(new Exit("", DirectionalVector.SOUTH));
+                    t.setExit(true);
                 }
             } else if ((i % room.width) == 0 && rns.get(3) != null) {
                 if (currentHeight == midHeight) {
                     t = new Tile(new Exit("", DirectionalVector.WEST));
+                    t.setExit(true);
                 }
             } else {
                 Obstacle o = null;

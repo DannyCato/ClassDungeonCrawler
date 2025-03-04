@@ -90,8 +90,8 @@ public class GameState implements IObservable {
         // root.getRoomNode().setConnection(room2.getRoomNode(), DirectionalVector.EAST);
         // room2.getRoomNode().setConnection(root.getRoomNode(), DirectionalVector.WEST);
         
-        RoomFiller.fill(root, 1);
-        RoomFiller.fill(room2, 1);
+        RoomFiller.fill(root, 0.1);
+        RoomFiller.fill(room2, 0.1);
         
         Tile startTile = (Tile)newMap.startUp();
         
