@@ -95,7 +95,11 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
     /**
      * adds a {@link Room} to rooms.
      * 
-     * @param tile {@link DungeonPiece}<{@link Tile}> a {@link Tile} to add
+     * @param from {@link DungeonPiece}<{@link Room}>
+     * @param to {@link DungeonPiece}<{@link Room}>
+     * @param dir {@link DirectionalVector}
+     * @param isGoal boolean
+     * @return boolean if Room adding was a success
      */
     public boolean addRoom(DungeonPiece<Room> from, DungeonPiece<Room> to, DirectionalVector dir, boolean isGoal) {
         RoomNode foundFrom = rooms.getRoom(((Room)from).getRoomNode());
