@@ -214,8 +214,8 @@ public class Room implements DungeonPiece<Room>, java.io.Serializable {
             tiles.add(addTile); // add
             if (((Tile)addTile).isExit()) { // check if addTile is an exit tile
                 exitsTiles.add(tiles.indexOf(addTile)); // Add the index of Exit Tiles
-                lookupTiles.put(addTile, tiles.size() - 1);
             }
+            lookupTiles.put(addTile, tiles.size() - 1);
             return true;
         }
         return false;
