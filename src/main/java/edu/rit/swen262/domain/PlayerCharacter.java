@@ -1,7 +1,7 @@
 package edu.rit.swen262.domain;
 
 /**
- * represents the Player Character traveling through the dungeon, extends the 
+ * represents the Player Character traveling through the dungeon, extends the
  * {@link Character}
  */
 public class PlayerCharacter extends Character {
@@ -12,15 +12,16 @@ public class PlayerCharacter extends Character {
 
     /**
      * initializes a PlayerCharacter with the given name and description. Their
-     * maxHP, attack, and defense stats are set to 100, 10, and 0 respectively by default.
+     * maxHP, attack, and defense stats are set to 100, 10, and 0 respectively by
+     * default.
      * 
-     * @param name the given name of the player
+     * @param name        the given name of the player
      * @param description the given brief description of the player
-     * @param armor the equipped armor
-     * @param weapon the equipped weapon
-     * @param gold the gold 
+     * @param armor       the equipped armor
+     * @param weapon      the equipped weapon
+     * @param gold        the gold
      */
-    
+
     public PlayerCharacter(String name, String description) {
         super(name, description, 100, 10, 0);
         this.armor = null;
@@ -29,7 +30,8 @@ public class PlayerCharacter extends Character {
         this.gold = new Gold(0);
     }
 
-    public PlayerCharacter(String name, String description, Armor armor, Weapon weapon, Inventory inventory, Gold gold) {
+    public PlayerCharacter(String name, String description, Armor armor, Weapon weapon, Inventory inventory,
+            Gold gold) {
         super(name, description, 100, 10, 0);
         this.armor = armor;
         this.weapon = weapon;
@@ -37,4 +39,62 @@ public class PlayerCharacter extends Character {
         this.gold = gold;
     }
 
+    public String eatFood(Food food) {
+        this.health += food.getHp();
+        if (this.health > this.maxHP) {
+            this.health = this.maxHP;
+        }
+
+        return "Ate food: " + food.getName();
+    }
+
+    public String equipArmor(Armor armor) {
+        if (this.armor == null) {
+            this.armor = armor;
+        }
+
+        else {
+            Armor temp = this.armor;
+            this.armor = armor;
+            for (Bag bag : inventory.getBags()) {
+                boolean result = bag.addItem(temp);
+                if (result) {
+                    break;
+                }
+            }
+        }
+
+        return "Now wearing: " + armor.getName();
+    }
+
+    public String equipWeapon(Weapon weapon) {
+        if (this.weapon == null) {
+            this.weapon = weapon;
+        }
+
+        else {
+            Weapon temp = this.weapon;
+            this.weapon = weapon;
+            for (Bag bag : inventory.getBags()) {
+                boolean result = bag.addItem(temp);
+                if (result) {
+                    break;
+                }
+            }
+        }
+
+        return "Now wielding: " + weapon.getName();
+    }
+
+    public Item findItem(Item item) {
+        for (Bag bag : inventory.getBags()) {
+            for (Item each : bag.getItems()) {
+                if (each.equals(item)) {
+                    bag.removeItem(each);
+                    return each;
+                }
+            }
+        }
+        return null;
+    }
 }
