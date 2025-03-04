@@ -12,7 +12,7 @@ import edu.rit.swen262.domain.RenderRepresentation;
 /**
  * A representation of {@link Map} {@link DungeonPiece} a composite of {@link Room Rooms}
  *                         (v LIST YOUR NAME HERE WHEN YOU WORK ON IT v)
- * @authors Danny Catorcini, 
+ * @authors Danny Catorcini, Eric Manning
  */
 public class Map implements DungeonPiece<Map>, java.io.Serializable {
     
@@ -28,12 +28,11 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
 
     // <-----------------------Constructors----------------------->
 
-    public Map(DungeonPiece<Room> root, DungeonPiece<Tile> startTile) {
+    public Map(DungeonPiece<Room> root) {
         this.rooms = new MapStructure();
         this.startRoom = root;
         this.currentRoom = root;
-
-        this.startTile = startTile;
+        
         rooms.addLooseRoom(((Room) root).getRoomNode());
     }
 
