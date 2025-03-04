@@ -313,10 +313,10 @@ public class Room implements DungeonPiece<Room>, java.io.Serializable {
      */
     private int getAdjactentTileInDir(int index, DirectionalVector dir) {
         if ((index % width == 0 && dir.x == -1 ) || (index % width == width - 1 && dir.x == 1) // Check if moving on X would wrap
-            || (index < width && dir.y == -1) || (index > ((height - 1) * width) && dir.y == 1)) { // Check if moving on Y would go out of bounds
+            || (index < width && dir.y == 1) || (index > ((height - 1) * width) && dir.y == -1)) { // Check if moving on Y would go out of bounds
             return index;
         }
-        return index + ((-dir.y * width) + dir.x); // adjacent tile formula
+        return index + ((-1 * dir.y * width) + dir.x); // adjacent tile formula
     }
 
     /**
