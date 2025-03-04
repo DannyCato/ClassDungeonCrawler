@@ -21,7 +21,8 @@ public class MapStructure implements java.io.Serializable {
      * @return {@link RoomNode} that was put in
      */
     public RoomNode addLooseRoom(RoomNode room) {
-        return rooms.put(room, room);
+        rooms.put(room, room);
+        return rooms.get(room);
     }
 
     /**
@@ -39,7 +40,7 @@ public class MapStructure implements java.io.Serializable {
         }
         RoomNode valueRoom = getRoom(value);
         if (valueRoom == null) {
-            valueRoom = addLooseRoom(valueRoom);
+            valueRoom = addLooseRoom(value);
         }
         if (!valueRoom.setConnection(keyRoom, DirectionalVector.getOppositeDirection(dir))) {
             return false;

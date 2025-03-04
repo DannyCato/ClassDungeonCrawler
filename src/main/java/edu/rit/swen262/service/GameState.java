@@ -80,14 +80,22 @@ public class GameState implements IObservable {
         HashSet<Occupant> initOccupants = new HashSet<>();
         initOccupants.add(this.player);
 
-        Room root = new Room(6, 3, "test starting room");
-        RoomFiller.fill(root, 0);
+        Room root = new Room(8, 4, "test starting room");
+        Room room2 = new Room(10, 5, "test second room");
 
         // does player actually get placed on the start tile? doesn't seem to do anything yet
         Tile startTile = new Tile();
         startTile.addOccupant(this.player);
 
         Map newMap = new Map(root, startTile);
+
+        newMap.addRoom(root, room2, DirectionalVector.EAST, false);
+
+        // root.getRoomNode().setConnection(room2.getRoomNode(), DirectionalVector.EAST);
+        // room2.getRoomNode().setConnection(root.getRoomNode(), DirectionalVector.WEST);
+
+        RoomFiller.fill(root, 1);
+        RoomFiller.fill(room2, 1);
 
         return newMap;
     }

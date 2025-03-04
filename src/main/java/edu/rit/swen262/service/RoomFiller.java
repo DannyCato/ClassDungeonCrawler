@@ -31,22 +31,22 @@ public class RoomFiller {
             int midWidth = (int) Math.ceil(room.width/2.0) ;
             int midHeight = (int) Math.ceil(room.height/2.0) ;
             
-            Tile t = null;
+            Tile t = new Tile();
             double chance = rand.nextDouble();
             if (i < room.width && rns.get(0) != null) {
-                if (currentHeight == midHeight) {
+                if (currentWidth == midWidth) {
                     t = new Tile(new Exit("", DirectionalVector.NORTH));
                 }
             } else if ((i % room.width) == (room.width - 1) && rns.get(1) != null) {
-                if (currentWidth == midWidth) {
+                if (currentHeight == midHeight) {
                     t = new Tile(new Exit("", DirectionalVector.EAST));
                 }
             } else if (i > (room.height - 1) * room.width && rns.get(2) != null) {
-                if (currentHeight == midHeight) {
+                if (currentWidth == midWidth) {
                     t = new Tile(new Exit("", DirectionalVector.SOUTH));
                 }
             } else if ((i % room.width) == 0 && rns.get(3) != null) {
-                if (currentWidth == midWidth) {
+                if (currentHeight == midHeight) {
                     t = new Tile(new Exit("", DirectionalVector.WEST));
                 }
             } else {
