@@ -51,11 +51,14 @@ public class PlayerCharacter extends Character {
     public String equipArmor(Armor armor) {
         if (this.armor == null) {
             this.armor = armor;
+            this.defense += armor.getDefense();
         }
 
         else {
             Armor temp = this.armor;
+            this.defense -= temp.getDefense();
             this.armor = armor;
+            this.defense += armor.getDefense();
             for (Bag bag : inventory.getBags()) {
                 boolean result = bag.addItem(temp);
                 if (result) {
@@ -70,11 +73,14 @@ public class PlayerCharacter extends Character {
     public String equipWeapon(Weapon weapon) {
         if (this.weapon == null) {
             this.weapon = weapon;
+            this.attack += weapon.getAttack();
         }
 
         else {
             Weapon temp = this.weapon;
+            this.attack -= temp.getAttack();
             this.weapon = weapon;
+            this.attack += weapon.getAttack();
             for (Bag bag : inventory.getBags()) {
                 boolean result = bag.addItem(temp);
                 if (result) {
