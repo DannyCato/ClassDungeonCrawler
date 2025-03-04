@@ -22,7 +22,6 @@ public class Inventory {
     }
 
     public boolean addBag(Bag bag) {
-
         if (bags.size() < capacity) {
             return bags.add(bag);
         }
@@ -31,7 +30,6 @@ public class Inventory {
     }
 
     public boolean removeBag(Bag bag) {
-
         if (bags.size() > 0) {
             return bags.remove(bag);
         }
@@ -39,19 +37,16 @@ public class Inventory {
     }
 
     public List<Bag> getBags() {
-
         return bags;
 
     }
 
     public int getTotalBags() {
-
         return bags.size();
 
     }
 
     public int getCapacity() {
-
         return capacity;
 
     }

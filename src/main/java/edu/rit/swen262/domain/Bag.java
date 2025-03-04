@@ -19,7 +19,6 @@ public class Bag {
     }
 
     public boolean addItem(Item item) {
-
         if (contents.size() < capacity) {
             return contents.add(item);
         }
@@ -28,13 +27,11 @@ public class Bag {
     }
 
     public boolean removeItem(Item item) {
-
         return contents.remove(item);
 
     }
 
     public List<Item> getItems() {
-
         return contents;
 
     }
