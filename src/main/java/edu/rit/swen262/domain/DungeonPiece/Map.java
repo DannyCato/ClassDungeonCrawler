@@ -104,7 +104,7 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
     public boolean addRoom(DungeonPiece<Room> from, DungeonPiece<Room> to, DirectionalVector dir, boolean isGoal) {
         RoomNode foundFrom = rooms.getRoom(((Room)from).getRoomNode());
         RoomNode foundTo = rooms.getRoom(((Room)to).getRoomNode());
-        if (foundFrom == null || foundTo == null ) {
+        if (foundFrom == null) {
             return false;
         }
         boolean success = rooms.addRoom(foundFrom, foundTo, dir);
