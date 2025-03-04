@@ -11,7 +11,7 @@ import edu.rit.swen262.domain.RenderRepresentation;
 
 /**
  * A representation of {@link Map} {@link DungeonPiece} a composite of {@link Room Rooms}
- *                         (v LIST YOUR NAME HERE WHEN YOU WORK ON IT v)
+ *
  * @authors Danny Catorcini, Eric Manning
  */
 public class Map implements DungeonPiece<Map>, java.io.Serializable {
@@ -32,7 +32,7 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
         this.rooms = new MapStructure();
         this.startRoom = root;
         this.currentRoom = root;
-        
+
         rooms.addLooseRoom(((Room) root).getRoomNode());
     }
 
@@ -172,4 +172,8 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
         return true;
     }
     
+    public DungeonPiece<Tile> startUp() {
+        this.startTile = ((Room)startRoom).getTileByIndex(0);
+        return startTile;
+    }
 }
