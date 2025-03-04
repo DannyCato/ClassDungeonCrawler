@@ -229,8 +229,8 @@ public class Room implements DungeonPiece<Room>, java.io.Serializable {
      * @return boolean. True if Occupant was moved
      */
     public boolean moveOccupant(Occupant o, DirectionalVector dir) {
-        int index = 0;
         Tile t = (Tile) getTileOfOccpant(o);
+        int index = lookupTiles.get(t);
         if (t == null) { // if a tile with TransientOccupant o is not found
             return false;
         }
