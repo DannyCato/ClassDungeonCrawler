@@ -21,7 +21,7 @@ public class DayTime implements TimePeriod {
         int turn = gameState.getTurnNumber();
 
         //if ten turns have passed since daytime started, change to night
-        if (turn % 2 == 0) {
+        if (turn % 10 == 0) {
             gameState.setTime(new NightTime(this.gameState));
         }
     }
