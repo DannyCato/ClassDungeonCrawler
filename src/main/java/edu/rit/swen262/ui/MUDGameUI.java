@@ -46,7 +46,7 @@ import edu.rit.swen262.service.Action.Action;
 public class MUDGameUI implements GameObserver {
     private InputParser inputParser;
     private Screen screen;
-    private Window window;
+    private Label mapDisplay;
     private Label turnDisplay;
     private Label timeDisplay;
     private Label menuDisplay;
@@ -65,11 +65,14 @@ public class MUDGameUI implements GameObserver {
         switch (event.getType()) {
             case GameEventType.DISPLAY_SUBMENU:
                 //update status panel w/ menu options
-                this.redrawMenu((String) event.getData("menuText"));
+                this.redrawMenu(event.getData("menuText").toString());
                 break;
             case GameEventType.MOVE_PLAYER:
-                this.eventLogMsgs.offer("You moved.");
+                if (event.getData("direction") != null) {
+                    this.eventLogMsgs.offer("You moved.");
                 this.redrawEventLog();
+                }
+                this.redrawMap(event.getData("currentRoom").toString());
                 this.redrawMenuDefault();
                 break;
             case GameEventType.FINISH_TURN:
@@ -127,6 +130,7 @@ public class MUDGameUI implements GameObserver {
         this.screen = null;
         this.turnDisplay = null;
         this.timeDisplay = null;
+        this.mapDisplay = null;
         this.menuDisplay = null;
         this.eventLogDisplay = null;
 
@@ -160,12 +164,12 @@ public class MUDGameUI implements GameObserver {
                 TextColor.ANSI.BLACK              // GUI background
             );
 
-            //textGUI.setTheme(theme);
+            textGUI.setTheme(theme);
 
             // set no shadow decorations for panels + full screen
             Window.Hint[] windowHints = new Window.Hint[] {
-                //Window.Hint.NO_DECORATIONS,
-                //Window.Hint.NO_POST_RENDERING,
+                Window.Hint.NO_DECORATIONS,
+                Window.Hint.NO_POST_RENDERING,
                 Window.Hint.EXPANDED};
 
             final Window window = new BasicWindow("MUD Game");
@@ -198,8 +202,8 @@ public class MUDGameUI implements GameObserver {
 
             // create panel displaying map
             Panel mapPanel = new Panel(new GridLayout(2));
-            Label mapDisplay = new Label("|□□|" + "\n|□□|");
-            mapPanel.addComponent(mapDisplay);
+            this.mapDisplay = new Label("|..|" + "\n|..|");
+            mapPanel.addComponent(this.mapDisplay);
 
             // create panel recieving input (spans entire screen)
             Panel inputPanel = new Panel(new GridLayout(1));
@@ -218,7 +222,6 @@ public class MUDGameUI implements GameObserver {
             Button submitButton = new Button("Submit", () -> {
                 String inputString = userInput.getText();
                 if (!inputString.isBlank()) {
-                    //statusDisplay.setText(inputString);
                     this.inputParser.receivedInput(userInput.getText());
                 }
                 userInput.setText(""); // Clear the text
@@ -263,7 +266,7 @@ public class MUDGameUI implements GameObserver {
      * @param displayText the new text to display on the menu panel
      */
     private void redrawMenu(String displayText) {
-        this.menuDisplay.setText(displayText);
+        this.menuDisplay.setText("Select an Option:\n" + displayText);
     }
 
     /**
@@ -331,5 +334,15 @@ public class MUDGameUI implements GameObserver {
      */
     private void redrawTime(String displayText) {
         this.timeDisplay.setText("Time: " + displayText);
+    }
+
+    /**
+     * updates the text displayed in the map panel to show the change after
+     * a player turn is taken
+     * 
+     * @param displayText
+     */
+    private void redrawMap(String displayText) {
+        this.mapDisplay.setText(displayText);
     }
 }

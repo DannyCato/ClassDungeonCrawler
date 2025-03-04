@@ -3,11 +3,20 @@ package edu.rit.swen262.service;
 import java.util.List;
 
 import edu.rit.swen262.domain.DayTime;
+import edu.rit.swen262.domain.DirectionalVector;
+import edu.rit.swen262.domain.Occupant;
 import edu.rit.swen262.domain.PlayerCharacter;
+import edu.rit.swen262.domain.RenderRepresentation;
+import edu.rit.swen262.domain.DungeonPiece.DungeonPiece;
+import edu.rit.swen262.domain.DungeonPiece.Map;
+import edu.rit.swen262.domain.DungeonPiece.Room;
+import edu.rit.swen262.domain.DungeonPiece.Tile;
 import edu.rit.swen262.domain.TimePeriod;
 import edu.rit.swen262.service.Action.DisplayMenuType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 
 /**
  * The class which represents the current state of the game being played.
@@ -19,6 +28,7 @@ import java.util.ArrayList;
 public class GameState implements IObservable {
     private List<GameObserver> observers;
     private PlayerCharacter player;
+    private Map map;
     private int turnNumber;
     private TimePeriod currentTime;
 
@@ -32,6 +42,7 @@ public class GameState implements IObservable {
     public GameState(PlayerCharacter player) {
         this.observers = new ArrayList<>();
         this.player = player;
+        this.map = this.buildMap();
         this.turnNumber = 1;
         this.setTime(new DayTime(this));
     }
@@ -60,13 +71,50 @@ public class GameState implements IObservable {
     }
 
     /**
+     * helper/test method which builds the exact same instance of a map
+     * upon initialization
+     * 
+     * @return the completed map
+     */
+    private Map buildMap() {
+        HashSet<Occupant> initOccupants = new HashSet<>();
+        initOccupants.add(this.player);
+
+        Room root = new Room(8, 4, "test starting room");
+        Room room2 = new Room(10, 5, "test second room");
+
+        Map newMap = new Map(root);
+
+        newMap.addRoom(root, room2, DirectionalVector.WEST, false);
+        
+        // root.getRoomNode().setConnection(room2.getRoomNode(), DirectionalVector.EAST);
+        // room2.getRoomNode().setConnection(root.getRoomNode(), DirectionalVector.WEST);
+        
+        RoomFiller.fill(root, 0.1);
+        RoomFiller.fill(room2, 0.1);
+        
+        Tile startTile = (Tile)newMap.startUp();
+        
+        startTile.addOccupant(this.player);
+
+        return newMap;
+    }
+
+    /**
      * move the player one tile on the map in the specified direction
      * 
      * @param direction the direction to move in on the map
      */
-    public void movePlayer(String direction) {
+    public void movePlayer(DirectionalVector direction) {
+        //update map??
+        this.map.move(player, direction);
+        
+        //convert current Room to String render, then pass along to UI
+        String currentRoomRender = this.map.structuredRender();
+
         GameEvent event = new GameEvent(GameEventType.MOVE_PLAYER);
         event.addData("direction", direction);
+        event.addData("currentRoom", currentRoomRender);
 
         this.notifyObservers(event);
 
@@ -78,7 +126,7 @@ public class GameState implements IObservable {
      * 
      * @param direction the direction in which to attempt an attack
      */
-    public void attackCharacter(String direction) {
+    public void attackCharacter(DirectionalVector direction) {
         GameEvent event = new GameEvent(GameEventType.TAKE_DAMAGE);
         event.addData("direction", direction);
         

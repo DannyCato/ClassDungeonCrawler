@@ -15,4 +15,18 @@ public class PlayerCharacter extends Character {
     public PlayerCharacter(String name, String description) {
         super(name, description, 100, 10, 0);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String description() {
+        return this.description;
+    }
+
+    /**
+     * {@link inheritDoc}
+     */
+    public RenderRepresentation render() {
+        return RenderRepresentation.CHARACTER;
+    }
 }

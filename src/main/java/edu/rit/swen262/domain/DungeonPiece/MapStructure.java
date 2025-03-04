@@ -7,7 +7,7 @@ import edu.rit.swen262.domain.DirectionalVector;
 /**
  * Helper Class to manage the layout of Map
  */
-public class MapStructure {
+public class MapStructure implements java.io.Serializable {
     private HashMap<RoomNode, RoomNode> rooms;
 
     public MapStructure() {
@@ -21,7 +21,8 @@ public class MapStructure {
      * @return {@link RoomNode} that was put in
      */
     public RoomNode addLooseRoom(RoomNode room) {
-        return rooms.put(room, room);
+        rooms.put(room, room);
+        return rooms.get(room);
     }
 
     /**
@@ -39,7 +40,7 @@ public class MapStructure {
         }
         RoomNode valueRoom = getRoom(value);
         if (valueRoom == null) {
-            valueRoom = addLooseRoom(valueRoom);
+            valueRoom = addLooseRoom(value);
         }
         if (!valueRoom.setConnection(keyRoom, DirectionalVector.getOppositeDirection(dir))) {
             return false;

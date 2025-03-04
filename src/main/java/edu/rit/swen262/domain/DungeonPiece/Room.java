@@ -17,7 +17,7 @@ import edu.rit.swen262.domain.RenderRepresentation;
  *                         
  * @authors Danny Catorcini 
  */
-public class Room implements DungeonPiece<Room> {
+public class Room implements DungeonPiece<Room>, java.io.Serializable {
     
     /**
      * Storage for {@link Tile tiles}. (Recommended to be {@link ArrayList}) <p>
@@ -49,8 +49,8 @@ public class Room implements DungeonPiece<Room> {
     private final RoomNode rn;
 
 
-    private final int width;
-    private final int height;
+    public final int width;
+    public final int height;
 
     /**
      * a String description of the room. 
@@ -214,8 +214,8 @@ public class Room implements DungeonPiece<Room> {
             tiles.add(addTile); // add
             if (((Tile)addTile).isExit()) { // check if addTile is an exit tile
                 exitsTiles.add(tiles.indexOf(addTile)); // Add the index of Exit Tiles
-                lookupTiles.put(addTile, tiles.size() - 1);
             }
+            lookupTiles.put(addTile, tiles.size() - 1);
             return true;
         }
         return false;
@@ -228,23 +228,44 @@ public class Room implements DungeonPiece<Room> {
      * @param dir a {@link DirectionalVector}. direction to be moved in
      * @return boolean. True if Occupant was moved
      */
-    public boolean moveOccupant(Occupant o, DirectionalVector dir) {
-        int index = 0;
+    public Tile moveOccupant(Occupant o, DirectionalVector dir) {
         Tile t = (Tile) getTileOfOccpant(o);
+        int index = lookupTiles.get(t);
         if (t == null) { // if a tile with TransientOccupant o is not found
-            return false;
+            return null;
         }
         int adjIndex = getAdjactentTileInDir(index, dir);
         if (adjIndex == index) { // if getAdjactentTileInDir failed
-            return false;
+            return null;
         }
         Tile adjT = (Tile) tiles.get(adjIndex);
         if (!adjT.isStackable()) { // if adjacent Tile is not stackable
-            return false;
+            return null;
         }
         t.removeOccupant(o); // finally do process
         adjT.addOccupant(o);
-        return true;
+        return adjT;
+    }
+
+    /**
+     * Returns the {@link DirectionalVector} edge that the {@link Tile} would be on
+     * 
+     * @param t {@link DungeonPiece}<{@link Tile}>
+     * @return {@link DirectionalVector} if true, or null otherwise
+     */
+    public DirectionalVector tileOnEdge(DungeonPiece<Tile> t) {
+        int index = lookupTiles.get(t);
+        if (index < width) {
+            return DirectionalVector.NORTH;
+        } else if ((index % width) == (width - 1)) {
+            return DirectionalVector.EAST;
+        } else if (index > (height - 1) * width) {
+            return DirectionalVector.SOUTH;
+        } else if ((index % width) == 0) {
+            return DirectionalVector.WEST;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -264,18 +285,7 @@ public class Room implements DungeonPiece<Room> {
         if (t == null) {
             return null;
         }
-        int index = lookupTiles.get(t);
-        if (index < width) {
-            return DirectionalVector.NORTH;
-        } else if ((index % width) == (width - 1)) {
-            return DirectionalVector.EAST;
-        } else if (index > (height - 1) * width) {
-            return DirectionalVector.SOUTH;
-        } else if ((index % width) == 0) {
-            return DirectionalVector.WEST;
-        } else {
-            return null;
-        }
+        return tileOnEdge(t);
     }
 
     /**
@@ -303,10 +313,10 @@ public class Room implements DungeonPiece<Room> {
      */
     private int getAdjactentTileInDir(int index, DirectionalVector dir) {
         if ((index % width == 0 && dir.x == -1 ) || (index % width == width - 1 && dir.x == 1) // Check if moving on X would wrap
-            || (index < width && dir.y == -1) || (index > ((height - 1) * width) && dir.y == 1)) { // Check if moving on Y would go out of bounds
+            || (index < width && dir.y == 1) || (index > ((height - 1) * width) && dir.y == -1)) { // Check if moving on Y would go out of bounds
             return index;
         }
-        return index + ((dir.y * width) + dir.x); // adjacent tile formula
+        return index + ((-1 * dir.y * width) + dir.x); // adjacent tile formula
     }
 
     /**
@@ -355,10 +365,33 @@ public class Room implements DungeonPiece<Room> {
         return null;
     }
 
+    /**
+     * gets a {@link DungeonPiece}<{@link Tile}> by index
+     * 
+     * @param i int
+     * @return {@link DungeonPiece}<{@link Tile}> if in list. Otherwise null
+     */
+    public DungeonPiece<Tile> getTileByIndex(int i) {
+        if (i < width * height) {
+            return tiles.get(i);
+        }
+        return null;
+    }
+
+    /**
+     * gets a {@link Occupant} based off the {@link Exit} {@link DirectionalVector} of its {@link Occupant}
+     * 
+     * @param dir {@link DirectionalVector}
+     * @return {@link DungeonPiece}<{@link Tile}>
+     */
     public DungeonPiece<Tile> getExitTileByDirection(DirectionalVector dir) {
         for (Integer i : exitsTiles) {
             Tile et = (Tile) tiles.get(i);
-            Exit exit = (Exit) et.getPermanentOccupant();
+            Occupant o = et.getPermanentOccupant() ;
+            if (!(o instanceof Exit)){
+                continue;
+            }
+            Exit exit = (Exit) o;
             if (exit.getExitDirection() == dir) {
                 return et;
             }

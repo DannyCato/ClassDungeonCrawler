@@ -14,6 +14,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import edu.rit.swen262.domain.DirectionalVector;
 import edu.rit.swen262.domain.PlayerCharacter;
 import edu.rit.swen262.service.Action.DisplayMenuType;
 import edu.rit.swen262.ui.MUDGameUI;
@@ -80,10 +81,10 @@ class GameStateTest {
         ArgumentCaptor<GameEvent> actualEvent = ArgumentCaptor.forClass(GameEvent.class);
 
         GameEvent expectedEvent = new GameEvent(GameEventType.MOVE_PLAYER);
-        expectedEvent.addData("direction", "North");
+        expectedEvent.addData("direction", DirectionalVector.NORTH);
 
         gameState.register(spyObserver);
-        gameState.movePlayer("North");
+        gameState.movePlayer(DirectionalVector.NORTH);
 
         assertTrue(gameState.getObservers().contains(spyObserver));
 
@@ -102,7 +103,7 @@ class GameStateTest {
         expectedEvent.addData("direction", "East");
 
         gameState.register(spyObserver);
-        gameState.attackCharacter("East");
+        gameState.attackCharacter(DirectionalVector.EAST);
 
         assertTrue(gameState.getObservers().contains(spyObserver));
 
