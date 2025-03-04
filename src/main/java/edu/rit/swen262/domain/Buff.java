@@ -1,8 +1,8 @@
 package edu.rit.swen262.domain;
 
 /**
- * Represents a Buff item that will increase the player's stats for a number of turns
- * Extends the {@code Item} class
+ * Represents a Buff item that will increase the player's stats for a number of turns.
+ * Extends the {@code Item} interface.
  * 
  * @author [Nick F, Ryan M]
  */
@@ -87,7 +87,7 @@ public class Buff extends Item {
     /**
      * Returns a clean string representation of a buff item including name,
      * description, duration, attack, defense, HP, and gold value.
-     * @return
+     * @return A string describing the Buff.
      */
     @Override
     public String toString() {

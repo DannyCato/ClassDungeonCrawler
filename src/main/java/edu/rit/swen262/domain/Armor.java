@@ -1,7 +1,7 @@
 package edu.rit.swen262.domain;
 
 /**
- * Represents an armor item in game, increasing the player's defensive stats.
+ * Represents an Armor item in game, increasing the player's defensive stats.
  * Extends from {@code Item}
  * 
  * @author [Nick F, Ryan M]
@@ -35,7 +35,7 @@ public class Armor extends Item {
 
     /**
      * Returns a clean string representation of an armor item, using the name, description, defense, and count.
-     * @return
+     * @return A string describing the Armor.
      */
     @Override
     public String toString() {

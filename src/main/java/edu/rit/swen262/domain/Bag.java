@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents a bag that can hold items, acts as a container
+ * Represents a Bag that can hold items, acts as a container
  * Has a defined capacity to store a specific amount of items
  * 
  * @author [Nick F, Ryan M]
