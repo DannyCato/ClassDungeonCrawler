@@ -1,6 +1,9 @@
     package edu.rit.swen262.domain;
 
-    /**
+import java.util.ArrayList;
+import java.util.List;
+
+/**
      * represents the Player Character traveling through the dungeon, extends the
      * {@link Character}
      */
@@ -103,4 +106,27 @@
             }
             return null;
         }
-    }
+
+        public List<Item> getCorpse() {
+            if (getHealth() > 0) {
+                return null;
+            }
+
+            List<Item> corpse = new ArrayList<Item>();
+
+            if (armor != null) {corpse.add(armor);}
+            if (weapon != null) {corpse.add(weapon);}
+            if (gold != null) {corpse.add(gold);}
+
+            for (Bag bag : inventory.getBags()) {
+                for (Item each : bag.getItems()) {
+                    corpse.add(each);
+                }
+            }
+
+            return corpse;
+            
+        }
+}
+
+    
