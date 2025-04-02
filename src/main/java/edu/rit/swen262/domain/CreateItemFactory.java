@@ -28,7 +28,7 @@ public class CreateItemFactory implements ItemFactory {
         int hpRandom = r.nextInt(10);
         int goldRandom = r.nextInt(5) + 1;
         Gold goldValue = new Gold(goldRandom);
-        String[] names = {"Leather", "Iron", "Gold", "Diamond"};
+        String[] names = {"Steak", "Burger", "Apple", "Rocks"};
         return new Food(names[r.nextInt(names.length)], "This is food.", hpRandom, goldValue);
     }
 
