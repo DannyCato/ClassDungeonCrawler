@@ -27,7 +27,7 @@ public class Chest {
 
         int maxItems = r.nextInt(5) + 1;
         int goldRandom = r.nextInt(10) + 10;
-        Gold goldValue = new Gold(goldRandom);
+        Gold goldValue = new Gold(goldRandom); 
         contents.add(goldValue);
 
         for (int i = 0; i < maxItems; i++) {

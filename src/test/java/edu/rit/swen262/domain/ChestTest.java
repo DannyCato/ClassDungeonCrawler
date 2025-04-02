@@ -2,6 +2,8 @@ package edu.rit.swen262.domain;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.Test;
 
 public class ChestTest {
@@ -10,7 +12,7 @@ public class ChestTest {
     public void test_GenerateNewChest() {
 
         CreateItemFactory factory = new CreateItemFactory();
-        Chest chest = new Chest(null, 0);
+        Chest chest = new Chest(new ArrayList<>(), 6);
         chest.generateChest(factory);
 
         assertNotNull(chest);
