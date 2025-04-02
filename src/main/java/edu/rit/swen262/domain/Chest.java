@@ -32,26 +32,25 @@ public class Chest {
 
         for (int i = 0; i < maxItems; i++) {
             if (contents.size() != capacity) {
-                int toCreate = r.nextInt(3);
+                int toCreate = r.nextInt(4);
 
-                if (toCreate == 0) {
-                    Armor armor = factory.createArmor();
-                    contents.add(armor);
-                }
-                else if (toCreate == 1) {
-                    Weapon weapon = factory.createWeapon();
-                    contents.add(weapon);
-                }
-                else if (toCreate == 2) {
-                    Food food = factory.createFood();
-                    contents.add(food);
-                }
-
-                else if (toCreate == 3) {
-                    Buff buff = factory.createBuff();
-                    contents.add(buff);
-
-                    // will make this switch case in a minute
+                switch(toCreate) {
+                    case 0:
+                        Armor armor = factory.createArmor();
+                        contents.add(armor);
+                        break;
+                    case 1:
+                        Weapon weapon = factory.createWeapon();
+                        contents.add(weapon);
+                        break;
+                    case 2:
+                        Food food = factory.createFood();
+                        contents.add(food);
+                        break;
+                    case 3:
+                        Buff buff = factory.createBuff();
+                        contents.add(buff);
+                        break;
                 }
             }
         }
