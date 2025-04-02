@@ -120,7 +120,7 @@ import java.util.List;
 
         public void lootChest(Chest chest) {
             for (Item item : chest.getContents()) {
-              String result = addItemToBag(item);
+              addItemToBag(item);
             }
             chest.getContents().clear();
         }
@@ -147,7 +147,7 @@ import java.util.List;
         public void lootCorpse(PlayerCharacter player) {
           List<Item> items = player.getCorpse();
           for (Item item : items) {
-            String result = addItemToBag(item);
+            addItemToBag(item);
           }
         }
 }
