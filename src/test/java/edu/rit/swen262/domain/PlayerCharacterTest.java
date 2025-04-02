@@ -1,9 +1,11 @@
 package edu.rit.swen262.domain;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PlayerCharacterTest {
 
@@ -93,6 +95,54 @@ public class PlayerCharacterTest {
         // Base attack is 10
         assertEquals(1, enemy.getHealth());
         assertEquals(100, player.getHealth());
+
+    }
+
+    @Test
+    public void test_PlayerLootChest() {
+      Inventory inventory = new Inventory(6);
+      Gold gold = new Gold(10);
+
+      PlayerCharacter player = new PlayerCharacter("player", "description", null, null, inventory, gold);
+      Chest chest = new Chest(new ArrayList<>(), 6);
+
+      // Player should have a random assortment of randomly generated items
+      player.lootChest(chest);
+
+      assertFalse(player.inventory.getBags().get(0).getItems().isEmpty());
+      assertTrue(chest.getContents().isEmpty());
+
+//      for (Bag bag : player.inventory.getBags()) {
+//        for (Item item : bag.getItems()) {
+//          System.out.println(item);
+//        }
+//      }
+
+    }
+
+    @Test
+    public void test_PlayerLootCorpse() {
+      Inventory inventory = new Inventory(999);
+      Gold gold = new Gold(10);
+
+      PlayerCharacter player = new PlayerCharacter("player", "description", null, null, inventory, gold);
+      PlayerCharacter player2 = new PlayerCharacter("player2", "description2", null, null, inventory, gold);
+      Weapon weapon = new Weapon("weapon", "wooden sword", 999, gold);
+
+      player.equipWeapon(weapon);
+      player2.equipWeapon(weapon);
+      player2.attack(player);
+
+      // Player 2 should have a sword and some gold.
+      player2.lootCorpse(player);
+
+      assertFalse(player2.inventory.getBags().get(0).getItems().isEmpty());
+
+//      for (Bag bag : player2.inventory.getBags()) {
+//        for (Item item : bag.getItems()) {
+//          System.out.println(item);
+//        }
+//      }
 
     }
 
