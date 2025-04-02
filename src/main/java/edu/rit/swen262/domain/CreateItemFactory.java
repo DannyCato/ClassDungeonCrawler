@@ -11,7 +11,7 @@ public class CreateItemFactory implements ItemFactory {
         int goldRandom = r.nextInt(5) + 1; // to at least be 1
         Gold goldValue = new Gold(goldRandom);
         String[] names = {"Leather", "Iron", "Gold", "Diamond"};
-        return new Armor(names[getRandomName(names)], "This is armor.", defense, goldValue);
+        return new Armor(names[r.nextInt(names.length)], "This is armor.", defense, goldValue);
     }
 
     @Override
@@ -20,7 +20,7 @@ public class CreateItemFactory implements ItemFactory {
         int goldRandom = r.nextInt(5) + 1;
         Gold goldValue = new Gold(goldRandom);
         String[] names = {"Wooden", "Iron", "Gold", "Diamond"};
-        return new Weapon(names[getRandomName(names)], "This is a weapon.", attack, goldValue);
+        return new Weapon(names[r.nextInt(names.length)], "This is a weapon.", attack, goldValue);
     }
 
     @Override
@@ -29,18 +29,31 @@ public class CreateItemFactory implements ItemFactory {
         int goldRandom = r.nextInt(5) + 1;
         Gold goldValue = new Gold(goldRandom);
         String[] names = {"Leather", "Iron", "Gold", "Diamond"};
-        return new Food(names[getRandomName(names)], "This is food.", hpRandom, goldValue);
+        return new Food(names[r.nextInt(names.length)], "This is food.", hpRandom, goldValue);
     }
 
     @Override
     public Buff createBuff() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createBuff'");
-    }
+ 
+        int goldRandom = r.nextInt(5) + 1;
+        Gold goldValue = new Gold(goldRandom);
+        String[] names = {"Attack Potion", "Defense Potion", "Health Potion"};
+        String potion = names[r.nextInt(names.length)];
+        int attack = 0;
+        int defense = 0;
+        int health = 0;
 
-    public int getRandomName(String[] names) {
-        int options = names.length;
-        return r.nextInt(options);
+        if (potion.equals("Attack Potion")) {
+            attack = r.nextInt(5);
+        }
+        else if(potion.equals("Defense Potion")) {
+            defense = r.nextInt(5);
+        }
+        else if(potion.equals("Health Potion")) {
+            health = r.nextInt(10);
+        }
+        return new Buff(potion, "This is a" + potion, 10, attack, defense, health, goldValue);
+
     }
     
 }
