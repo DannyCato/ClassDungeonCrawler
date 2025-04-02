@@ -47,7 +47,12 @@ public class Chest {
                     contents.add(food);
                 }
 
-                // to add buffs
+                else if (toCreate == 3) {
+                    Buff buff = factory.createBuff();
+                    contents.add(buff);
+
+                    // will make this switch case in a minute
+                }
             }
         }
     }
