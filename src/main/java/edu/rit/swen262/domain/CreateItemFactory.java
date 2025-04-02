@@ -43,15 +43,18 @@ public class CreateItemFactory implements ItemFactory {
         int defense = 0;
         int health = 0;
 
-        if (potion.equals("Attack Potion")) {
-            attack = r.nextInt(5);
+        switch(potion) {
+            case "Attack Potion":
+                attack = r.nextInt(5);
+                break;
+            case "Defense Potion":
+                defense = r.nextInt(5);
+                break;
+            case "Health Potion":
+                health = r.nextInt(10);
+                break;
         }
-        else if(potion.equals("Defense Potion")) {
-            defense = r.nextInt(5);
-        }
-        else if(potion.equals("Health Potion")) {
-            health = r.nextInt(10);
-        }
+
         return new Buff(potion, "This is a" + potion, 10, attack, defense, health, goldValue);
 
     }
