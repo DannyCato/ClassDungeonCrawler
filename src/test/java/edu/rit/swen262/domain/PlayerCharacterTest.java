@@ -15,7 +15,7 @@ public class PlayerCharacterTest {
         PlayerCharacter character = new PlayerCharacter("name", "description", null, null, inventory, gold);
         Armor armor = new Armor("armor", "description armor", 999, gold);
         Weapon weapon = new Weapon("weapon", "description weapon", 999, gold);
-        
+
         character.equipArmor(armor);
         character.equipWeapon(weapon);
 
@@ -33,7 +33,7 @@ public class PlayerCharacterTest {
         Armor armor = new Armor("armor", "description armor", 999, gold);
         Armor armor2 = new Armor("shouldnt equip this", "description armor", 1, gold);
         Weapon weapon = new Weapon("weapon", "description weapon", 999, gold);
-        
+
         character.equipArmor(armor);
         character.equipWeapon(weapon);
         character.equipArmor(armor2);
@@ -60,13 +60,13 @@ public class PlayerCharacterTest {
         player.equipWeapon(weapon);
         enemy.equipWeapon(weapon);
 
-        assertEquals(player.getHealth(), 100);
+        assertEquals(100, player.getHealth());
 
         enemy.attack(player);
-        
+
         // Base attack is 10
-        assertEquals(player.getHealth(), 75);
-        assertEquals(enemy.getHealth(), 100);
+        assertEquals(75, player.getHealth());
+        assertEquals(100, enemy.getHealth());
 
     }
 
@@ -86,14 +86,14 @@ public class PlayerCharacterTest {
         player.equipWeapon(weapon);
         enemy.equipWeapon(weapon);
 
-        assertEquals(player.getHealth(), 100);
+        assertEquals(100, player.getHealth());
 
         player.attack(enemy);
-        
+
         // Base attack is 10
-        assertEquals(enemy.getHealth(), 1);
-        assertEquals(player.getHealth(), 100);
+        assertEquals(1, enemy.getHealth());
+        assertEquals(100, player.getHealth());
 
     }
-    
+
 }
