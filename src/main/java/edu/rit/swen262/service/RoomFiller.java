@@ -6,10 +6,14 @@ import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.Random;
+import java.util.Arrays;
+import java.util.List;
 
 import edu.rit.swen262.domain.DirectionalVector;
+import edu.rit.swen262.domain.Enemy;
 import edu.rit.swen262.domain.Exit;
 import edu.rit.swen262.domain.Obstacle;
+import edu.rit.swen262.domain.Occupant;
 import edu.rit.swen262.domain.DungeonPiece.DungeonPiece;
 import edu.rit.swen262.domain.DungeonPiece.Room;
 import edu.rit.swen262.domain.DungeonPiece.RoomNode;
@@ -54,9 +58,13 @@ public class RoomFiller {
                     t.setExit(true);
                 }
             } else {
-                Obstacle o = null;
+                Occupant o = null;
                 if (chance < obstacleChance) {
-                    o = new Obstacle("");
+                    if (rand.nextBoolean()) {
+                        o = new Obstacle("");
+                    } else {
+                        o = generateEnemy();
+                    }
                 }
                 t = new Tile(o);
             }
@@ -70,6 +78,15 @@ public class RoomFiller {
         for (int i = 0; i < size; i++) {
             originalRoom.addTile(room.getTileByIndex(i));
         } 
+    }
+
+    private static Occupant generateEnemy() {
+        List<String> names = Arrays.asList("Zombie", "Vampire", "Werewolf", "Ghost", "Goblin",
+                                                "Orc", "Troll", "Skeleton", "Mummy", "Golem",
+                                                "Lich", "Demon", "Dragon", "Wraith", "Kraken",
+                                                "Hydra", "Griffin", "Minotaur", "Chimera", "Harpy");
+        String name = names.get(rand.nextInt(names.size()));
+        return new Enemy(name, rand.nextInt(101), rand.nextInt(50), rand.nextInt(50));
     }
 
     private static boolean validateRoom(Room room) {
