@@ -1,6 +1,9 @@
     package edu.rit.swen262.domain;
 
-    /**
+import java.util.ArrayList;
+import java.util.List;
+
+/**
      * represents the Player Character traveling through the dungeon, extends the
      * {@link Character}
      */
@@ -14,7 +17,7 @@
          * initializes a PlayerCharacter with the given name and description. Their
          * maxHP, attack, and defense stats are set to 100, 10, and 0 respectively by
          * default.
-         * 
+         *
          * @param name        the given name of the player
          * @param description the given brief description of the player
          * @param armor       the equipped armor
@@ -103,4 +106,50 @@
             }
             return null;
         }
-    }
+
+        public String addItemToBag(Item item) {
+
+          for (Bag bag : inventory.getBags()) {
+            if (bag.getItems().size() < bag.getCapacity()) {
+              bag.addItem(item);
+              return item.getName() + " added to Bag.";
+            }
+          }
+          return "Inventory full!";
+        }
+
+        public void lootChest(Chest chest) {
+            for (Item item : chest.getContents()) {
+              addItemToBag(item);
+            }
+            chest.getContents().clear();
+        }
+
+        public List<Item> getCorpse() {
+            if (getHealth() > 0) {
+                return null;
+            }
+
+            List<Item> corpse = new ArrayList<Item>();
+
+            if (armor != null) {corpse.add(armor);}
+            if (weapon != null) {corpse.add(weapon);}
+            if (gold != null) {corpse.add(gold);}
+
+            for (Bag bag : inventory.getBags()) {
+              corpse.addAll(bag.getItems());
+            }
+
+            return corpse;
+
+        }
+
+        public void lootCorpse(PlayerCharacter player) {
+          List<Item> items = player.getCorpse();
+          for (Item item : items) {
+            addItemToBag(item);
+          }
+        }
+}
+
+
