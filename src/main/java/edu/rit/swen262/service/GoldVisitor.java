@@ -6,7 +6,7 @@ import edu.rit.swen262.domain.Item;
 
 public class GoldVisitor implements InventoryVisitor {
     public void visitInventory(Inventory inventory) {
-
+        
     }
 
     public void visitBag(Bag bag) {

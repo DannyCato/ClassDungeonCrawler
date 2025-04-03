@@ -8,7 +8,7 @@ import edu.rit.swen262.service.GameEvent;
 import edu.rit.swen262.service.GameEventType;
 import edu.rit.swen262.service.GameObserver;
 import edu.rit.swen262.service.IObservable;
-
+import edu.rit.swen262.service.InventoryVisitor;
 import edu.rit.swen262.service.GameEvent;
 import edu.rit.swen262.service.GameEventType;
 import edu.rit.swen262.service.GameObserver;
@@ -21,7 +21,7 @@ import edu.rit.swen262.service.IObservable;
  * @author [Nick F, Ryan M]
  */
 
-public class Inventory {
+public class Inventory implements ItemComponent {
 
     /** The list of bags the the player currently has. */
     private List<Bag> bags;
@@ -53,11 +53,6 @@ public class Inventory {
         this.capacity = capacity;
     }
 
-    public Inventory() {
-        this.capacity = 6;
-        this.bags = this.generateBags(6);
-    }
-
     /**
      * Tries to add a bag if there is space.
      * @param bag The bag to be added.
@@ -69,15 +64,6 @@ public class Inventory {
         }
         return false;
 
-    }
-
-    private List<Bag> generateBags(int numSlots) {
-        ArrayList<Bag> contents = new ArrayList<>();
-        for (int i = 0; i < this.capacity; i++) {
-            contents.add(new Bag(new ArrayList<Item>(), numSlots));
-        }
-
-        return contents;
     }
 
     public boolean addItem(Item item) {
@@ -127,7 +113,21 @@ public class Inventory {
      */
     public int getCapacity() {
         return capacity;
-
     }
 
+    public String getName(){
+        return "Big uhhh Big Inventory Guy";
+    }
+
+    public String getDescription(){
+        return "I'm filled of little goodies :3";
+    }
+
+    public Gold getValue() {
+        return new Gold(0);
+    }
+    
+    public void accept(InventoryVisitor visitor) {
+        visitor.visitInventory(this);
+    }
 }
