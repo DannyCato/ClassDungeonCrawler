@@ -1,12 +1,14 @@
 package edu.rit.swen262.service;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.HashMap;
 
 import edu.rit.swen262.domain.Bag;
 import edu.rit.swen262.domain.Inventory;
 import edu.rit.swen262.service.Action.Action;
 import edu.rit.swen262.service.Action.DisplayMenuAction;
-import edu.rit.swen262.service.Action.UseItemAction;
+import edu.rit.swen262.ui.MUDGameUI;
 
 /**
  * A class which parses input from the user, mapping the given String
@@ -19,7 +21,8 @@ public class InputParser {
     private HashMap<MenuState, HashMap<Character, Action>> keystrokes;
     private ActionVisitor visitor;
     private Inventory inventory;
-    private char lastPressedKey;
+    private final int HISTORY_SIZE = 3; // number of most recent keystrokes kept in memory
+    private final Deque<Character> keystrokeHistory = new ArrayDeque<>(HISTORY_SIZE);
 
     /**
      * creates a new InputParser with the provided nested map of menu types to
@@ -47,7 +50,6 @@ public class InputParser {
             return;
         }
         
-        System.out.println(currentMenu);
         char input = text.toLowerCase().charAt(0);
 
         switch(currentMenu) {
@@ -62,29 +64,33 @@ public class InputParser {
                 break;
             case BAG:
                 // update list of items inside selected bag which can be selected
-                this.visitor.visitBag(this.inventory.getBags().get(Character.getNumericValue(input) - 1));
+                this.visitor.visitBag(this.inventory.getBags().get(Character.getNumericValue(getLast()) - 1));
                 keystrokes.put(MenuState.BAG, visitor.getKeystrokes());
+                break;
             case ITEM:
                 // update list of interactions available for the selected item
-                Bag bag = this.inventory.getBags().get(Character.getNumericValue(lastPressedKey) - 1);
-                this.visitor.visitItem(bag.getItems().get((Character.getNumericValue(input) - 1)));
+                Bag bag = this.inventory.getBags().get(Character.getNumericValue(getSecondLast()) - 1);
+                this.visitor.visitItem(bag.getItems().get((Character.getNumericValue(getLast()) - 1)));
                 
                 keystrokes.put(MenuState.ITEM, visitor.getKeystrokes());
                 break;
             default:
-                // not inventory-related, do nothing
                 break;
         }
 
         Action action = keystrokes.get(currentMenu).get(input);
 
-        
         // once action has been fully constructed, execute the command
         if (action != null) {
             action.performAction();
         }
         this.currentMenu.handleInput(this, input);
-        this.lastPressedKey = input;
+
+        //remove oldest input from history and add new one at tail
+        if (keystrokeHistory.size() == 3) {
+            keystrokeHistory.pollFirst();
+        }
+        keystrokeHistory.addLast(input);
     } 
 
     /**
@@ -95,5 +101,14 @@ public class InputParser {
      */
     public void setMenu(MenuState menu) {
         this.currentMenu = menu;
+    }
+
+    private Character getLast() {
+        return keystrokeHistory.peekLast();
+    }
+
+    private Character getSecondLast() {
+        if (keystrokeHistory.size() < 2) return null;
+        return keystrokeHistory.toArray(new Character[0])[keystrokeHistory.size() - 2]; // Second last keystroke
     }
 }

@@ -30,6 +30,7 @@ import com.googlecode.lanterna.terminal.swing.SwingTerminalFrame;
 import com.googlecode.lanterna.terminal.swing.TerminalEmulatorAutoCloseTrigger;
 
 import ch.qos.logback.core.net.QueueFactory;
+import edu.rit.swen262.domain.Item;
 import edu.rit.swen262.service.GameEvent;
 import edu.rit.swen262.service.GameEventType;
 import edu.rit.swen262.service.GameObserver;
@@ -88,6 +89,12 @@ public class MUDGameUI implements GameObserver {
                 break;
             case GameEventType.TAKE_DAMAGE:
                 this.eventLogMsgs.offer("Something took damage.");
+                this.redrawEventLog();
+                this.redrawMenuDefault();
+                break;
+            case GameEventType.USE_ITEM:
+                Item usedItem = (Item) event.getData("item");
+                this.eventLogMsgs.offer("You used the " + usedItem.getName() + "!");
                 this.redrawEventLog();
                 this.redrawMenuDefault();
                 break;

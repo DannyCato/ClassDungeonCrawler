@@ -22,6 +22,7 @@ public class ActionVisitor implements InventoryVisitor {
     }
 
     public void visitInventory(Inventory inventory) {
+        this.actionKeystrokes = new HashMap<Character, Action>();
         List<Bag> contents = inventory.getBags();
 
         for (int i = 0; i < contents.size() ; i++) {
@@ -34,6 +35,7 @@ public class ActionVisitor implements InventoryVisitor {
     }
     
     public void visitBag(Bag bag) {
+        this.actionKeystrokes = new HashMap<Character, Action>();
         List<Item> contents = bag.getItems();
 
         for (int i = 0; i < contents.size() ; i++) {
@@ -47,10 +49,10 @@ public class ActionVisitor implements InventoryVisitor {
     }
     
     public void visitItem(Item item) {
+        this.actionKeystrokes = new HashMap<Character, Action>();
+
         // implement functionality for dropping items here under key '2'
-        this.actionKeystrokes = new HashMap<Character, Action>() {{
-            put('1', new UseItemAction(gameState, item));
-        }};
+        this.actionKeystrokes.put('1', new UseItemAction(gameState, item));
     }
 
     /**

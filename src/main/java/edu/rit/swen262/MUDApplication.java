@@ -83,20 +83,15 @@ class SampleCommandLineRunner implements CommandLineRunner {
 		}};
 
 		/*
-		 inv command map should change based upon what's in the inventory?
-		 AKA Bags/Individual Items
+		 inventory, bag, and item keystroke maps are populated dynamically by the
+		 {@link InputParser} based upon the current state of the inventory when it
+		 is opened
 		 */
-		HashMap<Character, Action> inventoryKeystrokes = new HashMap<>() {{
+		HashMap<Character, Action> inventoryKeystrokes = new HashMap<>();
 
-		}};
+		HashMap<Character, Action> bagKeystrokes = new HashMap<>();
 
-		HashMap<Character, Action> bagKeystrokes = new HashMap<>() {{
-
-		}};
-
-		HashMap<Character, Action> itemKeystrokes = new HashMap<>() {{
-
-		}};
+		HashMap<Character, Action> itemKeystrokes = new HashMap<>();
 
 
 		String moveMenuString = this.buildMenuString(moveKeystrokes);
@@ -115,6 +110,7 @@ class SampleCommandLineRunner implements CommandLineRunner {
 		keystrokes.put(MenuState.ATTACK, attackKeystrokes);
 		keystrokes.put(MenuState.INVENTORY, inventoryKeystrokes);
 		keystrokes.put(MenuState.BAG, bagKeystrokes);
+		keystrokes.put(MenuState.ITEM, itemKeystrokes);
 
 		return keystrokes;
 	}
@@ -154,9 +150,9 @@ class SampleCommandLineRunner implements CommandLineRunner {
 		gameState.pickUpItem(new Food("Beans", "", 10, new Gold(100)));
 		gameState.pickUpItem(new Food("Burgar", "", 10, new Gold(100)));
 		gameState.pickUpItem(new Weapon("BEANS", "", 10, new Gold(100)));
-		gameState.pickUpItem(new Weapon("Gun #1", "", 10, new Gold(100)));
-		gameState.pickUpItem(new Weapon("Gun #2", "", 10, new Gold(100)));
-		gameState.pickUpItem(new Weapon("Gun #3", "", 10, new Gold(100)));
+		gameState.pickUpItem(new Weapon("Gun", "", 10, new Gold(100)));
+		gameState.pickUpItem(new Weapon("The Rock (Dwanye)", "", 9999, new Gold(100)));
+
 		client.start();
 	}
 }

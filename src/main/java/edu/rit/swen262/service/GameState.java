@@ -149,8 +149,10 @@ public class GameState implements IObservable {
      * needs an @param item the player character is using
      */
     public void useItem(Item item) {
-        //still waiting on integration w/ inventory subsystem
-        //this.notifyObservers(new GameEvent(GameEventType.USE_ITEM)); 
+        GameEvent event = new GameEvent(GameEventType.USE_ITEM);
+        event.addData("item", item);
+        
+        this.notifyObservers(event); 
     }
 
     /**
