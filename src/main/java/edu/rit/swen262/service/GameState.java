@@ -8,8 +8,6 @@ import edu.rit.swen262.domain.Inventory;
 import edu.rit.swen262.domain.Item;
 import edu.rit.swen262.domain.Occupant;
 import edu.rit.swen262.domain.PlayerCharacter;
-import edu.rit.swen262.domain.RenderRepresentation;
-import edu.rit.swen262.domain.DungeonPiece.DungeonPiece;
 import edu.rit.swen262.domain.DungeonPiece.Map;
 import edu.rit.swen262.domain.DungeonPiece.Room;
 import edu.rit.swen262.domain.DungeonPiece.Tile;
@@ -17,7 +15,6 @@ import edu.rit.swen262.domain.TimePeriod;
 import edu.rit.swen262.service.Action.DisplayMenuType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 
 /**
@@ -247,6 +244,11 @@ public class GameState implements IObservable {
         return this.turnNumber;
     }
 
+     /**
+     * fetches the {@link Inventory Inventory} of the current player
+     * 
+     * @return the a list of {@link Bag Bags} of the current player's inventory
+     */
     public Inventory getInventory() {
         return this.player.getInventory();
     }

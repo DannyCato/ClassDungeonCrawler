@@ -115,18 +115,35 @@ public class Inventory implements ItemComponent {
         return capacity;
     }
 
+    /**
+    * Gets the names of the inventory
+    * @return The name of the inventory as a string
+    */
     public String getName(){
         return "Big uhhh Big Inventory Guy";
     }
 
+    /**
+    * Gets the description of the inventory
+    * @return The description of the inventory
+    */
     public String getDescription(){
         return "I'm filled of little goodies :3";
     }
 
+    /**
+    * Gets the goldValue of the inventory
+    * @return The {@link Gold Gold} Value of the inventory
+    */
     public Gold getValue() {
         return new Gold(0);
     }
     
+    /**
+     * Accepts a visitor to allow the vistor to perform operations on this inventory
+     * 
+     * @param visitor the Visitor that will perform operations on this inventory
+     */
     public void accept(InventoryVisitor visitor) {
         visitor.visitInventory(this);
     }

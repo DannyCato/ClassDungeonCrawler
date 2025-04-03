@@ -54,6 +54,11 @@ public abstract class Item implements ItemComponent {
         return value;
     }
 
+    /**
+     * Accepts a visitor to allow the vistor to perform operations on this Item
+     * 
+     * @param visitor the Visitor that will perform operations on this Item
+     */
     public void accept(InventoryVisitor visitor) {
         visitor.visitItem(this);
     }

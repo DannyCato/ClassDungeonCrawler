@@ -94,14 +94,26 @@ public class Bag implements ItemComponent {
         return this.contents.size() == this.capacity;
     }
 
+    /**
+    * Gets the names of the Bag
+    * @return The name of the Bag as a string
+    */
     public String getName() {
         return "Bag";
     }
 
+    /**
+    * Gets the description of the bag
+    * @return The description of the bag
+    */
     public String getDescription(){
         return "Just a little baggie waggie";
     }
 
+    /**
+    * Gets the goldValue of the bag
+    * @return The {@link Gold Gold} Value of the bag
+    */
     public Gold getValue(){
         int totalVal = 0;
         
@@ -112,6 +124,11 @@ public class Bag implements ItemComponent {
         return new Gold(totalVal);
     }
 
+    /**
+     * Accepts a visitor to allow the vistor to perform operations on this bag
+     * 
+     * @param visitor the Visitor that will perform operations on this bag
+     */
     public void accept(InventoryVisitor visitor) {
         visitor.visitBag(this);
     }
