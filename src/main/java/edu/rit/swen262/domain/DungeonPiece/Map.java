@@ -25,6 +25,8 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
 
     private DungeonPiece<Room> currentRoom;
 
+    private boolean goalReached = false;
+
     // <-----------------------Constructors----------------------->
 
     public Map(DungeonPiece<Room> root) {
@@ -172,6 +174,9 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
         exitTile.removeOccupant(o); // finally do process
         otherTile.addOccupant(o);
         currentRoom = otherRoom;
+        if (playerOnGoal()) {
+            this.goalReached = true;
+        }
         return true;
     }
     
