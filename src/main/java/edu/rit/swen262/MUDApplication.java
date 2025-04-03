@@ -12,7 +12,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import edu.rit.swen262.domain.DirectionalVector;
+import edu.rit.swen262.domain.Food;
+import edu.rit.swen262.domain.Gold;
 import edu.rit.swen262.domain.PlayerCharacter;
+import edu.rit.swen262.domain.Weapon;
+import edu.rit.swen262.service.ActionVisitor;
 import edu.rit.swen262.service.GameState;
 import edu.rit.swen262.service.InputParser;
 import edu.rit.swen262.service.MenuState;
@@ -138,13 +142,21 @@ class SampleCommandLineRunner implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		PlayerCharacter player = new PlayerCharacter("Bobert", "can lift at least 5 worms.");
 		GameState gameState = new GameState(player);
+		ActionVisitor actionVisitor = new ActionVisitor(gameState);
 
 		HashMap<MenuState, HashMap<Character, Action>> keystrokes = this.bindCommands(gameState);
 		
-		InputParser inputParser = new InputParser(keystrokes);
+		InputParser inputParser = new InputParser(keystrokes, actionVisitor, gameState.getInventory());
 		MUDGameUI client = new MUDGameUI(inputParser);
 		gameState.register(client);
 
+		//simulate adding items to player inv for testing : )
+		gameState.pickUpItem(new Food("Beans", "", 10, new Gold(100)));
+		gameState.pickUpItem(new Food("Burgar", "", 10, new Gold(100)));
+		gameState.pickUpItem(new Weapon("BEANS", "", 10, new Gold(100)));
+		gameState.pickUpItem(new Weapon("Gun #1", "", 10, new Gold(100)));
+		gameState.pickUpItem(new Weapon("Gun #2", "", 10, new Gold(100)));
+		gameState.pickUpItem(new Weapon("Gun #3", "", 10, new Gold(100)));
 		client.start();
 	}
 }

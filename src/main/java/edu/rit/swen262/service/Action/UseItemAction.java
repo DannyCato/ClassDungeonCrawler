@@ -1,5 +1,6 @@
 package edu.rit.swen262.service.Action;
 
+import edu.rit.swen262.domain.Item;
 import edu.rit.swen262.service.GameState;
 
 /**
@@ -10,7 +11,7 @@ import edu.rit.swen262.service.GameState;
  */
 public class UseItemAction implements Action {
     private GameState gameState;
-    private String item;
+    private Item item;
 
     /**
      * instantiates a {@link Action concrete command} with the given {@link GameState}
@@ -18,7 +19,7 @@ public class UseItemAction implements Action {
      * @param gameState object containing the current state of the game
      * @param item the item to be used by the player
      */
-    public UseItemAction(GameState gameState, String item) {
+    public UseItemAction(GameState gameState, Item item) {
         this.gameState = gameState;
         this.item = item;
     }
@@ -32,7 +33,7 @@ public class UseItemAction implements Action {
 
     @Override
     public String toString() {
-        return this.item;
+        return this.item.toString();
     }
 }
 

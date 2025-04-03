@@ -2,7 +2,10 @@ package edu.rit.swen262.service;
 
 import java.util.HashMap;
 
+import edu.rit.swen262.domain.Bag;
+import edu.rit.swen262.domain.Inventory;
 import edu.rit.swen262.service.Action.Action;
+import edu.rit.swen262.service.Action.DisplayMenuAction;
 import edu.rit.swen262.service.Action.UseItemAction;
 
 /**
@@ -14,6 +17,9 @@ import edu.rit.swen262.service.Action.UseItemAction;
 public class InputParser {
     protected MenuState currentMenu;
     private HashMap<MenuState, HashMap<Character, Action>> keystrokes;
+    private ActionVisitor visitor;
+    private Inventory inventory;
+    private char lastPressedKey;
 
     /**
      * creates a new InputParser with the provided nested map of menu types to
@@ -22,8 +28,10 @@ public class InputParser {
      * 
      * @param keystrokes map between characters and their matching commands
      */
-    public InputParser(HashMap<MenuState, HashMap<Character, Action>> keystrokes) {
+    public InputParser(HashMap<MenuState, HashMap<Character, Action>> keystrokes, ActionVisitor visitor, Inventory inventory) {
         this.keystrokes = keystrokes;
+        this.visitor = visitor;
+        this.inventory = inventory;
         this.currentMenu = MenuState.DEFAULT;
     }
 
@@ -40,13 +48,34 @@ public class InputParser {
         }
 
         char input = text.toLowerCase().charAt(0);
+
+        switch(currentMenu) {
+            case DEFAULT:
+                this.visitor.visitInventory(this.inventory);
+                keystrokes.put(MenuState.INVENTORY, visitor.getKeystrokes());
+                break;
+            case INVENTORY:
+                this.visitor.visitBag(this.inventory.getBags().get(((int) input) - 1));
+                keystrokes.put(MenuState.BAG, visitor.getKeystrokes());
+            case BAG:
+                Bag bag = this.inventory.getBags().get(((int) lastPressedKey) - 1);
+                this.visitor.visitItem(bag.getItems().get(((int) input) - 1));
+                keystrokes.put(MenuState.ITEM, visitor.getKeystrokes());
+                break;
+            default:
+                // not inventory-related, do nothing
+                break;
+        }
+
         Action action = keystrokes.get(currentMenu).get(input);
+
         
         // once action has been fully constructed, execute the command
         if (action != null) {
             action.performAction();
         }
         this.currentMenu.handleInput(this, input);
+        this.lastPressedKey = input;
     } 
 
     /**

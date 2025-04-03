@@ -4,6 +4,8 @@ import java.util.List;
 
 import edu.rit.swen262.domain.DayTime;
 import edu.rit.swen262.domain.DirectionalVector;
+import edu.rit.swen262.domain.Inventory;
+import edu.rit.swen262.domain.Item;
 import edu.rit.swen262.domain.Occupant;
 import edu.rit.swen262.domain.PlayerCharacter;
 import edu.rit.swen262.domain.RenderRepresentation;
@@ -146,9 +148,18 @@ public class GameState implements IObservable {
      * 
      * needs an @param item the player character is using
      */
-    public void useItem(String item) {
+    public void useItem(Item item) {
         //still waiting on integration w/ inventory subsystem
         //this.notifyObservers(new GameEvent(GameEventType.USE_ITEM)); 
+    }
+
+    /**
+     * test method for adding single item to inventory
+     * @param item
+     */
+    public void pickUpItem(Item item) {
+        player.pickUpItem(item);
+        System.out.println(item.toString());
     }
 
     /**
@@ -231,5 +242,9 @@ public class GameState implements IObservable {
      */
     public int getTurnNumber() {
         return this.turnNumber;
+    }
+
+    public Inventory getInventory() {
+        return this.player.getInventory();
     }
 }

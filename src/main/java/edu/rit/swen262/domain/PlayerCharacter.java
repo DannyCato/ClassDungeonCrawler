@@ -104,6 +104,10 @@ public class PlayerCharacter extends Character {
         return null;
     }
 
+    public void pickUpItem(Item item) {
+        inventory.addItem(item);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -116,5 +120,9 @@ public class PlayerCharacter extends Character {
      */
     public RenderRepresentation render() {
         return RenderRepresentation.CHARACTER;
+    }
+
+    public Inventory getInventory() {
+        return this.inventory;
     }
 }
