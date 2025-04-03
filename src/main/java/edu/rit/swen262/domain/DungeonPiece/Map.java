@@ -184,4 +184,8 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
         }
         return startTile;
     }
+
+    private boolean playerOnGoal(DungeonPiece<Tile> tile) {
+        return tile == ((Room) goal).getTileByIndex(0);
+    }
 }
