@@ -30,8 +30,8 @@ public class PlayerCharacterTest {
         Inventory inventory = new Inventory(6);
         Gold gold = new Gold(10);
         PlayerCharacter character = new PlayerCharacter("name", "description", null, null, inventory, gold);
-        Armor armor = new Armor("armor", "description armor", 999, gold);
-        Armor armor2 = new Armor("shouldnt equip this", "description armor", 1, gold);
+        Armor armor = new Armor("should swap this", "description armor", 999, gold);
+        Armor armor2 = new Armor("should equip this", "description armor", 1, gold);
         Weapon weapon = new Weapon("weapon", "description weapon", 999, gold);
         
         character.equipArmor(armor);
@@ -92,6 +92,35 @@ public class PlayerCharacterTest {
         
         // Base attack is 10
         assertEquals(enemy.getHealth(), 1);
+        assertEquals(player.getHealth(), 100);
+
+    }
+
+    @Test
+    public void test_PlayerEatFood() {
+
+        Inventory inventory = new Inventory(6);
+        Gold gold = new Gold(10);
+
+        PlayerCharacter player = new PlayerCharacter("player", "description", null, null, inventory, gold);
+        PlayerCharacter enemy = new PlayerCharacter("enemy", "description", null, null, inventory, gold);
+
+        Armor armor = new Armor("armor", "cloth armor", 0, gold);
+        Weapon weapon = new Weapon("weapon", "wooden sword", 89, gold);
+        Food food = new Food("steak", "food", 99, gold);
+
+        player.equipArmor(armor);
+        player.equipWeapon(weapon);
+        enemy.equipWeapon(weapon);
+
+        assertEquals(player.getHealth(), 100);
+
+        enemy.attack(player);
+
+        assertEquals(player.getHealth(), 1);
+
+        player.eatFood(food);
+
         assertEquals(player.getHealth(), 100);
 
     }
