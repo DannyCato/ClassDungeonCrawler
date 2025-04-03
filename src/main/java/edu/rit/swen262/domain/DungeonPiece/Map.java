@@ -124,12 +124,23 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
         return currentRoom;
     }
 
+    /**
+     * Checks if there is a connection from the current {@link Room} in the specified {@link DirectionalVector}.
+     *
+     * @param dir {@link DirectionalVector} indicating the direction to check for an exit
+     * @return boolean indicating whether an exit exists in the given direction
+     */
     public boolean canExitRoom(DirectionalVector dir) {
         return (((Room) currentRoom).getRoomNode().getConnection(dir)) != null;
     }
 
     /**
+     * Moves an {@link Occupant} within the current {@link Room} in the specified {@link DirectionalVector}.
+     * If the occupant is moved onto an exit {@link Tile}, an attempt is made to exit the room.
      * 
+     * @param o {@link Occupant} to be moved
+     * @param dir {@link DirectionalVector} indicating the direction to move
+     * @return boolean indicating whether the move was successful
      */
     public boolean move(Occupant o, DirectionalVector dir) {
         Tile t = ((Room)currentRoom).moveOccupant(o, dir);
@@ -179,7 +190,13 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
         }
         return true;
     }
-    
+
+    /**
+     * Finds the first stackable {@link Tile} in the {@link Room} given by {@link #setStartRoom(DungeonPiece)}
+     * and returns it. This is the tile that the player should start on.
+     * 
+     * @return the first stackable {@link Tile} in the {@link Room} given by {@link #setStartRoom(DungeonPiece)}
+     */
     public DungeonPiece<Tile> startUp() {
         int i = 0;
         startTile = ((Room)startRoom).getTileByIndex(i);
@@ -190,7 +207,22 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
         return startTile;
     }
 
+
+    /**
+     * Checks if the player has reached the goal {@link Room}.
+     *
+     * @return boolean indicating whether the current room is the goal room
+     */
     private boolean playerOnGoal() {
         return currentRoom == goal;
+    }
+
+    /**
+     * Sets the goal {@link Room} in the map.
+     * 
+     * @param goal the {@link DungeonPiece}<{@link Room}> to be set as the goal
+     */
+    public void setGoal(DungeonPiece<Room> goal) {
+        this.goal = goal;
     }
 }
