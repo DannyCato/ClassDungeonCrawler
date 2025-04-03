@@ -149,8 +149,10 @@ public class GameState implements IObservable {
      * needs an @param item the player character is using
      */
     public void useItem(Item item) {
+        String itemMsg = player.useItem(item);
         GameEvent event = new GameEvent(GameEventType.USE_ITEM);
         event.addData("item", item);
+        event.addData("message", itemMsg);
         
         this.notifyObservers(event); 
     }

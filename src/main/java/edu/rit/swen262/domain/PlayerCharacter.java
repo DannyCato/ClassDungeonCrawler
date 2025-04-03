@@ -92,6 +92,21 @@ public class PlayerCharacter extends Character {
         return "Now wielding: " + weapon.getName();
     }
 
+    public String useItem(Item item) {
+        if (item instanceof Food) {
+            Food food = (Food) item;
+            return this.eatFood(food);
+        } else if (item instanceof Weapon) {
+            Weapon weapon = (Weapon) item;
+            return this.equipWeapon(weapon);
+        } else if (item instanceof Armor) {
+            Armor armor = (Armor) item;
+            return this.equipArmor(armor);
+        } else {
+            return "The" + item.getName() + "cannot be used.";
+        }
+    }
+
     public Item findItem(Item item) {
         for (Bag bag : inventory.getBags()) {
             for (Item each : bag.getItems()) {

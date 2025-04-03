@@ -51,6 +51,7 @@ public class MUDGameUI implements GameObserver {
     private Label turnDisplay;
     private Label timeDisplay;
     private Label menuDisplay;
+    private final int EVENT_LOG_SIZE = 10;
     private Queue<String> eventLogMsgs;
     private Label eventLogDisplay;
 
@@ -94,7 +95,9 @@ public class MUDGameUI implements GameObserver {
                 break;
             case GameEventType.USE_ITEM:
                 Item usedItem = (Item) event.getData("item");
+                String itemMsg = (String) event.getData("message");
                 this.eventLogMsgs.offer("You used the " + usedItem.getName() + "!");
+                this.eventLogMsgs.offer(itemMsg);
                 this.redrawEventLog();
                 this.redrawMenuDefault();
                 break;
@@ -296,7 +299,7 @@ public class MUDGameUI implements GameObserver {
      */
     private void redrawEventLog() {
         //remove oldest event log message from the display
-        if (this.eventLogMsgs.size() > 5) {
+        if (this.eventLogMsgs.size() > EVENT_LOG_SIZE) {
             this.eventLogMsgs.poll();
         }
 

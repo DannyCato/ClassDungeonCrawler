@@ -11,6 +11,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import edu.rit.swen262.domain.Armor;
 import edu.rit.swen262.domain.DirectionalVector;
 import edu.rit.swen262.domain.Food;
 import edu.rit.swen262.domain.Gold;
@@ -152,6 +153,7 @@ class SampleCommandLineRunner implements CommandLineRunner {
 		gameState.pickUpItem(new Weapon("BEANS", "", 10, new Gold(100)));
 		gameState.pickUpItem(new Weapon("Gun", "", 10, new Gold(100)));
 		gameState.pickUpItem(new Weapon("The Rock (Dwanye)", "", 9999, new Gold(100)));
+		gameState.pickUpItem(new Armor("The Master Shield", "", 9999, new Gold(100)));
 
 		client.start();
 	}
