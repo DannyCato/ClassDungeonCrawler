@@ -63,6 +63,7 @@ public class DisplayMenuAction implements Action {
      */
     @Override
     public void performAction() {
+        System.out.println(menuType + " - " + menuText);
         gameState.displayMenu(this.menuType, this.menuText);
     }
 }

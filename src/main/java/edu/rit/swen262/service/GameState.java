@@ -159,7 +159,6 @@ public class GameState implements IObservable {
      */
     public void pickUpItem(Item item) {
         player.pickUpItem(item);
-        System.out.println(item.toString());
     }
 
     /**

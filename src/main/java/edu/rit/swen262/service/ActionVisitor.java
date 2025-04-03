@@ -22,29 +22,32 @@ public class ActionVisitor implements InventoryVisitor {
     }
 
     public void visitInventory(Inventory inventory) {
-        List<ItemComponent> contents = List.copyOf(inventory.getBags());
+        List<Bag> contents = inventory.getBags();
 
         for (int i = 0; i < contents.size() ; i++) {
-            String menuString = this.buildMenuString(contents);
-            Action displayMenu = new DisplayMenuAction(gameState, DisplayMenuType.INVENTORY, menuString);
+            List<ItemComponent> bagItems = List.copyOf(contents.get(i).getItems());
+            String menuString = this.buildMenuString(bagItems);
+            Action displayMenu = new DisplayMenuAction(gameState, DisplayMenuType.BAG, menuString);
 
-            actionKeystrokes.put((char) (i + 1), displayMenu);
+            actionKeystrokes.put(Character.forDigit(i + 1, 10), displayMenu);
         }
     }
     
     public void visitBag(Bag bag) {
-        List<ItemComponent> contents = List.copyOf(bag.getItems());
+        List<Item> contents = bag.getItems();
 
         for (int i = 0; i < contents.size() ; i++) {
-            String menuString = this.buildMenuString(contents);
-            Action displayMenu = new DisplayMenuAction(gameState, DisplayMenuType.BAG, menuString);
+            String menuString = """
+                    [1] Use Item
+                    """;
+            Action displayMenu = new DisplayMenuAction(gameState, DisplayMenuType.ITEM, menuString);
 
-            actionKeystrokes.put((char) (i + 1), displayMenu);
+            actionKeystrokes.put(Character.forDigit(i + 1, 10), displayMenu);
         }
     }
     
     public void visitItem(Item item) {
-        //implement functionality for dropping items here
+        // implement functionality for dropping items here under key '2'
         this.actionKeystrokes = new HashMap<Character, Action>() {{
             put('1', new UseItemAction(gameState, item));
         }};
@@ -62,11 +65,18 @@ public class ActionVisitor implements InventoryVisitor {
         StringBuilder displayText = new StringBuilder();
         
         for (int i = 0; i < items.size(); i++) {
-            displayText.append(String.format("[%s] %s\n", i, items.get(i).toString()));
+            displayText.append(String.format("[%s] %s\n", i + 1, items.get(i).getName()));
         }
 		
 		return displayText.toString();
 	}
+
+    public DisplayMenuAction getInventoryDisplayAction(Inventory inventory) {
+        List<ItemComponent> contents = List.copyOf(inventory.getBags());
+
+        String menuString = this.buildMenuString(contents);
+        return new DisplayMenuAction(gameState, DisplayMenuType.INVENTORY, menuString);
+    }
 
     public HashMap<Character, Action> getKeystrokes() {
         return this.actionKeystrokes;

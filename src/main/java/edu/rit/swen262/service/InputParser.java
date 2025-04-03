@@ -46,20 +46,29 @@ public class InputParser {
         if (text.isBlank()) {
             return;
         }
-
+        
+        System.out.println(currentMenu);
         char input = text.toLowerCase().charAt(0);
 
         switch(currentMenu) {
             case DEFAULT:
+                // update DisplayMenuAction inside of DefaultMenu keystroke map
+                DisplayMenuAction inventoryDisplayMenu = visitor.getInventoryDisplayAction(inventory);
+                keystrokes.get(currentMenu).put('i', inventoryDisplayMenu);
+            case INVENTORY:
+                // update list of bags inside inv which can be selected
                 this.visitor.visitInventory(this.inventory);
                 keystrokes.put(MenuState.INVENTORY, visitor.getKeystrokes());
                 break;
-            case INVENTORY:
-                this.visitor.visitBag(this.inventory.getBags().get(((int) input) - 1));
-                keystrokes.put(MenuState.BAG, visitor.getKeystrokes());
             case BAG:
-                Bag bag = this.inventory.getBags().get(((int) lastPressedKey) - 1);
-                this.visitor.visitItem(bag.getItems().get(((int) input) - 1));
+                // update list of items inside selected bag which can be selected
+                this.visitor.visitBag(this.inventory.getBags().get(Character.getNumericValue(input) - 1));
+                keystrokes.put(MenuState.BAG, visitor.getKeystrokes());
+            case ITEM:
+                // update list of interactions available for the selected item
+                Bag bag = this.inventory.getBags().get(Character.getNumericValue(lastPressedKey) - 1);
+                this.visitor.visitItem(bag.getItems().get((Character.getNumericValue(input) - 1)));
+                
                 keystrokes.put(MenuState.ITEM, visitor.getKeystrokes());
                 break;
             default:
