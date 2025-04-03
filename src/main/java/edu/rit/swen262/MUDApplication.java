@@ -78,16 +78,22 @@ class SampleCommandLineRunner implements CommandLineRunner {
 			put('8', new AttackAction(gameState, DirectionalVector.NORTHWEST));
 		}};
 
-		/*inv command map should change based upon what's in the inventory?
+		/*
+		 inv command map should change based upon what's in the inventory?
 		 AKA Bags/Individual Items
-
-		 (generation of these maps may need to move to another class depending upon
-		 integraton)
 		 */
 		HashMap<Character, Action> inventoryKeystrokes = new HashMap<>() {{
-			// put('1', new UseItemAction(gameState, "North East"));
-			// put('2', new UseItemAction(gameState, "North"));
+
 		}};
+
+		HashMap<Character, Action> bagKeystrokes = new HashMap<>() {{
+
+		}};
+
+		HashMap<Character, Action> itemKeystrokes = new HashMap<>() {{
+
+		}};
+
 
 		String moveMenuString = this.buildMenuString(moveKeystrokes);
 		String attackMenuString = this.buildMenuString(attackKeystrokes);
@@ -104,6 +110,7 @@ class SampleCommandLineRunner implements CommandLineRunner {
 		keystrokes.put(MenuState.MOVE, moveKeystrokes);
 		keystrokes.put(MenuState.ATTACK, attackKeystrokes);
 		keystrokes.put(MenuState.INVENTORY, inventoryKeystrokes);
+		keystrokes.put(MenuState.BAG, bagKeystrokes);
 
 		return keystrokes;
 	}

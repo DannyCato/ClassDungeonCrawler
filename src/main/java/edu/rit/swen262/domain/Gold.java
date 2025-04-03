@@ -7,8 +7,8 @@ public class Gold extends Item {
 
     public Gold(int value, int count) {
         super("Gold", "This item is a form of currency.", null);
-        this.value = value;
-        this.count = count;
+        this.value = value; // value of each gold piece
+        this.count = count; // NUMBER of gold pieces in stack?
     }
 
     public int getStack() {

@@ -1,5 +1,7 @@
 package edu.rit.swen262.domain;
 
+import edu.rit.swen262.service.InventoryVisitor;
+
 public abstract class Item implements InventoryComponent {
     private String name;
     private String description;
@@ -21,6 +23,10 @@ public abstract class Item implements InventoryComponent {
 
     public Gold getValue() {
         return value;
+    }
+
+    public void accept(InventoryVisitor visitor) {
+        visitor.visitItem(this);
     }
 
     @Override

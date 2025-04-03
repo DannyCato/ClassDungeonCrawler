@@ -5,6 +5,7 @@ package edu.rit.swen262.domain;
  * {@link Character}
  */
 public class PlayerCharacter extends Character {
+    private Inventory inventory;
     /**
      * initializes a PlayerCharacter with the given name and description. Their
      * maxHP, attack, and defense stats are set to 100, 10, and 0 respectively by default.
@@ -14,6 +15,7 @@ public class PlayerCharacter extends Character {
      */
     public PlayerCharacter(String name, String description) {
         super(name, description, 100, 10, 0);
+        this.inventory = new Inventory();
     }
 
     /**
@@ -28,5 +30,9 @@ public class PlayerCharacter extends Character {
      */
     public RenderRepresentation render() {
         return RenderRepresentation.CHARACTER;
+    }
+
+    public Inventory getInventory() {
+        return this.inventory;
     }
 }
