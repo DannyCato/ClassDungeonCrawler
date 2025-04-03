@@ -8,7 +8,7 @@ public class GoldTest {
 
     @Test
     public void test_GoldConstructor() {
-        Gold gold = new Gold(10, 1);
+        Gold gold = new Gold(1);
 
         assertEquals(gold, gold.getValue());
         assertEquals(1, gold.getCount());
@@ -16,18 +16,9 @@ public class GoldTest {
     }
 
     @Test
-    public void test_GetStack() {
-
-        Gold gold = new Gold(20, 5);
-
-        assertEquals(100, gold.getStack());
-
-    }
-
-    @Test
     public void test_IncreaseCount() {
 
-        Gold gold = new Gold(20, 5);
+        Gold gold = new Gold(5);
         gold.increaseCount();
         gold.increaseCount();
 
@@ -38,7 +29,7 @@ public class GoldTest {
     @Test
     public void test_DecreaseCount() {
 
-        Gold gold = new Gold(20, 5);
+        Gold gold = new Gold(5);
         gold.decreaseCount();
         gold.decreaseCount();
 
@@ -49,7 +40,7 @@ public class GoldTest {
     @Test
     public void test_DecreaseCountNegative() {
 
-        Gold gold = new Gold(20, 1);
+        Gold gold = new Gold(1);
         gold.decreaseCount();
         gold.decreaseCount();
         gold.decreaseCount();

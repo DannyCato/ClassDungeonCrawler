@@ -9,7 +9,7 @@ class FoodTest {
 
     @Test
     public void test_FoodConstructor() {
-        Gold gold = new Gold(10, 1);
+        Gold gold = new Gold(10);
         Food food = new Food("Food", "Food Description", 0, gold);
 
         assertEquals(gold, gold.getValue());
@@ -21,7 +21,7 @@ class FoodTest {
 
     @Test
     public void test_FoodEquals() {
-        Gold gold = new Gold(10, 1);
+        Gold gold = new Gold(10);
         Food food = new Food("Food", "Food Description", 0, gold);
         Food food2 = new Food("Food", "Food Description", 0, gold);
 
@@ -31,7 +31,7 @@ class FoodTest {
 
     @Test
     public void test_FoodNotEquals() {
-        Gold gold = new Gold(10, 1);
+        Gold gold = new Gold(10);
         Food Food = new Food("Food", "Food Description", 0, gold);
         Food Food2 = new Food("Cool Food", "Food Description", 0, gold);
 
@@ -41,7 +41,7 @@ class FoodTest {
 
     @Test
     public void test_FoodIsItem() {
-        Gold gold = new Gold(10, 1);
+        Gold gold = new Gold(10);
         Food Food = new Food("Food", "Food Description", 0, gold);
 
         assertEquals(Food instanceof Item, true);

@@ -9,7 +9,7 @@ class BuffTest {
 
     @Test
     public void test_BuffConstructor() {
-        Gold gold = new Gold(10, 1);
+        Gold gold = new Gold(10);
         Buff buff = new Buff("Buff", "Buff Description", 0, 0, 0, 0, gold);
 
         assertEquals(gold, gold.getValue());
@@ -24,7 +24,7 @@ class BuffTest {
 
     @Test
     public void test_BuffEquals() {
-        Gold gold = new Gold(10, 1);
+        Gold gold = new Gold(10);
         Buff buff = new Buff("Buff", "Buff Description", 0, 0, 0, 0, gold);
         Buff buff2 = new Buff("Buff", "Buff Description", 0, 0, 0, 0, gold);
 
@@ -34,7 +34,7 @@ class BuffTest {
 
     @Test
     public void test_BuffNotEquals() {
-        Gold gold = new Gold(10, 1);
+        Gold gold = new Gold(10);
         Buff Buff = new Buff("Buff", "Buff Description", 0, 0, 0, 0, gold);
         Buff Buff2 = new Buff("Cool Buff", "Buff Description", 0, 0, 0, 0, gold);
 
@@ -44,7 +44,7 @@ class BuffTest {
 
     @Test
     public void test_BuffIsItem() {
-        Gold gold = new Gold(10, 1);
+        Gold gold = new Gold(10);
         Buff Buff = new Buff("Buff", "Buff Description", 0, 0, 0, 0, gold);
 
         assertEquals(Buff instanceof Item, true);
