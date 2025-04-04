@@ -16,6 +16,7 @@ import edu.rit.swen262.domain.PlayerCharacter;
 import edu.rit.swen262.service.GameState;
 import edu.rit.swen262.service.InputParser;
 import edu.rit.swen262.service.MenuState;
+import edu.rit.swen262.service.RandomInstance;
 import edu.rit.swen262.service.Action.Action;
 import edu.rit.swen262.service.Action.AttackAction;
 import edu.rit.swen262.service.Action.DisplayMenuAction;
@@ -129,6 +130,18 @@ class SampleCommandLineRunner implements CommandLineRunner {
 	
 	@Override
 	public void run(String... args) throws Exception {
+		// boolean found = false ; // commented out code to have seeded play throughs
+		// for (String string : args) {
+		// 	if (found) {
+		// 		RandomInstance.seed(Integer.parseInt(string));
+		// 		break ;
+		// 	}
+		// 	if (string.equals("-s"))
+		// 	{
+		// 		found = true ;
+		// 	}
+		// }
+		RandomInstance.instance();
 		PlayerCharacter player = new PlayerCharacter("Bobert", "can lift at least 5 worms.");
 		GameState gameState = new GameState(player);
 

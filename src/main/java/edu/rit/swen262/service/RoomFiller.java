@@ -20,7 +20,7 @@ import edu.rit.swen262.domain.DungeonPiece.RoomNode;
 import edu.rit.swen262.domain.DungeonPiece.Tile;
 
 public class RoomFiller {
-    private static final Random rand = new Random();
+    private static final Random RAND = RandomInstance.instance();
 
     public static void fill(Room room, double obstacleChance) {
         Room originalRoom = room; 
@@ -36,7 +36,7 @@ public class RoomFiller {
             int midHeight = (int) Math.ceil(room.height/2.0) ;
             
             Tile t = new Tile();
-            double chance = rand.nextDouble();
+            double chance = RAND.nextDouble();
             if (i < room.width && rns.get(0) != null) {
                 if (currentWidth == midWidth) {
                     t = new Tile(new Exit("", DirectionalVector.NORTH));
@@ -60,7 +60,7 @@ public class RoomFiller {
             } else {
                 Occupant o = null;
                 if (chance < obstacleChance) {
-                    if (rand.nextBoolean()) {
+                    if (RAND.nextBoolean()) {
                         o = new Obstacle("");
                     } else {
                         o = generateEnemy();
@@ -85,8 +85,8 @@ public class RoomFiller {
                                                 "Orc", "Troll", "Skeleton", "Mummy", "Golem",
                                                 "Lich", "Demon", "Dragon", "Wraith", "Kraken",
                                                 "Hydra", "Griffin", "Minotaur", "Chimera", "Harpy");
-        String name = names.get(rand.nextInt(names.size()));
-        return new Enemy(name, rand.nextInt(101), rand.nextInt(50), rand.nextInt(50));
+        String name = names.get(RAND.nextInt(names.size()));
+        return new Enemy(name, RAND.nextInt(101), RAND.nextInt(50), RAND.nextInt(50));
     }
 
     private static boolean validateRoom(Room room) {
