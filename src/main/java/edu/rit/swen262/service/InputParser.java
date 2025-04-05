@@ -30,6 +30,8 @@ public class InputParser {
      * {@link Action concrete commands} 
      * 
      * @param keystrokes map between characters and their matching commands
+     * @param visitor visitor which is responsible for querying inventory to return Actions
+     * @param inventory inventory to generate commands from
      */
     public InputParser(HashMap<MenuState, HashMap<Character, Action>> keystrokes, ActionVisitor visitor, Inventory inventory) {
         this.keystrokes = keystrokes;
@@ -52,6 +54,10 @@ public class InputParser {
         
         char input = text.toLowerCase().charAt(0);
 
+        /* 
+         * dynamically update commands based upon the current state of the inventory
+         * and which bag/item is currently selected
+        */
         switch(currentMenu) {
             case DEFAULT:
                 // update DisplayMenuAction inside of DefaultMenu keystroke map
@@ -103,10 +109,22 @@ public class InputParser {
         this.currentMenu = menu;
     }
 
+    /**
+     * helper method to fetch the last entered keystroke from the keystroke
+     * history queue
+     * 
+     * @return the last entered keystroke
+     */
     private Character getLast() {
         return keystrokeHistory.peekLast();
     }
 
+    /**
+     * helper method to fetch the second-to-last entered keystroke from 
+     * the keystroke history queue
+     * 
+     * @return the second-to-last entered keystroke
+     */
     private Character getSecondLast() {
         if (keystrokeHistory.size() < 2) return null;
         return keystrokeHistory.toArray(new Character[0])[keystrokeHistory.size() - 2]; // Second last keystroke

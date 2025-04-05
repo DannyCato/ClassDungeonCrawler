@@ -19,9 +19,8 @@ public class PlayerCharacter extends Character {
      * @param description the given brief description of the player
      * @param armor       the equipped armor
      * @param weapon      the equipped weapon
-     * @param gold        the gold
+     * @param gold        the gold held by the player
      */
-
     public PlayerCharacter(String name, String description) {
         super(name, description, 100, 10, 0);
         this.armor = null;

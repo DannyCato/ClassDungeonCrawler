@@ -14,11 +14,13 @@ import edu.rit.swen262.service.Action.UseItemAction;
 
 
 /**
- * The class is a specific implementation of the Visitor Pattern
+ * The class is a specific implementation of the Visitor interface
  * Defines the concrete operations to be performed on elements within the inventory system
  * that affect the current {@link Item Item's} of the current {@link Player Player's} {@link Inventory inventory}
  * 
- * The ActionVisitor traverses the inventory, bag, and item elements and stores their current values
+ * The ActionVisitor traverses the inventory, bag, and item elements and generates the
+ * corrosponding hashmaps of {@link Action Actions} bound to a numeric keystroke and 
+ * meant be executed by the game
  * 
  * @author Victor Bovat, Philip Rubbo
  */
@@ -41,7 +43,8 @@ public class ActionVisitor implements InventoryVisitor {
     /**
      * Visits an Inventory element and generates a list of action keystrokes
      * for interacting with each bag within the inventory. Each keystroke
-     * will then trigger the display of a display menu for a specific bag
+     * will then trigger the display of a {@link DisplayMenuAction menu} 
+     * for the contents of a specific bag
      * 
      * @param inventory The Inventory element that is operated on
      */
@@ -61,7 +64,8 @@ public class ActionVisitor implements InventoryVisitor {
     /**
      * Visits an Bag element and generates a list of action keystrokes
      * for interacting with each item within the bag. Each keystroke
-     * will then trigger the display of a display menu for a specific item
+     * will then trigger the display of a {@link DisplayMenuAction menu} 
+     * for the actions that can be performed with a specific item
      * 
      * @param bag The Bag element that is operated on
      */
@@ -80,8 +84,8 @@ public class ActionVisitor implements InventoryVisitor {
     }
     
     /**
-     * Visits an Item element and generates a list of action keystrokes
-     * for Item Actions
+     * Visits an Item element and generates a list of {@link Action Actions}
+     * relating to the use of an item
      * 
      * @param item The Item element that is operated on
      */
@@ -111,11 +115,12 @@ public class ActionVisitor implements InventoryVisitor {
 	}
 
     /**
-     * Returns a DisplayMenuAction that represents the Action of Display the Inventory.
-     * This is used for diplaying the overall inventory to the user, including all bags and their contents.
+     * Returns a DisplayMenuAction that represents the Action of displaying the 
+     * contents of the {@link Inventory}. This is used for diplaying the overall 
+     * inventory to the user at the top level, including all bags and their contents.
      * 
      * @param inventory The Inventory element to generate a display action for.
-     * @return A DisplayMenuAction that will display the inventory's contents.
+     * @return A {@link DisplayMenuAction} that will display the inventory's contents.
      */
     public DisplayMenuAction getInventoryDisplayAction(Inventory inventory) {
         List<ItemComponent> contents = List.copyOf(inventory.getBags());

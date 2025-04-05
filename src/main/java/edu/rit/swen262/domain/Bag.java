@@ -65,7 +65,6 @@ public class Bag implements ItemComponent {
      */
     public boolean removeItem(Item item) {
         return contents.remove(item);
-
     }
 
     /**
@@ -85,12 +84,10 @@ public class Bag implements ItemComponent {
     }
 
     /**
-     * Compares a bag to another bag for equality.
-     * The two are considered equal if both contain the same items and have the same capacity.
-     * 
-     * @param obj The object that will be compared to.
-     * @return Returns {@code true} if the objects are equal, {@code false} if they are not.
-     */    public boolean isFull() {
+     * checks if the bag is currently at full capacity
+     * @return {@code true} if the bag is full, {@code false} otherwise
+     */
+    public boolean isFull() {
         return this.contents.size() == this.capacity;
     }
 
@@ -133,6 +130,13 @@ public class Bag implements ItemComponent {
         visitor.visitBag(this);
     }
 
+    /**
+     * Compares a bag to another bag for equality.
+     * The two are considered equal if both contain the same items and have the same capacity.
+     * 
+     * @param obj The object that will be compared to.
+     * @return Returns {@code true} if the objects are equal, {@code false} if they are not.
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Bag) {

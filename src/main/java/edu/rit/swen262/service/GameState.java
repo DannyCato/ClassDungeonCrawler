@@ -131,17 +131,9 @@ public class GameState implements IObservable {
         
         this.notifyObservers(event);
     }
-
-    /**
-     *  opens the inventory of the player character
-     */
-    public void openInventory() {
-        //still waiting on integration w/ inventory subsystem
-        this.notifyObservers(null); 
-    }
     
     /**
-     * uses the item found in player character Inventory
+     * uses the item found in player character {@link Inventory}
      * 
      * needs an @param item the player character is using
      */
@@ -155,7 +147,7 @@ public class GameState implements IObservable {
     }
 
     /**
-     * test method for adding single item to inventory
+     * adds a single item to the {@link PLayerCharacter player's} {@link Inventory}
      * @param item
      */
     public void pickUpItem(Item item) {
@@ -163,9 +155,10 @@ public class GameState implements IObservable {
     }
 
     /**
-     * disarms the trap found in a cardinal direction away from player character in room
+     * disarms the trap found in a cardinal direction away from the 
+     * {@link PlayerCharacter player character} in a {@link Room room}
      * 
-     * needs an @param trap the player character is deactivating in a cardinal direction
+     * @param trap the trap being deactivated adjacent to the player
      */
     public void disarmTrap(String trap) {
         this.notifyObservers(null); 

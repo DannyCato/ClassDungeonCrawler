@@ -18,7 +18,7 @@ import edu.rit.swen262.service.IObservable;
  * Represents a player's inventory, which can hold multiple bags.
  * Bags are used to store extra items.
  * 
- * @author [Nick F, Ryan M]
+ * @author Nick F, Ryan M
  */
 
 public class Inventory implements ItemComponent {
@@ -66,6 +66,12 @@ public class Inventory implements ItemComponent {
 
     }
 
+    /**
+     * adds a single item to the inventory in the next open slot
+     * 
+     * @param item the item to be added to the inventory
+     * @return {@code true} if the operation succeeds, {@code false} otherwise
+     */
     public boolean addItem(Item item) {
         for (Bag bag : this.bags) {
             if (!bag.isFull()) {
@@ -104,7 +110,6 @@ public class Inventory implements ItemComponent {
      */
     public int getTotalBags() {
         return bags.size();
-
     }
 
     /**

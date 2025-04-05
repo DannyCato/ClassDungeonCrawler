@@ -9,7 +9,7 @@ import edu.rit.swen262.service.InventoryVisitor;
  * Notably abstract, as it serves the purpose of being a base class for all item types.
  * Implements the {@code ItemComponent} interface.
  * 
- * @author [Nick F, Ryan M]
+ * @author Nick F, Ryan M
  */
 public abstract class Item implements ItemComponent {
     

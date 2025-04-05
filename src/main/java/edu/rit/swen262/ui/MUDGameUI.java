@@ -55,6 +55,13 @@ public class MUDGameUI implements GameObserver {
     private Queue<String> eventLogMsgs;
     private Label eventLogDisplay;
 
+    /**
+     * initializes a new UI component for the MUD Game, launching a new terminal
+     * window to display the game, then binding he {@link InputParser} to the 
+     * text input box within it
+     * 
+     * @param inputParser the object rsponsible for interpreting inputted keystrokes
+     */
     public MUDGameUI(InputParser inputParser) {
         this.inputParser = inputParser;
         this.eventLogMsgs = new LinkedList<>();
@@ -72,7 +79,7 @@ public class MUDGameUI implements GameObserver {
             case GameEventType.MOVE_PLAYER:
                 if (event.getData("direction") != null) {
                     this.eventLogMsgs.offer("You moved.");
-                this.redrawEventLog();
+                    this.redrawEventLog();
                 }
                 this.redrawMap(event.getData("currentRoom").toString());
                 this.redrawMenuDefault();
@@ -294,8 +301,7 @@ public class MUDGameUI implements GameObserver {
 
     /**
      * updates the text displayed in the event log panel to display the response to
-     * the most recent action(s) taken
-     * 
+     * the most recent action(s) taken 
      */
     private void redrawEventLog() {
         //remove oldest event log message from the display
@@ -350,7 +356,7 @@ public class MUDGameUI implements GameObserver {
      * updates the text displayed in the map panel to show the change after
      * a player turn is taken
      * 
-     * @param displayText
+     * @param displayText the text to be displayed in the map panel
      */
     private void redrawMap(String displayText) {
         this.mapDisplay.setText(displayText);
