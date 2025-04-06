@@ -45,6 +45,8 @@ import edu.rit.swen262.service.Action.Action;
  */
 public class MUDGameUI implements GameObserver {
     private InputParser inputParser;
+    private SwingTerminalFrame terminal;
+    private WindowBasedTextGUI textGUI;
     private Screen screen;
     private Label mapDisplay;
     private Label turnDisplay;
@@ -100,13 +102,48 @@ public class MUDGameUI implements GameObserver {
     }
 
     /**
-     * starts a new game, initializing all relevent objects then taking control
-     * of the window to draw the starting game screen
+     * starts a new game, initializing all relevent objects (terminal, textGUI), sets the color
+     * theme, then takes control of the window to draw the starting game screen
      */
     public void start() {
-        System.out.println("game initialized!");
+        try {
+            /* create a Swing-based terminal emulator -- UNIX-based terminal
+            works, but seems to cause graphical errors based upon the system running it
+            */
+            this.terminal = new SwingTerminalFrame(
+                "MUD Game",
+                TerminalEmulatorAutoCloseTrigger.CloseOnExitPrivateMode
+            );
 
-        this.drawUI();
+            this.terminal.setVisible(true);
+
+            // create screen component
+            //DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory();
+            this.screen = new TerminalScreen(this.terminal);
+            this.screen.startScreen();
+
+            this.textGUI = new MultiWindowTextGUI(this.screen);
+
+            // set tui color scheme
+            Theme theme = SimpleTheme.makeTheme(
+                true,               
+                TextColor.ANSI.WHITE,             // normal foreground
+                TextColor.ANSI.BLACK,             // normal background
+                TextColor.ANSI.GREEN,             // editable foreground
+                TextColor.ANSI.BLACK_BRIGHT,              // editable background
+                TextColor.ANSI.GREEN_BRIGHT,             // Focused foreground
+                TextColor.ANSI.BLACK_BRIGHT,       // Focused background (highlight)
+                TextColor.ANSI.BLACK              // GUI background
+            );
+
+            this.textGUI.setTheme(theme);
+
+            System.out.println("game initialized!");
+
+            this.drawUI();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -127,7 +164,6 @@ public class MUDGameUI implements GameObserver {
      * available to the player (map, turn number, etc.)
      */
     private void drawUI() {
-        this.screen = null;
         this.turnDisplay = null;
         this.timeDisplay = null;
         this.mapDisplay = null;
@@ -135,37 +171,6 @@ public class MUDGameUI implements GameObserver {
         this.eventLogDisplay = null;
 
         try {
-            /* create a Swing-based terminal window -- UNIX-based terminal
-            works, but seems to cause graphical errors based upon the system running it
-            */
-            SwingTerminalFrame terminal = new SwingTerminalFrame(
-                "MUD Game",
-                TerminalEmulatorAutoCloseTrigger.CloseOnExitPrivateMode
-            );
-    
-            terminal.setVisible(true);
-
-            // create screen component
-            //DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory();
-            this.screen = new TerminalScreen(terminal);
-            this.screen.startScreen();
-
-            final WindowBasedTextGUI textGUI = new MultiWindowTextGUI(this.screen);
-
-            // set tui color scheme
-            Theme theme = SimpleTheme.makeTheme(
-                true,               
-                TextColor.ANSI.WHITE,             // normal foreground
-                TextColor.ANSI.BLACK,             // normal background
-                TextColor.ANSI.GREEN,             // editable foreground
-                TextColor.ANSI.BLACK_BRIGHT,              // editable background
-                TextColor.ANSI.GREEN_BRIGHT,             // Focused foreground
-                TextColor.ANSI.BLACK_BRIGHT,       // Focused background (highlight)
-                TextColor.ANSI.BLACK              // GUI background
-            );
-
-            textGUI.setTheme(theme);
-
             // set no shadow decorations for panels + full screen
             Window.Hint[] windowHints = new Window.Hint[] {
                 Window.Hint.NO_DECORATIONS,
@@ -248,9 +253,7 @@ public class MUDGameUI implements GameObserver {
             window.setComponent(contentPanel.setLayoutData(
                 GridLayout.createLayoutData(GridLayout.Alignment.CENTER, GridLayout.Alignment.CENTER)));
 
-            textGUI.addWindowAndWait(window);
-        } catch (IOException e) {
-            e.printStackTrace();
+            this.textGUI.addWindowAndWait(window);
         } finally {
             // if control over the window has not already been yielded, do so
             if(this.screen != null) {
