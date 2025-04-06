@@ -182,7 +182,8 @@ public class MUDGameUI implements GameObserver {
     }
 
     /**
-     * 
+     * takes control of the console and draws the starting screen for the game,
+     * then boots up the main game's UI once setup is complete
      */
     private void drawStartUp() {
         // set no shadow decorations for panels + full screen

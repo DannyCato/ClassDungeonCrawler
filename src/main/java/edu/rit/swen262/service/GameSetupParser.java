@@ -12,10 +12,22 @@ import edu.rit.swen262.service.Action.SetPlayerAction;
 public class GameSetupParser {
     private SetPlayerAction setPlayer;
 
+    /**
+     * creates a new GameSetupParser with the given {@link SetPlayerAction}
+     * to manage starting a new game with the selected options
+     * 
+     * @param setPlayer binded command to update player data
+     */
     public GameSetupParser(SetPlayerAction setPlayer) {
         this.setPlayer = setPlayer;
     }
 
+    /**
+     * updates the information of the player with the given name and description
+     * 
+     * @param nameText text inputted into the name field
+     * @param descriptionText text inputted into the description field
+     */
     public void setupPlayer(String nameText, String descriptionText) {
         // not enough detail provided, do nothing/fall back on defaults
         if (nameText.isBlank() || descriptionText.isBlank()) {
