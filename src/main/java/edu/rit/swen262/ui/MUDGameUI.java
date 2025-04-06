@@ -131,16 +131,16 @@ public class MUDGameUI implements GameObserver {
                 TextColor.ANSI.BLACK,             // normal background
                 TextColor.ANSI.GREEN,             // editable foreground
                 TextColor.ANSI.BLACK_BRIGHT,              // editable background
-                TextColor.ANSI.GREEN_BRIGHT,             // Focused foreground
-                TextColor.ANSI.BLACK_BRIGHT,       // Focused background (highlight)
-                TextColor.ANSI.BLACK              // GUI background
+                TextColor.ANSI.GREEN_BRIGHT,             // focused foreground
+                TextColor.ANSI.BLACK_BRIGHT,       // focused background (highlight)
+                TextColor.ANSI.BLACK              // gui background
             );
 
             this.textGUI.setTheme(theme);
 
             System.out.println("game initialized!");
 
-            this.drawUI();
+            this.drawStartUp();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -157,6 +157,34 @@ public class MUDGameUI implements GameObserver {
             e.printStackTrace();
         }
         System.exit(0);
+    }
+
+    /**
+     * 
+     */
+    private void drawStartUp() {
+        final Window nameWindow = new BasicWindow("Welcome!");
+        Panel contentPanel = new Panel();
+        LinearLayout layout = new LinearLayout(Direction.VERTICAL);
+        contentPanel.setLayoutManager(layout);
+
+        Label welcomeLabel = new Label("Welcome, Adventurer!\nEnter your name before you plunge into the dungeons of MUD.");
+        welcomeLabel.setPreferredSize(new TerminalSize(60, 3));
+
+        TextBox nameBox = new TextBox().setPreferredSize(new TerminalSize(20, 1));
+
+        Button submitButton = new Button("Submit", () -> {
+            String playerName = nameBox.getText();
+            nameWindow.close(); // Close the name prompt window
+            drawUI(); // Now start the main UI
+        });
+
+        contentPanel.addComponent(welcomeLabel);
+        contentPanel.addComponent(nameBox);
+        contentPanel.addComponent(submitButton);
+
+        nameWindow.setComponent(contentPanel);
+        this.textGUI.addWindowAndWait(nameWindow); // Blocks until window is closed
     }
 
     /**
