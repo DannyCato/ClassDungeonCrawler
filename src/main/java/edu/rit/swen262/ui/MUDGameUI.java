@@ -14,8 +14,10 @@ import com.googlecode.lanterna.graphics.Theme;
 import com.googlecode.lanterna.gui2.BasicWindow;
 import com.googlecode.lanterna.gui2.Button;
 import com.googlecode.lanterna.gui2.Direction;
+import com.googlecode.lanterna.gui2.EmptySpace;
 import com.googlecode.lanterna.gui2.GridLayout;
 import com.googlecode.lanterna.gui2.Label;
+import com.googlecode.lanterna.gui2.LayoutData;
 import com.googlecode.lanterna.gui2.LinearLayout;
 import com.googlecode.lanterna.gui2.MultiWindowTextGUI;
 import com.googlecode.lanterna.gui2.Panel;
@@ -57,6 +59,8 @@ public class MUDGameUI implements GameObserver {
 
     public MUDGameUI(InputParser inputParser) {
         this.inputParser = inputParser;
+        //init map with placeholder to be replaced once startup is complete
+        this.mapDisplay = new Label("|..|" + "\n|..|");
         this.eventLogMsgs = new LinkedList<>();
     }
 
@@ -69,10 +73,13 @@ public class MUDGameUI implements GameObserver {
                 //update status panel w/ menu options
                 this.redrawMenu(event.getData("menuText").toString());
                 break;
+            case GameEventType.UPDATE_MAP:
+                this.redrawMap(event.getData("currentRoom").toString());
+                break;
             case GameEventType.MOVE_PLAYER:
                 if (event.getData("direction") != null) {
                     this.eventLogMsgs.offer("You moved.");
-                this.redrawEventLog();
+                    this.redrawEventLog();
                 }
                 this.redrawMap(event.getData("currentRoom").toString());
                 this.redrawMenuDefault();
@@ -163,28 +170,45 @@ public class MUDGameUI implements GameObserver {
      * 
      */
     private void drawStartUp() {
-        final Window nameWindow = new BasicWindow("Welcome!");
+        // set no shadow decorations for panels + full screen
+        Window.Hint[] windowHints = new Window.Hint[] {
+            Window.Hint.NO_DECORATIONS,
+            //Window.Hint.NO_POST_RENDERING,
+            Window.Hint.EXPANDED};
+
+        final Window window = new BasicWindow("Welcome!");
+        window.setHints(Arrays.asList(windowHints));
+
         Panel contentPanel = new Panel();
         LinearLayout layout = new LinearLayout(Direction.VERTICAL);
+        layout.setSpacing(1);
         contentPanel.setLayoutManager(layout);
+        LayoutData centerLayoutData = LinearLayout.createLayoutData(LinearLayout.Alignment.Center);
 
-        Label welcomeLabel = new Label("Welcome, Adventurer!\nEnter your name before you plunge into the dungeons of MUD.");
-        welcomeLabel.setPreferredSize(new TerminalSize(60, 3));
+        Label welcomeLabel = new Label("Welcome, Adventurer!");
+        welcomeLabel.setLayoutData(centerLayoutData);
+
+        Label instructionLabel = new Label("Enter your name before you plunge into the dungeons of MUD.");
+        instructionLabel.setLayoutData(centerLayoutData);
 
         TextBox nameBox = new TextBox().setPreferredSize(new TerminalSize(20, 1));
+        nameBox.setLayoutData(centerLayoutData);
 
         Button submitButton = new Button("Submit", () -> {
             String playerName = nameBox.getText();
-            nameWindow.close(); // Close the name prompt window
-            drawUI(); // Now start the main UI
+            window.close(); // close the name prompt window
+            drawUI(); // now start the main UI
         });
+        submitButton.setLayoutData(centerLayoutData);
 
         contentPanel.addComponent(welcomeLabel);
+        contentPanel.addComponent(instructionLabel);
+
         contentPanel.addComponent(nameBox);
         contentPanel.addComponent(submitButton);
 
-        nameWindow.setComponent(contentPanel);
-        this.textGUI.addWindowAndWait(nameWindow); // Blocks until window is closed
+        window.setComponent(contentPanel);
+        this.textGUI.addWindowAndWait(window);
     }
 
     /**
@@ -192,17 +216,11 @@ public class MUDGameUI implements GameObserver {
      * available to the player (map, turn number, etc.)
      */
     private void drawUI() {
-        this.turnDisplay = null;
-        this.timeDisplay = null;
-        this.mapDisplay = null;
-        this.menuDisplay = null;
-        this.eventLogDisplay = null;
-
         try {
             // set no shadow decorations for panels + full screen
             Window.Hint[] windowHints = new Window.Hint[] {
                 Window.Hint.NO_DECORATIONS,
-                Window.Hint.NO_POST_RENDERING,
+                //Window.Hint.NO_POST_RENDERING,
                 Window.Hint.EXPANDED};
 
             final Window window = new BasicWindow("MUD Game");
@@ -235,7 +253,6 @@ public class MUDGameUI implements GameObserver {
 
             // create panel displaying map
             Panel mapPanel = new Panel(new GridLayout(2));
-            this.mapDisplay = new Label("|..|" + "\n|..|");
             mapPanel.addComponent(this.mapDisplay);
 
             // create panel recieving input (spans entire screen)

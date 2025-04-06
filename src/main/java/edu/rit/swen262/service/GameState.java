@@ -101,6 +101,19 @@ public class GameState implements IObservable {
     }
 
     /**
+     * updates the map panel within the {@link MUDGameUI UI component} to display
+     * the current version of the room the player is currently inside
+     */
+    public void updateMap() {
+        String currentRoomRender = this.map.structuredRender();
+
+        GameEvent event = new GameEvent(GameEventType.UPDATE_MAP);
+        event.addData("currentRoom", currentRoomRender);
+
+        this.notifyObservers(event);
+    }
+
+    /**
      * move the player one tile on the map in the specified direction
      * 
      * @param direction the direction to move in on the map
@@ -131,6 +144,7 @@ public class GameState implements IObservable {
         event.addData("direction", direction);
         
         this.notifyObservers(event);
+        this.playerTurnFinished();
     }
 
     /**

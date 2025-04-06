@@ -144,6 +144,7 @@ class SampleCommandLineRunner implements CommandLineRunner {
 		InputParser inputParser = new InputParser(keystrokes);
 		MUDGameUI client = new MUDGameUI(inputParser);
 		gameState.register(client);
+		gameState.updateMap();
 
 		client.start();
 	}
