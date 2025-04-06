@@ -35,6 +35,7 @@ import ch.qos.logback.core.net.QueueFactory;
 import edu.rit.swen262.service.GameEvent;
 import edu.rit.swen262.service.GameEventType;
 import edu.rit.swen262.service.GameObserver;
+import edu.rit.swen262.service.GameSetupParser;
 import edu.rit.swen262.service.GameState;
 import edu.rit.swen262.service.InputParser;
 import edu.rit.swen262.service.Action.Action;
@@ -46,10 +47,16 @@ import edu.rit.swen262.service.Action.Action;
  * @author Victor Bovat
  */
 public class MUDGameUI implements GameObserver {
+    // invokers
+    private GameSetupParser setupParser;
     private InputParser inputParser;
+
+    // functional display components
     private SwingTerminalFrame terminal;
     private WindowBasedTextGUI textGUI;
     private Screen screen;
+
+    // data display elements
     private Label mapDisplay;
     private Label turnDisplay;
     private Label timeDisplay;
@@ -57,7 +64,15 @@ public class MUDGameUI implements GameObserver {
     private Queue<String> eventLogMsgs;
     private Label eventLogDisplay;
 
-    public MUDGameUI(InputParser inputParser) {
+    /**
+     * initiazes a new UI component which manages displaying all data and
+     * interactions involved with a single instance of the MUD Game
+     * 
+     * @param setupParser invoker which manages inputs regarding game setup
+     * @param inputParser invoker which manages inputs regarding gameplay
+     */
+    public MUDGameUI(GameSetupParser setupParser, InputParser inputParser) {
+        this.setupParser = setupParser;
         this.inputParser = inputParser;
         //init map with placeholder to be replaced once startup is complete
         this.mapDisplay = new Label("|..|" + "\n|..|");
@@ -188,23 +203,37 @@ public class MUDGameUI implements GameObserver {
         Label welcomeLabel = new Label("Welcome, Adventurer!");
         welcomeLabel.setLayoutData(centerLayoutData);
 
-        Label instructionLabel = new Label("Enter your name before you plunge into the dungeons of MUD.");
-        instructionLabel.setLayoutData(centerLayoutData);
+        Label nameLabel = new Label("Enter your name before you plunge into the dungeons of MUD.");
+        nameLabel.setLayoutData(centerLayoutData);
 
         TextBox nameBox = new TextBox().setPreferredSize(new TerminalSize(20, 1));
         nameBox.setLayoutData(centerLayoutData);
 
+        Label descriptionLabel = new Label("Leave a few words behind--who are you?");
+        descriptionLabel.setLayoutData(centerLayoutData);
+
+        TextBox descriptionBox = new TextBox().setPreferredSize(new TerminalSize(40, 1));
+        descriptionBox.setLayoutData(centerLayoutData);
+
+        // fetch inputted name + description on submit
         Button submitButton = new Button("Submit", () -> {
             String playerName = nameBox.getText();
+            String playerDescription = descriptionBox.getText();
+            this.setupParser.setupPlayer(playerName, playerDescription);
+
             window.close(); // close the name prompt window
             drawUI(); // now start the main UI
         });
         submitButton.setLayoutData(centerLayoutData);
 
         contentPanel.addComponent(welcomeLabel);
-        contentPanel.addComponent(instructionLabel);
 
+        contentPanel.addComponent(nameLabel);
         contentPanel.addComponent(nameBox);
+
+        contentPanel.addComponent(descriptionLabel);
+        contentPanel.addComponent(descriptionBox);
+
         contentPanel.addComponent(submitButton);
 
         window.setComponent(contentPanel);

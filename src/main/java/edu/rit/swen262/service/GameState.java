@@ -114,6 +114,15 @@ public class GameState implements IObservable {
     }
 
     /**
+     * updates the data of the player character currently playing the game
+     * 
+     * @param p the new player character to update to
+     */
+    public void updatePlayer(PlayerCharacter p) {
+        this.player = p;
+    }
+
+    /**
      * move the player one tile on the map in the specified direction
      * 
      * @param direction the direction to move in on the map
