@@ -21,7 +21,7 @@ import edu.rit.swen262.domain.RenderRepresentation;
  *                         (v LIST YOUR NAME HERE WHEN YOU WORK ON IT v)
  * @authors Danny Catorcini, Eric Manning
  */
-public class Tile implements DungeonPiece<Tile> {
+public class Tile implements DungeonPiece<Tile>, java.io.Serializable {
 
     /**
      * The {@link Occupant Occupant} that will always be in a {@link Tile}. Set upon construction and final.

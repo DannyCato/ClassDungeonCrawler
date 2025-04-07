@@ -11,7 +11,13 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import edu.rit.swen262.domain.Armor;
+import edu.rit.swen262.domain.DirectionalVector;
+import edu.rit.swen262.domain.Food;
+import edu.rit.swen262.domain.Gold;
 import edu.rit.swen262.domain.PlayerCharacter;
+import edu.rit.swen262.domain.Weapon;
+import edu.rit.swen262.service.ActionVisitor;
 import edu.rit.swen262.service.GameState;
 import edu.rit.swen262.service.InputParser;
 import edu.rit.swen262.service.MenuState;
@@ -56,37 +62,38 @@ class SampleCommandLineRunner implements CommandLineRunner {
 		HashMap<MenuState, HashMap<Character, Action>> keystrokes = new HashMap<>();
 
 		HashMap<Character, Action> moveKeystrokes = new HashMap<>() {{
-			put('1', new MoveAction(gameState, "North East"));
-			put('2', new MoveAction(gameState, "North"));
-			put('3', new MoveAction(gameState, "North West"));
-			put('4', new MoveAction(gameState, "East"));
-			put('5', new MoveAction(gameState, "West"));
-			put('6', new MoveAction(gameState, "South East"));
-			put('7', new MoveAction(gameState, "South"));
-			put('8', new MoveAction(gameState, "South West"));
+			put('1', new MoveAction(gameState, DirectionalVector.NORTH));
+			put('2', new MoveAction(gameState, DirectionalVector.NORTHEAST));
+			put('3', new MoveAction(gameState, DirectionalVector.EAST));
+			put('4', new MoveAction(gameState, DirectionalVector.SOUTHEAST));
+			put('5', new MoveAction(gameState, DirectionalVector.SOUTH));
+			put('6', new MoveAction(gameState, DirectionalVector.SOUTHWEST));
+			put('7', new MoveAction(gameState, DirectionalVector.WEST));
+			put('8', new MoveAction(gameState, DirectionalVector.NORTHWEST));
 		}};
 
 		HashMap<Character, Action> attackKeystrokes = new HashMap<>() {{
-			put('1', new AttackAction(gameState, "North East"));
-			put('2', new AttackAction(gameState, "North"));
-			put('3', new AttackAction(gameState, "North West"));
-			put('4', new AttackAction(gameState, "East"));
-			put('5', new AttackAction(gameState, "West"));
-			put('6', new AttackAction(gameState, "South East"));
-			put('7', new AttackAction(gameState, "South"));
-			put('8', new AttackAction(gameState, "South West"));
+			put('1', new AttackAction(gameState, DirectionalVector.NORTH));
+			put('2', new AttackAction(gameState, DirectionalVector.NORTHEAST));
+			put('3', new AttackAction(gameState, DirectionalVector.EAST));
+			put('4', new AttackAction(gameState, DirectionalVector.SOUTHEAST));
+			put('5', new AttackAction(gameState, DirectionalVector.SOUTH));
+			put('6', new AttackAction(gameState, DirectionalVector.SOUTHWEST));
+			put('7', new AttackAction(gameState, DirectionalVector.WEST));
+			put('8', new AttackAction(gameState, DirectionalVector.NORTHWEST));
 		}};
 
-		/*inv command map should change based upon what's in the inventory?
-		 AKA Bags/Individual Items
-
-		 (generation of these maps may need to move to another class depending upon
-		 integraton)
+		/*
+		 inventory, bag, and item keystroke maps are populated dynamically by the
+		 {@link InputParser} based upon the current state of the inventory when it
+		 is opened
 		 */
-		HashMap<Character, Action> inventoryKeystrokes = new HashMap<>() {{
-			// put('1', new UseItemAction(gameState, "North East"));
-			// put('2', new UseItemAction(gameState, "North"));
-		}};
+		HashMap<Character, Action> inventoryKeystrokes = new HashMap<>();
+
+		HashMap<Character, Action> bagKeystrokes = new HashMap<>();
+
+		HashMap<Character, Action> itemKeystrokes = new HashMap<>();
+
 
 		String moveMenuString = this.buildMenuString(moveKeystrokes);
 		String attackMenuString = this.buildMenuString(attackKeystrokes);
@@ -103,6 +110,8 @@ class SampleCommandLineRunner implements CommandLineRunner {
 		keystrokes.put(MenuState.MOVE, moveKeystrokes);
 		keystrokes.put(MenuState.ATTACK, attackKeystrokes);
 		keystrokes.put(MenuState.INVENTORY, inventoryKeystrokes);
+		keystrokes.put(MenuState.BAG, bagKeystrokes);
+		keystrokes.put(MenuState.ITEM, itemKeystrokes);
 
 		return keystrokes;
 	}
@@ -130,12 +139,21 @@ class SampleCommandLineRunner implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		PlayerCharacter player = new PlayerCharacter("Bobert", "can lift at least 5 worms.");
 		GameState gameState = new GameState(player);
+		ActionVisitor actionVisitor = new ActionVisitor(gameState);
 
 		HashMap<MenuState, HashMap<Character, Action>> keystrokes = this.bindCommands(gameState);
 		
-		InputParser inputParser = new InputParser(keystrokes);
+		InputParser inputParser = new InputParser(keystrokes, actionVisitor, gameState.getInventory());
 		MUDGameUI client = new MUDGameUI(inputParser);
 		gameState.register(client);
+
+		//simulate adding items to player inv for testing : )
+		gameState.pickUpItem(new Food("Beans", "", 10, new Gold(100)));
+		gameState.pickUpItem(new Food("Burgar", "", 10, new Gold(100)));
+		gameState.pickUpItem(new Weapon("BEANS", "", 10, new Gold(100)));
+		gameState.pickUpItem(new Weapon("Gun", "", 10, new Gold(100)));
+		gameState.pickUpItem(new Weapon("The Rock (Dwanye)", "", 9999, new Gold(100)));
+		gameState.pickUpItem(new Armor("The Master Shield", "", 9999, new Gold(100)));
 
 		client.start();
 	}

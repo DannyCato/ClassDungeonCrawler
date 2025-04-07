@@ -2,12 +2,22 @@ package edu.rit.swen262.service;
 
 import java.util.List;
 
+import edu.rit.swen262.domain.Armor;
 import edu.rit.swen262.domain.DayTime;
+import edu.rit.swen262.domain.DirectionalVector;
+import edu.rit.swen262.domain.Inventory;
+import edu.rit.swen262.domain.Item;
+import edu.rit.swen262.domain.Occupant;
 import edu.rit.swen262.domain.PlayerCharacter;
+import edu.rit.swen262.domain.DungeonPiece.Map;
+import edu.rit.swen262.domain.DungeonPiece.Room;
+import edu.rit.swen262.domain.DungeonPiece.Tile;
 import edu.rit.swen262.domain.TimePeriod;
+import edu.rit.swen262.domain.Weapon;
 import edu.rit.swen262.service.Action.DisplayMenuType;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  * The class which represents the current state of the game being played.
@@ -19,6 +29,7 @@ import java.util.ArrayList;
 public class GameState implements IObservable {
     private List<GameObserver> observers;
     private PlayerCharacter player;
+    private Map map;
     private int turnNumber;
     private TimePeriod currentTime;
 
@@ -32,6 +43,7 @@ public class GameState implements IObservable {
     public GameState(PlayerCharacter player) {
         this.observers = new ArrayList<>();
         this.player = player;
+        this.map = this.buildMap();
         this.turnNumber = 1;
         this.setTime(new DayTime(this));
     }
@@ -60,13 +72,50 @@ public class GameState implements IObservable {
     }
 
     /**
+     * helper/test method which builds the exact same instance of a map
+     * upon initialization
+     * 
+     * @return the completed map
+     */
+    private Map buildMap() {
+        HashSet<Occupant> initOccupants = new HashSet<>();
+        initOccupants.add(this.player);
+
+        Room root = new Room(8, 4, "test starting room");
+        Room room2 = new Room(10, 5, "test second room");
+
+        Map newMap = new Map(root);
+
+        newMap.addRoom(root, room2, DirectionalVector.WEST, false);
+        
+        // root.getRoomNode().setConnection(room2.getRoomNode(), DirectionalVector.EAST);
+        // room2.getRoomNode().setConnection(root.getRoomNode(), DirectionalVector.WEST);
+        
+        RoomFiller.fill(root, 0.1);
+        RoomFiller.fill(room2, 0.1);
+        
+        Tile startTile = (Tile)newMap.startUp();
+        
+        startTile.addOccupant(this.player);
+
+        return newMap;
+    }
+
+    /**
      * move the player one tile on the map in the specified direction
      * 
      * @param direction the direction to move in on the map
      */
-    public void movePlayer(String direction) {
+    public void movePlayer(DirectionalVector direction) {
+        //update map??
+        this.map.move(player, direction);
+        
+        //convert current Room to String render, then pass along to UI
+        String currentRoomRender = this.map.structuredRender();
+
         GameEvent event = new GameEvent(GameEventType.MOVE_PLAYER);
         event.addData("direction", direction);
+        event.addData("currentRoom", currentRoomRender);
 
         this.notifyObservers(event);
 
@@ -78,35 +127,58 @@ public class GameState implements IObservable {
      * 
      * @param direction the direction in which to attempt an attack
      */
-    public void attackCharacter(String direction) {
+    public void attackCharacter(DirectionalVector direction) {
         GameEvent event = new GameEvent(GameEventType.TAKE_DAMAGE);
         event.addData("direction", direction);
         
         this.notifyObservers(event);
     }
-
-    /**
-     *  opens the inventory of the player character
-     */
-    public void openInventory() {
-        //still waiting on integration w/ inventory subsystem
-        this.notifyObservers(null); 
-    }
     
     /**
-     * uses the item found in player character Inventory
+     * uses the item found in player character {@link Inventory}
      * 
-     * needs an @param item the player character is using
+     * @param item the item the player character is using
      */
-    public void useItem(String item) {
-        //still waiting on integration w/ inventory subsystem
-        //this.notifyObservers(new GameEvent(GameEventType.USE_ITEM)); 
+    public void useItem(Item item) {
+        String itemMsg = player.useItem(item);
+        GameEvent event = new GameEvent(GameEventType.USE_ITEM);
+        event.addData("item", item);
+        event.addData("message", itemMsg);
+
+        if (!(item instanceof Weapon) && !(item instanceof Armor)) {
+            player.dropItem(item);
+        }
+        
+        this.notifyObservers(event); 
     }
 
     /**
-     * disarms the trap found in a cardinal direction away from player character in room
+     * drops the item found in player character {@link Inventory}
      * 
-     * needs an @param trap the player character is deactivating in a cardinal direction
+     * @param item the item the player character is dropping
+     */
+    public void dropItem(Item item) {
+        GameEvent event = new GameEvent(GameEventType.DROP_ITEM);
+        event.addData("item", item);
+
+        player.dropItem(item);
+
+        this.notifyObservers(event); 
+    }
+
+    /**
+     * adds a single item to the {@link PlayerCharacter player's} {@link Inventory}
+     * @param item the item to be added to the inventory
+     */
+    public void pickUpItem(Item item) {
+        player.pickUpItem(item);
+    }
+
+    /**
+     * disarms the trap found in a cardinal direction away from the 
+     * {@link PlayerCharacter player character} in a {@link Room room}
+     * 
+     * @param trap the trap being deactivated adjacent to the player
      */
     public void disarmTrap(String trap) {
         this.notifyObservers(null); 
@@ -183,5 +255,14 @@ public class GameState implements IObservable {
      */
     public int getTurnNumber() {
         return this.turnNumber;
+    }
+
+     /**
+     * fetches the {@link Inventory Inventory} of the current player
+     * 
+     * @return the a list of {@link Bag Bags} of the current player's inventory
+     */
+    public Inventory getInventory() {
+        return this.player.getInventory();
     }
 }

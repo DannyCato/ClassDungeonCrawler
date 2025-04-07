@@ -41,12 +41,16 @@ public enum MenuState {
     INVENTORY {
         @Override
         public void handleInput(InputParser p, char keystroke) {
-            /* awaiting inventory subsystem integration, 
-            should go INVENTORY -> BAG, then BAG -> DEFAULT on next keystroke? */
-            p.setMenu(DEFAULT);
+            p.setMenu(BAG);
         }
     },
     BAG {
+        @Override
+        public void handleInput(InputParser p, char keystroke) {
+            p.setMenu(ITEM);
+        }
+    },
+    ITEM {
         @Override
         public void handleInput(InputParser p, char keystroke) {
             p.setMenu(DEFAULT);

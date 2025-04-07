@@ -7,7 +7,8 @@ package edu.rit.swen262.service;
  */
 public interface GameObserver {
     /**
-     * updates the field storing the latest version of the GameState
+     * updates the observer and performs operations when the state of the
+     * {@link GameState GameState object} being observed sends a push notification 
      * @param g the updated version of the GameState object
      */
     public void update(GameEvent event);

@@ -1,6 +1,7 @@
 package edu.rit.swen262.domain.DungeonPiece;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import edu.rit.swen262.domain.DirectionalVector;
@@ -10,10 +11,10 @@ import edu.rit.swen262.domain.RenderRepresentation;
 
 /**
  * A representation of {@link Map} {@link DungeonPiece} a composite of {@link Room Rooms}
- *                         (v LIST YOUR NAME HERE WHEN YOU WORK ON IT v)
- * @authors Danny Catorcini, 
+ *
+ * @authors Danny Catorcini, Eric Manning
  */
-public class Map implements DungeonPiece<Map> {
+public class Map implements DungeonPiece<Map>, java.io.Serializable {
     
     private final MapStructure rooms;
 
@@ -24,15 +25,13 @@ public class Map implements DungeonPiece<Map> {
 
     private DungeonPiece<Room> currentRoom;
 
-
     // <-----------------------Constructors----------------------->
 
-    public Map(DungeonPiece<Room> root, DungeonPiece<Tile> startTile) {
+    public Map(DungeonPiece<Room> root) {
         this.rooms = new MapStructure();
         this.startRoom = root;
         this.currentRoom = root;
 
-        this.startTile = startTile;
         rooms.addLooseRoom(((Room) root).getRoomNode());
     }
 
@@ -47,6 +46,28 @@ public class Map implements DungeonPiece<Map> {
     @Override
     public List<RenderRepresentation> render() {
         return currentRoom.render();
+    }
+
+    /**
+     * returns a formatted {@link Room} based on render()
+     * 
+     * @return {@link String}
+     */
+    public String structuredRender() {
+        String s = "";
+        HashSet<RenderRepresentation> linebreakTiles = new HashSet<>(); // <- What does this do??
+        List<RenderRepresentation> li = render();
+        RenderRepresentation last = null;
+        for (RenderRepresentation rr : li) {
+            if ((last == RenderRepresentation.VWALL && rr == RenderRepresentation.VWALL) 
+            || (last == RenderRepresentation.CORNER && rr == RenderRepresentation.VWALL)
+            || (last == RenderRepresentation.VWALL && rr == RenderRepresentation.CORNER)) {
+                s += "\n";
+            }
+            s += rr.render();
+            last = rr;
+        }
+        return s;
     }
 
     /**
@@ -72,15 +93,18 @@ public class Map implements DungeonPiece<Map> {
     /**
      * adds a {@link Room} to rooms.
      * 
-     * @param tile {@link DungeonPiece}<{@link Tile}> a {@link Tile} to add
+     * @param from {@link DungeonPiece}<{@link Room}>
+     * @param to {@link DungeonPiece}<{@link Room}>
+     * @param dir {@link DirectionalVector}
+     * @param isGoal boolean
+     * @return boolean if Room adding was a success
      */
     public boolean addRoom(DungeonPiece<Room> from, DungeonPiece<Room> to, DirectionalVector dir, boolean isGoal) {
         RoomNode foundFrom = rooms.getRoom(((Room)from).getRoomNode());
-        RoomNode foundTo = rooms.getRoom(((Room)to).getRoomNode());
-        if (foundFrom == null || foundTo == null ) {
+        if (foundFrom == null) {
             return false;
         }
-        boolean success = rooms.addRoom(foundFrom, foundTo, dir);
+        boolean success = rooms.addRoom(foundFrom, ((Room)to).getRoomNode() , dir);
         if (success && isGoal) {
             this.goal = to;
         }
@@ -106,7 +130,11 @@ public class Map implements DungeonPiece<Map> {
      * 
      */
     public boolean move(Occupant o, DirectionalVector dir) {
-        return ((Room)currentRoom).moveOccupant(o, dir);
+        Tile t = ((Room)currentRoom).moveOccupant(o, dir);
+        if (t != null && t.isExit()) {
+            exitRoom(o, t.getExitDirection());
+        };
+        return t != null;
     }
 
     /**
@@ -147,4 +175,13 @@ public class Map implements DungeonPiece<Map> {
         return true;
     }
     
+    public DungeonPiece<Tile> startUp() {
+        int i = 0;
+        startTile = ((Room)startRoom).getTileByIndex(i);
+        while ( !( ((Tile)startTile).isStackable() )) {
+            i++;
+            startTile = ((Room)startRoom).getTileByIndex(i);
+        }
+        return startTile;
+    }
 }

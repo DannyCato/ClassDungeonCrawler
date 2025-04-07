@@ -9,24 +9,69 @@ import java.util.Arrays;
  * @author Danny Catorcini
  */
 public enum DirectionalVector {
-    NORTH(0, 1),
-    NORTHEAST(1, 1),
-    EAST(1, 0),
-    SOUTHEAST(1, -1),
-    SOUTH(0, -1),
-    SOUTHWEST(-1, -1),
-    WEST(-1, 0),
-    NORTHWEST(-1, 1);
+    NORTH(0, 1) {
+        @Override
+        public String toString() {
+            return "North";
+        }
+    },
+    NORTHEAST(1, 1) {
+        @Override
+        public String toString() {
+            return "North East";
+        }
+    },
+    EAST(1, 0) {
+        @Override
+        public String toString() {
+            return "East";
+        }
+    },
+    SOUTHEAST(1, -1) {
+        @Override
+        public String toString() {
+            return "South East";
+        }
+    },
+    SOUTH(0, -1) {
+        @Override
+        public String toString() {
+            return "South";
+        }
+    },
+    SOUTHWEST(-1, -1) {
+        @Override
+        public String toString() {
+            return "South West";
+        }
+    },
+    WEST(-1, 0) {
+        @Override
+        public String toString() {
+            return "West";
+        }
+    },
+    NORTHWEST(-1, 1) {
+        @Override
+        public String toString() {
+            return "North West";
+        }
+    };
 
     public int x;
 
     public int y;
 
     public static ArrayList<DirectionalVector> directions = new ArrayList<>(Arrays.asList(DirectionalVector.values()));
+    public static ArrayList<DirectionalVector> cardinals = new ArrayList<>(Arrays.asList(NORTH, EAST, SOUTH, WEST));
 
     private DirectionalVector(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+
+    public static boolean isCardinal(DirectionalVector dir) {
+        return cardinals.contains(dir);    
     }
 
     /**
@@ -48,5 +93,13 @@ public enum DirectionalVector {
      */
     public static boolean directionsAreOpposite(DirectionalVector d1, DirectionalVector d2) {
         return (Math.abs(directions.indexOf(d1) - directions.indexOf(d2)) == 4);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return super.toString();
     }
 }

@@ -3,6 +3,8 @@ package edu.rit.swen262.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.rit.swen262.service.InventoryVisitor;
+
 /**
  * Represents a Bag that can hold items, acts as a container
  * Has a defined capacity to store a specific amount of items
@@ -10,8 +12,7 @@ import java.util.List;
  * @author [Nick F, Ryan M]
  */
 
-public class Bag {
-
+public class Bag implements ItemComponent {
     /** 
      * The items stored in a bag.
     */
@@ -64,7 +65,6 @@ public class Bag {
      */
     public boolean removeItem(Item item) {
         return contents.remove(item);
-
     }
 
     /**
@@ -73,7 +73,6 @@ public class Bag {
      */
     public List<Item> getItems() {
         return contents;
-
     }
 
     /**
@@ -82,6 +81,53 @@ public class Bag {
      */
     public int getCapacity() {
         return capacity;
+    }
+
+    /**
+     * checks if the bag is currently at full capacity
+     * @return {@code true} if the bag is full, {@code false} otherwise
+     */
+    public boolean isFull() {
+        return this.contents.size() == this.capacity;
+    }
+
+    /**
+    * Gets the names of the Bag
+    * @return The name of the Bag as a string
+    */
+    public String getName() {
+        return "Bag";
+    }
+
+    /**
+    * Gets the description of the bag
+    * @return The description of the bag
+    */
+    public String getDescription(){
+        return "Just a little baggie waggie";
+    }
+
+    /**
+    * Gets the goldValue of the bag
+    * @return The {@link Gold Gold} Value of the bag
+    */
+    public Gold getValue(){
+        int totalVal = 0;
+        
+        for (Item item : contents) {
+            totalVal += item.getValue().getCount();
+        }
+
+        return new Gold(totalVal);
+    }
+
+    /**
+     * Accepts a visitor to allow the vistor to perform operations on this bag
+     * 
+     * @param visitor the Visitor that will perform operations on this bag
+     */
+    public void accept(InventoryVisitor visitor) {
+        visitor.visitBag(this);
     }
 
     /**

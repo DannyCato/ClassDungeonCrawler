@@ -1,11 +1,15 @@
 package edu.rit.swen262.domain;
 
+import edu.rit.swen262.service.InventoryVisitor;
+
+import edu.rit.swen262.service.InventoryVisitor;
+
 /**
  * Represents an item in the game.
  * Notably abstract, as it serves the purpose of being a base class for all item types.
  * Implements the {@code ItemComponent} interface.
  * 
- * @author [Nick F, Ryan M]
+ * @author Nick F, Ryan M
  */
 public abstract class Item implements ItemComponent {
     
@@ -51,6 +55,15 @@ public abstract class Item implements ItemComponent {
     }
 
     /**
+     * Accepts a visitor to allow the vistor to perform operations on this Item
+     * 
+     * @param visitor the Visitor that will perform operations on this Item
+     */
+    public void accept(InventoryVisitor visitor) {
+        visitor.visitItem(this);
+    }
+
+    /**
      * Compares an item to another item for equality.
      * If both items have the same description and name, they are considered equal.
      * 
@@ -77,18 +90,4 @@ public abstract class Item implements ItemComponent {
     public String toString() {
         return String.format("%s: %s%nValue: %s", name, description, value.getCount());
     }
-
-    public static void main(String[] args) {
-        Gold gold = new Gold(10);
-        System.out.println(gold);
-        Armor armor = new Armor("Armor", "Protect", 1, gold);
-        System.out.println(armor);
-        Weapon weapon = new Weapon("Weapon", "Fight", 2, gold);
-        System.out.println(weapon);
-        Food food = new Food("Food", "Heal", 3, gold);
-        System.out.println(food);
-        Buff buff = new Buff("Buff", "Helps", 4, 4, 4, 4, gold);
-        System.out.println(buff);
-    }
-
 }

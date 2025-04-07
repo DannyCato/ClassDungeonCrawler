@@ -5,7 +5,7 @@ package edu.rit.swen262.domain;
  * 
  * @authors Eric Manning, Danny Catorcini
  */
-public class Exit implements Occupant {
+public class Exit implements Occupant, java.io.Serializable {
     // private static final RenderRepresentation RENDER_REPRESENTATION = RenderRepresentation.EXIT;
     private static final boolean STACKABLE = true;
     private String description;

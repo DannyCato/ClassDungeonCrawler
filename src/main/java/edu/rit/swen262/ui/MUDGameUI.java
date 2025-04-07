@@ -30,6 +30,7 @@ import com.googlecode.lanterna.terminal.swing.SwingTerminalFrame;
 import com.googlecode.lanterna.terminal.swing.TerminalEmulatorAutoCloseTrigger;
 
 import ch.qos.logback.core.net.QueueFactory;
+import edu.rit.swen262.domain.Item;
 import edu.rit.swen262.service.GameEvent;
 import edu.rit.swen262.service.GameEventType;
 import edu.rit.swen262.service.GameObserver;
@@ -46,13 +47,21 @@ import edu.rit.swen262.service.Action.Action;
 public class MUDGameUI implements GameObserver {
     private InputParser inputParser;
     private Screen screen;
-    private Window window;
+    private Label mapDisplay;
     private Label turnDisplay;
     private Label timeDisplay;
     private Label menuDisplay;
+    private final int EVENT_LOG_SIZE = 10;
     private Queue<String> eventLogMsgs;
     private Label eventLogDisplay;
 
+    /**
+     * initializes a new UI component for the MUD Game, launching a new terminal
+     * window to display the game, then binding he {@link InputParser} to the 
+     * text input box within it
+     * 
+     * @param inputParser the object rsponsible for interpreting inputted keystrokes
+     */
     public MUDGameUI(InputParser inputParser) {
         this.inputParser = inputParser;
         this.eventLogMsgs = new LinkedList<>();
@@ -65,11 +74,14 @@ public class MUDGameUI implements GameObserver {
         switch (event.getType()) {
             case DISPLAY_SUBMENU:
                 //update status panel w/ menu options
-                this.redrawMenu((String) event.getData("menuText"));
+                this.redrawMenu(event.getData("menuText").toString());
                 break;
             case MOVE_PLAYER:
-                this.eventLogMsgs.offer("You moved.");
-                this.redrawEventLog();
+                if (event.getData("direction") != null) {
+                    this.eventLogMsgs.offer("You moved.");
+                    this.redrawEventLog();
+                }
+                this.redrawMap(event.getData("currentRoom").toString());
                 this.redrawMenuDefault();
                 break;
             case FINISH_TURN:
@@ -85,6 +97,22 @@ public class MUDGameUI implements GameObserver {
                 break;
             case TAKE_DAMAGE:
                 this.eventLogMsgs.offer("Something took damage.");
+                this.redrawEventLog();
+                this.redrawMenuDefault();
+                break;
+            case USE_ITEM:
+                Item usedItem = (Item) event.getData("item");
+                String itemMsg = (String) event.getData("message");
+                this.eventLogMsgs.offer("You used the " + usedItem.getName() + "!");
+                this.eventLogMsgs.offer(itemMsg);
+                
+                this.redrawEventLog();
+                this.redrawMenuDefault();
+                break;
+            case DROP_ITEM:
+                Item droppedItem = (Item) event.getData("item");
+                this.eventLogMsgs.offer("You dropped the " + droppedItem.getName() + "!");
+                
                 this.redrawEventLog();
                 this.redrawMenuDefault();
                 break;
@@ -127,6 +155,7 @@ public class MUDGameUI implements GameObserver {
         this.screen = null;
         this.turnDisplay = null;
         this.timeDisplay = null;
+        this.mapDisplay = null;
         this.menuDisplay = null;
         this.eventLogDisplay = null;
 
@@ -160,12 +189,12 @@ public class MUDGameUI implements GameObserver {
                 TextColor.ANSI.BLACK              // GUI background
             );
 
-            //textGUI.setTheme(theme);
+            textGUI.setTheme(theme);
 
             // set no shadow decorations for panels + full screen
             Window.Hint[] windowHints = new Window.Hint[] {
-                //Window.Hint.NO_DECORATIONS,
-                //Window.Hint.NO_POST_RENDERING,
+                Window.Hint.NO_DECORATIONS,
+                Window.Hint.NO_POST_RENDERING,
                 Window.Hint.EXPANDED};
 
             final Window window = new BasicWindow("MUD Game");
@@ -198,8 +227,8 @@ public class MUDGameUI implements GameObserver {
 
             // create panel displaying map
             Panel mapPanel = new Panel(new GridLayout(2));
-            Label mapDisplay = new Label("|□□|" + "\n|□□|");
-            mapPanel.addComponent(mapDisplay);
+            this.mapDisplay = new Label("|..|" + "\n|..|");
+            mapPanel.addComponent(this.mapDisplay);
 
             // create panel recieving input (spans entire screen)
             Panel inputPanel = new Panel(new GridLayout(1));
@@ -218,7 +247,6 @@ public class MUDGameUI implements GameObserver {
             Button submitButton = new Button("Submit", () -> {
                 String inputString = userInput.getText();
                 if (!inputString.isBlank()) {
-                    //statusDisplay.setText(inputString);
                     this.inputParser.receivedInput(userInput.getText());
                 }
                 userInput.setText(""); // Clear the text
@@ -263,7 +291,7 @@ public class MUDGameUI implements GameObserver {
      * @param displayText the new text to display on the menu panel
      */
     private void redrawMenu(String displayText) {
-        this.menuDisplay.setText(displayText);
+        this.menuDisplay.setText("Select an Option:\n" + displayText);
     }
 
     /**
@@ -281,12 +309,11 @@ public class MUDGameUI implements GameObserver {
 
     /**
      * updates the text displayed in the event log panel to display the response to
-     * the most recent action(s) taken
-     * 
+     * the most recent action(s) taken 
      */
     private void redrawEventLog() {
         //remove oldest event log message from the display
-        if (this.eventLogMsgs.size() > 5) {
+        if (this.eventLogMsgs.size() > EVENT_LOG_SIZE) {
             this.eventLogMsgs.poll();
         }
 
@@ -331,5 +358,15 @@ public class MUDGameUI implements GameObserver {
      */
     private void redrawTime(String displayText) {
         this.timeDisplay.setText("Time: " + displayText);
+    }
+
+    /**
+     * updates the text displayed in the map panel to show the change after
+     * a player turn is taken
+     * 
+     * @param displayText the text to be displayed in the map panel
+     */
+    private void redrawMap(String displayText) {
+        this.mapDisplay.setText(displayText);
     }
 }

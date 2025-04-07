@@ -1,16 +1,27 @@
 package edu.rit.swen262.domain;
 
 import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.List;
+
+import edu.rit.swen262.service.GameEvent;
+import edu.rit.swen262.service.GameEventType;
+import edu.rit.swen262.service.GameObserver;
+import edu.rit.swen262.service.IObservable;
+import edu.rit.swen262.service.InventoryVisitor;
+import edu.rit.swen262.service.GameEvent;
+import edu.rit.swen262.service.GameEventType;
+import edu.rit.swen262.service.GameObserver;
+import edu.rit.swen262.service.IObservable;
 
 /**
  * Represents a player's inventory, which can hold multiple bags.
  * Bags are used to store extra items.
  * 
- * @author [Nick F, Ryan M]
+ * @author Nick F, Ryan M
  */
 
-public class Inventory {
+public class Inventory implements ItemComponent {
 
     /** The list of bags the the player currently has. */
     private List<Bag> bags;
@@ -56,6 +67,23 @@ public class Inventory {
     }
 
     /**
+     * adds a single item to the inventory in the next open slot
+     * 
+     * @param item the item to be added to the inventory
+     * @return {@code true} if the operation succeeds, {@code false} otherwise
+     */
+    public boolean addItem(Item item) {
+        for (Bag bag : this.bags) {
+            if (!bag.isFull()) {
+                bag.addItem(item);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Tries to remove a bag from the inventory.
      * @param bag The bag to be removed.
      * @return Returns {@code true} if the bag was removed, {@code false} otherwise.
@@ -68,12 +96,26 @@ public class Inventory {
     }
 
     /**
+     * removes the given {@link Item} from the inventory
+     * 
+     * @param item the item to be removed
+     * @return {@code true} if the item was succesfully found and removed, {@code false} otherwise
+     */
+    public boolean removeItem(Item item) {
+        for (Bag bag : this.bags) {
+            if (bag.removeItem(item)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Gets a list of all of the bags a player has.
      * @return the bags a player has.
      */
     public List<Bag> getBags() {
         return bags;
-
     }
 
     /**
@@ -82,7 +124,6 @@ public class Inventory {
      */
     public int getTotalBags() {
         return bags.size();
-
     }
 
     /**
@@ -91,7 +132,38 @@ public class Inventory {
      */
     public int getCapacity() {
         return capacity;
-
     }
 
+    /**
+    * Gets the names of the inventory
+    * @return The name of the inventory as a string
+    */
+    public String getName(){
+        return "Big uhhh Big Inventory Guy";
+    }
+
+    /**
+    * Gets the description of the inventory
+    * @return The description of the inventory
+    */
+    public String getDescription(){
+        return "I'm filled of little goodies :3";
+    }
+
+    /**
+    * Gets the goldValue of the inventory
+    * @return The {@link Gold Gold} Value of the inventory
+    */
+    public Gold getValue() {
+        return new Gold(0);
+    }
+    
+    /**
+     * Accepts a visitor to allow the vistor to perform operations on this inventory
+     * 
+     * @param visitor the Visitor that will perform operations on this inventory
+     */
+    public void accept(InventoryVisitor visitor) {
+        visitor.visitInventory(this);
+    }
 }

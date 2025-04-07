@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import edu.rit.swen262.service.Action.*;
+import edu.rit.swen262.domain.DirectionalVector;
 import edu.rit.swen262.domain.PlayerCharacter;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -26,7 +27,7 @@ public class ActionTest {
 	@DisplayName("Validate that a concrete attack action is correctly initialized")
 	void attackActionInit() {
         GameState gameState = mock(GameState.class);
-        AttackAction attackAction = new AttackAction(gameState, "North");
+        AttackAction attackAction = new AttackAction(gameState, DirectionalVector.NORTH);
         
         assertTrue(attackAction.getGameState().equals(gameState));
         assertTrue(attackAction.getDirection().equals("North"));
@@ -38,10 +39,10 @@ public class ActionTest {
         GameState gameState = new GameState(this.player);
         GameState spyGameState = spy(gameState);
 
-        MoveAction moveAction = new MoveAction(spyGameState, "South");
+        MoveAction moveAction = new MoveAction(spyGameState, DirectionalVector.SOUTH);
 
         moveAction.performAction();
-        verify(spyGameState).movePlayer("South");
+        verify(spyGameState).movePlayer(DirectionalVector.SOUTH);
         
     }
 
@@ -49,7 +50,7 @@ public class ActionTest {
     @DisplayName("Validate that an attack action is correctly initialized")
     void movementActionInit() {
         GameState gameState = mock(GameState.class);
-        MoveAction moveAction = new MoveAction(gameState, "North");
+        MoveAction moveAction = new MoveAction(gameState, DirectionalVector.NORTH);
 
         assertTrue(moveAction.getGameState().equals(gameState));
         assertTrue(moveAction.getDirection().equals("North"));
@@ -61,10 +62,10 @@ public class ActionTest {
         GameState gameState = new GameState(this.player);
         GameState spyGameState = spy(gameState);
 
-        AttackAction attackAction = new AttackAction(spyGameState, "South");
+        AttackAction attackAction = new AttackAction(spyGameState, DirectionalVector.SOUTH);
 
         attackAction.performAction();
-        verify(spyGameState).attackCharacter("South");
+        verify(spyGameState).attackCharacter(DirectionalVector.SOUTH);
         
     }
 
