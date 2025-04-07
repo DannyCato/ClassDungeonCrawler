@@ -110,7 +110,12 @@ public class ActionVisitor implements InventoryVisitor {
         StringBuilder displayText = new StringBuilder();
         
         for (int i = 0; i < items.size(); i++) {
-            displayText.append(String.format("[%s] %s\n", i + 1, items.get(i).getName()));
+            ItemComponent iComponent = items.get(i);
+            displayText.append(String.format("[%s] %s", i + 1, iComponent.getName()));
+            if (iComponent instanceof Item) {
+                displayText.append(String.format(" (%s)", iComponent.getClass().getSimpleName()));
+            }
+            displayText.append("\n");
         }
 		
 		return displayText.toString();
