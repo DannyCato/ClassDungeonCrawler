@@ -72,11 +72,11 @@ public class MUDGameUI implements GameObserver {
      */
     public void update(GameEvent event) {
         switch (event.getType()) {
-            case GameEventType.DISPLAY_SUBMENU:
+            case DISPLAY_SUBMENU:
                 //update status panel w/ menu options
                 this.redrawMenu(event.getData("menuText").toString());
                 break;
-            case GameEventType.MOVE_PLAYER:
+            case MOVE_PLAYER:
                 if (event.getData("direction") != null) {
                     this.eventLogMsgs.offer("You moved.");
                     this.redrawEventLog();
@@ -84,10 +84,10 @@ public class MUDGameUI implements GameObserver {
                 this.redrawMap(event.getData("currentRoom").toString());
                 this.redrawMenuDefault();
                 break;
-            case GameEventType.FINISH_TURN:
+            case FINISH_TURN:
                 this.redrawTurn(event.getData("turnNumber").toString());
                 break;
-            case GameEventType.CHANGE_TIME:
+            case CHANGE_TIME:
                 String time = event.getData("time").toString();
 
                 this.eventLogMsgs.offer("Time changed to " + time);
@@ -95,12 +95,12 @@ public class MUDGameUI implements GameObserver {
                 this.redrawEventLog();
                 this.redrawTime(time);
                 break;
-            case GameEventType.TAKE_DAMAGE:
+            case TAKE_DAMAGE:
                 this.eventLogMsgs.offer("Something took damage.");
                 this.redrawEventLog();
                 this.redrawMenuDefault();
                 break;
-            case GameEventType.USE_ITEM:
+            case USE_ITEM:
                 Item usedItem = (Item) event.getData("item");
                 String itemMsg = (String) event.getData("message");
                 this.eventLogMsgs.offer("You used the " + usedItem.getName() + "!");
@@ -109,14 +109,14 @@ public class MUDGameUI implements GameObserver {
                 this.redrawEventLog();
                 this.redrawMenuDefault();
                 break;
-            case GameEventType.DROP_ITEM:
+            case DROP_ITEM:
                 Item droppedItem = (Item) event.getData("item");
                 this.eventLogMsgs.offer("You dropped the " + droppedItem.getName() + "!");
                 
                 this.redrawEventLog();
                 this.redrawMenuDefault();
                 break;
-            case GameEventType.QUIT_GAME:
+            case QUIT_GAME:
                 this.stop();
                 break;
             default:

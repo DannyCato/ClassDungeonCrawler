@@ -25,16 +25,16 @@ public class RoomNode implements java.io.Serializable {
      */
     public boolean setConnection(RoomNode r, DirectionalVector dir) {
         switch (dir) {
-            case DirectionalVector.NORTH:
+            case NORTH:
                 north = r;
                 break;
-            case DirectionalVector.SOUTH:
+            case SOUTH:
                 south = r;
                 break;
-            case DirectionalVector.EAST:
+            case EAST:
                 east = r;
                 break;
-            case DirectionalVector.WEST:
+            case WEST:
                 west = r;
                 break;
             default:
@@ -50,13 +50,13 @@ public class RoomNode implements java.io.Serializable {
      */
     public RoomNode getConnection(DirectionalVector dir) {
         switch (dir) {
-            case DirectionalVector.NORTH:
+            case NORTH:
                 return north;
-            case DirectionalVector.SOUTH:
+            case SOUTH:
                 return south;
-            case DirectionalVector.EAST:
+            case EAST:
                 return east;
-            case DirectionalVector.WEST:
+            case WEST:
                 return west;
             default:
                 return null;
