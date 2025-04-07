@@ -105,6 +105,14 @@ public class MUDGameUI implements GameObserver {
                 String itemMsg = (String) event.getData("message");
                 this.eventLogMsgs.offer("You used the " + usedItem.getName() + "!");
                 this.eventLogMsgs.offer(itemMsg);
+                
+                this.redrawEventLog();
+                this.redrawMenuDefault();
+                break;
+            case GameEventType.DROP_ITEM:
+                Item droppedItem = (Item) event.getData("item");
+                this.eventLogMsgs.offer("You dropped the " + droppedItem.getName() + "!");
+                
                 this.redrawEventLog();
                 this.redrawMenuDefault();
                 break;

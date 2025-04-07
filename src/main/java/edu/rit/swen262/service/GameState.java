@@ -158,7 +158,12 @@ public class GameState implements IObservable {
      * @param item the item the player character is dropping
      */
     public void dropItem(Item item) {
+        GameEvent event = new GameEvent(GameEventType.DROP_ITEM);
+        event.addData("item", item);
+
         player.dropItem(item);
+
+        this.notifyObservers(event); 
     }
 
     /**

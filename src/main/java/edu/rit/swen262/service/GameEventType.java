@@ -12,5 +12,6 @@ public enum GameEventType {
     FINISH_TURN,
     ADD_ITEM,
     USE_ITEM,
+    DROP_ITEM,
     QUIT_GAME
 }
