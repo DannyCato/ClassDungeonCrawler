@@ -3,11 +3,12 @@ package edu.rit.swen262.service;
 import java.util.HashMap;
 
 import edu.rit.swen262.service.Action.Action;
+import edu.rit.swen262.service.Action.SetPlayerAction;
 import edu.rit.swen262.service.Action.UseItemAction;
 
 /**
- * A class which parses input from the user, mapping the given String
- * to its corrosponding {@link Action}
+ * A class which parses input from the user while the game is running, 
+ * mapping the given String to its corrosponding {@link Action}
  * 
  * @author Victor Bovat, Philip Rubbo
  */
