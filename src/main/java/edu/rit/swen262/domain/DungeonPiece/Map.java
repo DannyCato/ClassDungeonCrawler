@@ -225,4 +225,14 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
     public void setGoal(DungeonPiece<Room> goal) {
         this.goal = goal;
     }
+
+    /**
+     * fetches whether or not the map is currently in a valid win condition of the
+     * player being inside of the goal room
+     * 
+     * @return {@code true} if the player is inside the goal room and may end the game, {@code false} otherwise
+     */
+    public boolean isGoalReached() {
+        return this.goalReached;
+    }
 }

@@ -82,14 +82,13 @@ public class GameState implements IObservable {
 
         Room root = new Room(8, 4, "test starting room");
         Room room2 = new Room(10, 5, "test second room");
+        Room goalRoom = new Room(3, 3, "test goal room");
 
         Map newMap = new Map(root);
 
         newMap.addRoom(root, room2, DirectionalVector.WEST, false);
-        
-        // root.getRoomNode().setConnection(room2.getRoomNode(), DirectionalVector.EAST);
-        // room2.getRoomNode().setConnection(root.getRoomNode(), DirectionalVector.WEST);
-        
+        newMap.addRoom(room2, goalRoom, DirectionalVector.NORTH, true);
+
         RoomFiller.fill(root, 0.1);
         RoomFiller.fill(room2, 0.1);
         
@@ -108,6 +107,9 @@ public class GameState implements IObservable {
     public void movePlayer(DirectionalVector direction) {
         //update map??
         this.map.move(player, direction);
+        if (this.map.isGoalReached()) {
+            System.out.println("ENTERING THE GOAL WOOOO");
+        }
         
         //convert current Room to String render, then pass along to UI
         String currentRoomRender = this.map.structuredRender();
