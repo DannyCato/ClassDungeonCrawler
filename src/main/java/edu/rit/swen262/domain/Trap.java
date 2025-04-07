@@ -24,7 +24,7 @@ public class Trap implements Occupant, GameObserver {
      * @return if the disarm attempt was successful
      */
     public boolean characterDisarm(Character disarmer) {
-        
+        return true;
     }
 
     public String attack(Character trapped) {

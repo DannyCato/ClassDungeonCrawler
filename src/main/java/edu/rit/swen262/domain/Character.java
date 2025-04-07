@@ -58,6 +58,33 @@ public abstract class Character implements Occupant, java.io.Serializable {
     }
 
     /**
+     * fetches the current HP of the {@link Character}
+     * 
+     * @return current HP of the {@link Character}
+     */
+    public int getCurrentHealth() {
+        return this.health;
+    }
+
+    /**
+     * fetches the attack stat of the {@link Character}
+     * 
+     * @return attack stat of the {@link Character}
+     */
+    public int getAttack() {
+        return this.attack;
+    }
+
+    /**
+     * fetches the defence stat of the {@link Character}
+     * 
+     * @return defence stat of the {@link Character}
+     */
+    public int getDefense() {
+        return this.defense;
+    }
+
+    /**
      * sets the name of the {@link Character} to the specified name
      * 
      * @param name the new name of the {@link Character}
