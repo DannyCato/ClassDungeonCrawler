@@ -96,12 +96,26 @@ public class Inventory implements ItemComponent {
     }
 
     /**
+     * removes the given {@link Item} from the inventory
+     * 
+     * @param item the item to be removed
+     * @return {@code true} if the item was succesfully found and removed, {@code false} otherwise
+     */
+    public boolean removeItem(Item item) {
+        for (Bag bag : this.bags) {
+            if (bag.removeItem(item)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Gets a list of all of the bags a player has.
      * @return the bags a player has.
      */
     public List<Bag> getBags() {
         return bags;
-
     }
 
     /**

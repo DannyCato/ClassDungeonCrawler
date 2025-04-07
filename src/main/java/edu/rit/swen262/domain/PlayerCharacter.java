@@ -118,8 +118,22 @@ public class PlayerCharacter extends Character {
         return null;
     }
 
+    /**
+     * adds a single {@link Item} to the player character's {@link Inventory}
+     * 
+     * @param item the item to be added
+     */
     public void pickUpItem(Item item) {
         inventory.addItem(item);
+    }
+
+    /**
+     * removes a single {@link Item} from the player character's {@link Inventory}
+     * 
+     * @param item the item to be removed
+     */
+    public void dropItem(Item item) {
+        inventory.removeItem(item);
     }
 
     /**

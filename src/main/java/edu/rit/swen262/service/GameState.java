@@ -2,6 +2,7 @@ package edu.rit.swen262.service;
 
 import java.util.List;
 
+import edu.rit.swen262.domain.Armor;
 import edu.rit.swen262.domain.DayTime;
 import edu.rit.swen262.domain.DirectionalVector;
 import edu.rit.swen262.domain.Inventory;
@@ -12,6 +13,7 @@ import edu.rit.swen262.domain.DungeonPiece.Map;
 import edu.rit.swen262.domain.DungeonPiece.Room;
 import edu.rit.swen262.domain.DungeonPiece.Tile;
 import edu.rit.swen262.domain.TimePeriod;
+import edu.rit.swen262.domain.Weapon;
 import edu.rit.swen262.service.Action.DisplayMenuType;
 
 import java.util.ArrayList;
@@ -142,13 +144,17 @@ public class GameState implements IObservable {
         GameEvent event = new GameEvent(GameEventType.USE_ITEM);
         event.addData("item", item);
         event.addData("message", itemMsg);
+
+        if (!(item instanceof Weapon) && !(item instanceof Armor)) {
+            player.dropItem(item);
+        }
         
         this.notifyObservers(event); 
     }
 
     /**
-     * adds a single item to the {@link PLayerCharacter player's} {@link Inventory}
-     * @param item
+     * adds a single item to the {@link PlayerCharacter player's} {@link Inventory}
+     * @param item the item to be added to the inventory
      */
     public void pickUpItem(Item item) {
         player.pickUpItem(item);
