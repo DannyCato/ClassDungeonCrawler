@@ -137,7 +137,7 @@ public class GameState implements IObservable {
     /**
      * uses the item found in player character {@link Inventory}
      * 
-     * needs an @param item the player character is using
+     * @param item the item the player character is using
      */
     public void useItem(Item item) {
         String itemMsg = player.useItem(item);
@@ -150,6 +150,15 @@ public class GameState implements IObservable {
         }
         
         this.notifyObservers(event); 
+    }
+
+    /**
+     * drops the item found in player character {@link Inventory}
+     * 
+     * @param item the item the player character is dropping
+     */
+    public void dropItem(Item item) {
+        player.dropItem(item);
     }
 
     /**

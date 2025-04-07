@@ -10,6 +10,7 @@ import edu.rit.swen262.domain.ItemComponent;
 import edu.rit.swen262.service.Action.Action;
 import edu.rit.swen262.service.Action.DisplayMenuAction;
 import edu.rit.swen262.service.Action.DisplayMenuType;
+import edu.rit.swen262.service.Action.DropItemAction;
 import edu.rit.swen262.service.Action.UseItemAction;
 
 
@@ -76,6 +77,7 @@ public class ActionVisitor implements InventoryVisitor {
         for (int i = 0; i < contents.size() ; i++) {
             String menuString = """
                     [1] Use Item
+                    [2] Drop Item
                     """;
             Action displayMenu = new DisplayMenuAction(gameState, DisplayMenuType.ITEM, menuString);
 
@@ -92,8 +94,8 @@ public class ActionVisitor implements InventoryVisitor {
     public void visitItem(Item item) {
         this.actionKeystrokes = new HashMap<Character, Action>();
 
-        // implement functionality for dropping items here under key '2'
         this.actionKeystrokes.put('1', new UseItemAction(gameState, item));
+        this.actionKeystrokes.put('2', new DropItemAction(gameState, item));
     }
 
     /**
