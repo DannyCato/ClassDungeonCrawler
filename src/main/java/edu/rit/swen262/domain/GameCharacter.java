@@ -1,12 +1,14 @@
     package edu.rit.swen262.domain;
 
-    /**
+import edu.rit.swen262.service.GameMediator;
+
+/**
      * a representation of a Character within the MUD Game, which has a name, decsription
      * and stats, and is capable of attacking any other Character on the Map.
      * 
      * @author Victor Bovat
      */
-    public abstract class Character implements Occupant, java.io.Serializable, Attackable {
+    public abstract class GameCharacter implements Occupant, java.io.Serializable, Attackable {
         String name;
         String description;
         int health;
@@ -17,7 +19,7 @@
         private GameMediator mediator;
 
         /**
-         * initializes a {@link Character} with the given name, description, 
+         * initializes a {@link GameCharacter} with the given name, description, 
          * and max health, attack, and defense stats. by default, the health
          * stat is set to the full maxHP value.
          * 
@@ -27,7 +29,7 @@
          * @param attack the attack stat of the character
          * @param defense the defense stat of the character
          */
-        public Character(String name, String description, int maxHP, int attack, 
+        public GameCharacter(String name, String description, int maxHP, int attack, 
         int defense) {
             this.name = name;
             this.description = description;
@@ -42,14 +44,14 @@
         }
 
         /**
-         * attacks the other specified {@link Character} and deducts health from
+         * attacks the other specified {@link GameCharacter} and deducts health from
          * them based upon the initaor's attack stat and the opponent's defense stat.
          * If the calculated damage is more than the opponent's current health, then
          * it will instead be set to zero.
          * 
-         * @param opponent the {@link Character} to be attacked
+         * @param opponent the {@link GameCharacter} to be attacked
          */
-        public String attack(Character opponent) {
+        public String attack(GameCharacter opponent) {
 
             int damage = getAttack() - opponent.getDefense();
             opponent.health -= damage;
@@ -74,31 +76,33 @@
                 this.health = 0;
             }
 
-            return this.name + "took damage for " + damageTaken + "points!";
+            System.out.println(this.name + ": " + this.health);
+
+            return this.name + " took damage for " + damageTaken + " points!";
         }
 
         /**
-         * fetches the name of the {@link Character}
+         * fetches the name of the {@link GameCharacter}
          * 
-         * @return name of the {@link Character}
+         * @return name of the {@link GameCharacter}
          */
         public String getName() {
             return this.name;
         }
 
         /**
-         * sets the name of the {@link Character} to the specified name
+         * sets the name of the {@link GameCharacter} to the specified name
          * 
-         * @param name the new name of the {@link Character}
+         * @param name the new name of the {@link GameCharacter}
          */
         public void setName(String name) {
             this.name = name;
         }
 
         /**
-         * sets the description of the {@link Character} to the given String
+         * sets the description of the {@link GameCharacter} to the given String
          * 
-         * @param description the new description of the {@link Character}
+         * @param description the new description of the {@link GameCharacter}
          */
         public void setDescription(String description) {
             this.description = description;

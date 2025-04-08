@@ -123,7 +123,7 @@ class GameStateTest {
         expectedEvent.addData("menuText", "dummy text");
 
         gameState.register(spyObserver);
-        gameState.displayMenu(DisplayMenuType.MOVE, "dummy text");
+        gameState.displayMenu(DisplayMenuType.MOVE, "dummy text", null);
 
         assertTrue(gameState.getObservers().contains(spyObserver));
 

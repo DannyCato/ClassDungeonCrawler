@@ -3,10 +3,14 @@ package edu.rit.swen262.service;
 import java.util.List;
 
 import edu.rit.swen262.domain.Armor;
+import edu.rit.swen262.domain.Attackable;
+import edu.rit.swen262.domain.Bag;
 import edu.rit.swen262.domain.DayTime;
 import edu.rit.swen262.domain.DirectionalVector;
+import edu.rit.swen262.domain.GameCharacter;
 import edu.rit.swen262.domain.Inventory;
 import edu.rit.swen262.domain.Item;
+import edu.rit.swen262.domain.Lootable;
 import edu.rit.swen262.domain.Occupant;
 import edu.rit.swen262.domain.PlayerCharacter;
 import edu.rit.swen262.domain.DungeonPiece.Map;
@@ -26,7 +30,7 @@ import java.util.HashSet;
  * 
  * @author Victor Bovat, Philip Rubbo
  */
-public class GameState implements IObservable {
+public class GameState implements IObservable, GameMediator {
     private List<GameObserver> observers;
     private PlayerCharacter player;
     private Map map;
@@ -131,7 +135,26 @@ public class GameState implements IObservable {
         GameEvent event = new GameEvent(GameEventType.TAKE_DAMAGE);
         event.addData("direction", direction);
         
+        //check if valid target found in attack direction on map, awaiting integration :(
+
+        // test enemy
+        PlayerCharacter recipient = new PlayerCharacter("target dummy", "a sword pincushion");
+
+        String attackMessage = recipient.getName() + " launched an attack on " + player.getName() + "!";
+        String dmgMessage = attackCharacter(player, recipient);
+
+        event.addData("attackMessage", attackMessage);
+        event.addData("dmgMessage", dmgMessage);
+
         this.notifyObservers(event);
+    }
+    
+    public String attackCharacter(GameCharacter initiator, Attackable receiver) {
+        return receiver.takeDamage(initiator.getAttack());
+    }
+
+    public void lootObject(PlayerCharacter player, Lootable lootObject) {
+        //stubbed
     }
     
     /**
@@ -201,12 +224,15 @@ public class GameState implements IObservable {
      * 
      * @param menuType Enum value that dictates the type of menu
      * @param menuText String representation of all the actions the user can take
+     * @param menuPath optional
      */
-    public void displayMenu(DisplayMenuType menuType, String menuText) {
+    public void displayMenu(DisplayMenuType menuType, String menuText, List<Character> menuPath) {
         // build event with additional data of type + display text
         GameEvent event = new GameEvent(GameEventType.DISPLAY_SUBMENU);
         event.addData("menuType", menuType);
         event.addData("menuText", menuText);
+
+        event.addData("goldValue", 0);
 
         //update UI w/ menu
         this.notifyObservers(event);

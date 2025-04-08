@@ -5,9 +5,9 @@ import java.util.List;
 
 /**
  * represents the Player Character traveling through the dungeon, extends the
- * {@link Character}
+ * {@link GameCharacter}
  */
-public class PlayerCharacter extends Character {
+public class PlayerCharacter extends GameCharacter {
     Armor armor;
     Weapon weapon;
     Inventory inventory;

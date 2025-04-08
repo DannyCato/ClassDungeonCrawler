@@ -96,7 +96,9 @@ public class MUDGameUI implements GameObserver {
                 this.redrawTime(time);
                 break;
             case TAKE_DAMAGE:
-                this.eventLogMsgs.offer("Something took damage.");
+                this.eventLogMsgs.offer((String) event.getData("attackMessage"));
+                this.eventLogMsgs.offer((String) event.getData("dmgMessage"));
+                
                 this.redrawEventLog();
                 this.redrawMenuDefault();
                 break;
