@@ -21,6 +21,7 @@ public enum RenderRepresentation implements Comparator<RenderRepresentation> {
     EXIT('X'),
     OBSTACLE('B', false),
     CHEST('C'),
+    MERCHANT('M'),
     EMPTY('.', Integer.MIN_VALUE),
     HIDDENTRAP(EMPTY.representation, 1),
     TRAP('T'),
