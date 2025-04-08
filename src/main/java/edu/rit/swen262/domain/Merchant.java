@@ -13,6 +13,11 @@ public class Merchant implements Occupant{
     private String description;
     private boolean safe;
 
+    /**
+     * Base constructor for Merchant that sets default values.
+     * 
+     * @param description   A description needed for the Occupant implementation
+     */
     public Merchant(String description) {
         this.currentForm = new MerchantClosed(this);
         generateStoreItems();
@@ -20,6 +25,14 @@ public class Merchant implements Occupant{
         this.safe = false;
     }
 
+    /**
+     * Constructor for if you wish to create a Merchant with set variables
+     * 
+     * @param list          The list of items for sale.
+     * @param currentForm   The state of the Merchant, either {@link MerchantOpened} or {@link MerchantClosed}
+     * @param description   A description needed for the Occupant implementation
+     * @param safe          Used for if the Merchant is safe to open.
+     */
     public Merchant(List<Item> list, MerchantForm currentForm, String description, boolean safe) {
         this.list = list;
         this.currentForm = currentForm;
@@ -27,6 +40,9 @@ public class Merchant implements Occupant{
         this.safe = safe;
     }
 
+    /**
+     * Generates 3 random items for the Merchant Shop.
+     */
     private void generateStoreItems() {
         CreateItemFactory factory = new CreateItemFactory();
         int capacity = 3;
@@ -52,6 +68,12 @@ public class Merchant implements Occupant{
         }
     }
 
+    /**
+     * Searches the current room for an enemy and if found sets it as unsafe. Otherwise its safe.
+     * 
+     * @param currentRoom   Passed in for somewhere to represent the current room.
+     * @return              boolean of if the Merchant is safe.
+     */
     public boolean isSafe(Room currentRoom) {
         Collection<Occupant> occupants = currentRoom.getOccupants();
 
@@ -70,10 +92,23 @@ public class Merchant implements Occupant{
         return this.safe;
     }
 
+    /**
+     * Gets the items sold in the shop.
+     * 
+     * @return the list of items in the shop
+     */
     public List<Item> getShopItems() {
         return this.list;
     }
 
+    /**
+     * Handles the purchase of a item and returns the result of what happened.
+     * 
+     * @param index         Index of the item wanting to buy from the list of items being sold.
+     * @param player        The current player trying to buy from the shop.
+     * @param currentRoom   Passed in for somewhere to represent the current room.
+     * @return              The String result stating what happened
+     */
     public String purchaseItem(int index, PlayerCharacter player, Room currentRoom) {
         isSafe(currentRoom);
         String result = currentForm.handlePurchaseItem(index, player);
@@ -84,6 +119,14 @@ public class Merchant implements Occupant{
         return result;
     }
 
+    /**
+     * Handles the sale of a item and returns the result of what happened.
+     * 
+     * @param item          The item that player wants to sell.
+     * @param player        The current player trying to buy from the shop.
+     * @param currentRoom   Passed in for somewhere to represent the current room.
+     * @return              The String result stating what happened
+     */
     public String sellItem(Item item, PlayerCharacter player, Room currentRoom) {
         isSafe(currentRoom);
         String result = currentForm.handleItemSale(item, player);

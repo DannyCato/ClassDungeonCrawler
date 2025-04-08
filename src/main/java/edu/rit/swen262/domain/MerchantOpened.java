@@ -9,6 +9,14 @@ public class MerchantOpened implements MerchantForm {
         this.merchant = merchant;
     }
 
+    /**
+     * Gets the items from the passed in Merchant, uses the index to find the item wanted and gives the player the item
+     * if they have the inventory space or enough gold to buy the item.
+     * 
+     * @param index         Index of the item wanting to buy from the list of items being sold.
+     * @param player        The current player trying to buy from the shop.
+     * @return              The String result stating what happened
+     */
     @Override
     public String handlePurchaseItem(int index, PlayerCharacter player) {
         List<Item> shop = merchant.getShopItems();
@@ -30,6 +38,14 @@ public class MerchantOpened implements MerchantForm {
         }
     }
 
+    /**
+     * Requires the item the player wants to sell, finds the item in the players inventory, 
+     * removes the item form the player, than gives them half the gold the items worth.
+     * 
+     * @param item          The item that player wants to sell.
+     * @param player        The current player trying to buy from the shop.
+     * @return              The String result stating what happened
+     */
     @Override
     public String handleItemSale(Item item, PlayerCharacter player) {
         Item itemToSell = player.findItem(item);

@@ -7,11 +7,17 @@ public class MerchantClosed implements MerchantForm {
         this.merchant = merchant;
     }
 
+    /**
+     * @return      Is Null since the shop is closed.
+     */
     @Override
     public String handlePurchaseItem(int index, PlayerCharacter player) {
         return null;
     }
 
+    /**
+     * @return      Is Null since the shop is closed.
+     */
     @Override
     public String handleItemSale(Item item, PlayerCharacter player) {
         return null;
