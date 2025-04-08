@@ -96,18 +96,38 @@ public class GameState implements IObservable {
         Room room8 = new Room(5, 4, "test eighth room");
         Room room9 = new Room(9, 10, "test ninth room");
         Room room10 = new Room(8, 4, "test tenth room");
+        Room room11 = new Room(8, 4, "test tenth room");
         Room goal = new Room(1, 1, "test goal room");
 
         Map newMap = new Map(root);
 
         newMap.addRoom(root, room2, DirectionalVector.WEST, false);
-        newMap.addRoom(root, room3, DirectionalVector.SOUTH, false);
-        newMap.addRoom(room2, room4, DirectionalVector.NORTH, false);
+        newMap.addRoom(room2, room3, DirectionalVector.NORTH, false);
+        newMap.addRoom(room3, room4, DirectionalVector.WEST, false);
+        newMap.addRoom(room4, room5, DirectionalVector.NORTH, false);
+        newMap.addRoom(room5, room6, DirectionalVector.EAST, false);
+        newMap.addRoom(room3, room6, DirectionalVector.NORTH, false);
+        newMap.addRoom(room6, room7, DirectionalVector.EAST, false);
+        newMap.addRoom(root, room9, DirectionalVector.EAST, false);
+        newMap.addRoom(root, room11, DirectionalVector.SOUTH, false);
+        newMap.addRoom(room9, room10, DirectionalVector.SOUTH, false);
+        newMap.addRoom(room10, room11, DirectionalVector.WEST, false);
+        newMap.addRoom(room9, room8, DirectionalVector.NORTH, false);
+        newMap.addRoom(room7, goal, DirectionalVector.SOUTH, true);
+        newMap.addRoom(room8, goal, DirectionalVector.WEST, true);
         
         RoomFiller.fill(root, 0.1);
         RoomFiller.fill(room2, 0.1);
         RoomFiller.fill(room3, 0.1);
         RoomFiller.fill(room4, 0.1);
+        RoomFiller.fill(room5, 0.1);
+        RoomFiller.fill(room6, 0.1);
+        RoomFiller.fill(room7, 0.1);
+        RoomFiller.fill(room8, 0.1);
+        RoomFiller.fill(room9, 0.1);
+        RoomFiller.fill(room10, 0.1);
+        RoomFiller.fill(room11, 0.1);
+        RoomFiller.fill(goal, 0.1);
         
         Tile startTile = (Tile)newMap.startUp();
         

@@ -64,16 +64,16 @@ public class RoomFiller {
             Tile t = new Tile();
             double chance = RAND.nextDouble();
             if (i < room.width && rns.get(0) != null) {
-                exitGen(currentWidth, midWidth, DirectionalVector.NORTH) ;
+                t = exitGen(currentWidth, midWidth, DirectionalVector.NORTH) ;
 
             } else if ((i % room.width) == (room.width - 1) && rns.get(1) != null) {
-                exitGen(currentHeight, midHeight, DirectionalVector.EAST) ;
+                t = exitGen(currentHeight, midHeight, DirectionalVector.EAST) ;
 
             } else if (i > (room.height - 1) * room.width && rns.get(2) != null) {
-                exitGen(currentWidth, midWidth, DirectionalVector.SOUTH) ;
+                t = exitGen(currentWidth, midWidth, DirectionalVector.SOUTH) ;
 
             } else if ((i % room.width) == 0 && rns.get(3) != null) {
-                exitGen(currentHeight, midHeight, DirectionalVector.WEST) ;
+                t = exitGen(currentHeight, midHeight, DirectionalVector.WEST) ;
                 
             } else {
                 Occupant o = null;
