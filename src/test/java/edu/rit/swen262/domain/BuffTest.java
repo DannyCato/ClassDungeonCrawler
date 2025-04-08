@@ -51,4 +51,15 @@ class BuffTest {
 
     }
 
+    @Test
+    public void test_ApplyBuff() {
+        Gold gold = new Gold(10);
+        Buff Buff = new Buff("Buff", "Buff Description", 10, 5, 10, 2, gold);
+        PlayerCharacter player = new PlayerCharacter("name", "desc", null, null, null, null, null);
+
+        player.useBuff(Buff);
+        assertEquals(15, player.getAttack());
+
+    }
+
 }

@@ -40,7 +40,7 @@ public class PlayerCharacter extends Character {
         this.weapon = weapon;
         this.inventory = inventory;
         this.gold = gold;
-        this.buffs = buffs;
+        this.buffs = new ArrayList<>();
     }
 
     public String eatFood(Food food) {
@@ -118,12 +118,11 @@ public class PlayerCharacter extends Character {
         for (int i = 0; i < buffs.size(); i++) {
             buffs.get(i).decreaseDuration();
             if (buffs.get(i).getDuration() <= 0) {
-                boolean delete = buffs.remove(buffs.get(i));
-                if (delete) {
-                    this.attack -= buffs.get(i).getAttack();
-                    this.defense -= buffs.get(i).getDefense();
-                    this.maxHP -= buffs.get(i).getHp();
-                }
+                this.attack -= buffs.get(i).getAttack();
+                this.defense -= buffs.get(i).getDefense();
+                this.maxHP -= buffs.get(i).getHp();
+                buffs.remove(i);
+                i--;
             }
         }
     }
