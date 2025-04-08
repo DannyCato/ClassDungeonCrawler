@@ -12,7 +12,7 @@ public class PlayerCharacterTest {
 
         Inventory inventory = new Inventory(6);
         Gold gold = new Gold(10);
-        PlayerCharacter character = new PlayerCharacter("name", "description", null, null, inventory, gold);
+        PlayerCharacter character = new PlayerCharacter("name", "description", null, null, inventory, gold, null);
         Armor armor = new Armor("armor", "description armor", 999, gold);
         Weapon weapon = new Weapon("weapon", "description weapon", 999, gold);
         
@@ -29,7 +29,7 @@ public class PlayerCharacterTest {
 
         Inventory inventory = new Inventory(6);
         Gold gold = new Gold(10);
-        PlayerCharacter character = new PlayerCharacter("name", "description", null, null, inventory, gold);
+        PlayerCharacter character = new PlayerCharacter("name", "description", null, null, inventory, gold, null);
         Armor armor = new Armor("should swap this", "description armor", 999, gold);
         Armor armor2 = new Armor("should equip this", "description armor", 1, gold);
         Weapon weapon = new Weapon("weapon", "description weapon", 999, gold);
@@ -50,8 +50,8 @@ public class PlayerCharacterTest {
         Inventory inventory = new Inventory(6);
         Gold gold = new Gold(10);
 
-        PlayerCharacter player = new PlayerCharacter("player", "description", null, null, inventory, gold);
-        PlayerCharacter enemy = new PlayerCharacter("enemy", "description", null, null, inventory, gold);
+        PlayerCharacter player = new PlayerCharacter("player", "description", null, null, inventory, gold, null);
+        PlayerCharacter enemy = new PlayerCharacter("enemy", "description", null, null, inventory, gold, null);
 
         Armor armor = new Armor("armor", "cloth armor", 0, gold);
         Weapon weapon = new Weapon("weapon", "wooden sword", 15, gold);
@@ -76,8 +76,8 @@ public class PlayerCharacterTest {
         Inventory inventory = new Inventory(6);
         Gold gold = new Gold(10);
 
-        PlayerCharacter player = new PlayerCharacter("player", "description", null, null, inventory, gold);
-        PlayerCharacter enemy = new PlayerCharacter("enemy", "description", null, null, inventory, gold);
+        PlayerCharacter player = new PlayerCharacter("player", "description", null, null, inventory, gold, null);
+        PlayerCharacter enemy = new PlayerCharacter("enemy", "description", null, null, inventory, gold, null);
 
         Armor armor = new Armor("armor", "cloth armor", 0, gold);
         Weapon weapon = new Weapon("weapon", "wooden sword", 89, gold);
@@ -102,8 +102,8 @@ public class PlayerCharacterTest {
         Inventory inventory = new Inventory(6);
         Gold gold = new Gold(10);
 
-        PlayerCharacter player = new PlayerCharacter("player", "description", null, null, inventory, gold);
-        PlayerCharacter enemy = new PlayerCharacter("enemy", "description", null, null, inventory, gold);
+        PlayerCharacter player = new PlayerCharacter("player", "description", null, null, inventory, gold, null);
+        PlayerCharacter enemy = new PlayerCharacter("enemy", "description", null, null, inventory, gold, null);
 
         Armor armor = new Armor("armor", "cloth armor", 0, gold);
         Weapon weapon = new Weapon("weapon", "wooden sword", 89, gold);
