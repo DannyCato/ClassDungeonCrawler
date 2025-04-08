@@ -154,7 +154,9 @@ public class GameState implements IObservable, GameMediator {
     }
 
     public void lootObject(PlayerCharacter player, Lootable lootObject) {
-        //stubbed
+        List<Item> loot = lootObject.takeLoot();
+
+        player.takeLoot(loot);
     }
     
     /**
