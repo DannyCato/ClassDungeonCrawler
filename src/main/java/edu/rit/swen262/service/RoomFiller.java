@@ -22,41 +22,42 @@ import edu.rit.swen262.domain.DungeonPiece.Tile;
 public class RoomFiller {
     private static final Random RAND = RandomInstance.instance();
 
+    private static Tile exitGen(int current, int mid, DirectionalVector exit) {
+        Tile t = null ;
+        if (current == mid) {
+            t = new Tile(new Exit("", exit));
+            t.setExit(true);
+        }
+        return t;
+    }
+
     public static void fill(Room room, double obstacleChance) {
         Room originalRoom = room; 
         room = new Room(room.width, room.height);
         int size = room.height * room.width;
         
         ArrayList<RoomNode> rns = originalRoom.getRoomNode().getAllConnections();
+        int midWidth = (int) Math.ceil(room.width/2.0) ;
+        int midHeight = (int) Math.ceil(room.height/2.0) ;
+        
         for (int i = 0; i < size; i++) {
             int currentWidth = i % room.width;
             int currentHeight = i / room.width;
 
-            int midWidth = (int) Math.ceil(room.width/2.0) ;
-            int midHeight = (int) Math.ceil(room.height/2.0) ;
-            
             Tile t = new Tile();
             double chance = RAND.nextDouble();
             if (i < room.width && rns.get(0) != null) {
-                if (currentWidth == midWidth) {
-                    t = new Tile(new Exit("", DirectionalVector.NORTH));
-                    t.setExit(true);
-                }
+                exitGen(currentWidth, midWidth, DirectionalVector.NORTH) ;
+
             } else if ((i % room.width) == (room.width - 1) && rns.get(1) != null) {
-                if (currentHeight == midHeight) {
-                    t = new Tile(new Exit("", DirectionalVector.EAST));
-                    t.setExit(true);
-                }
+                exitGen(currentHeight, midHeight, DirectionalVector.EAST) ;
+
             } else if (i > (room.height - 1) * room.width && rns.get(2) != null) {
-                if (currentWidth == midWidth) {
-                    t = new Tile(new Exit("", DirectionalVector.SOUTH));
-                    t.setExit(true);
-                }
+                exitGen(currentWidth, midWidth, DirectionalVector.SOUTH) ;
+
             } else if ((i % room.width) == 0 && rns.get(3) != null) {
-                if (currentHeight == midHeight) {
-                    t = new Tile(new Exit("", DirectionalVector.WEST));
-                    t.setExit(true);
-                }
+                exitGen(currentHeight, midHeight, DirectionalVector.WEST) ;
+                
             } else {
                 Occupant o = null;
                 if (chance < obstacleChance) {
