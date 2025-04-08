@@ -29,4 +29,19 @@ public class MerchantOpened implements MerchantForm {
             return "Not enough Gold.";
         }
     }
+
+    @Override
+    public String handleItemSale(Item item, PlayerCharacter player) {
+        Item itemToSell = player.findItem(item);
+
+        player.dropItem(itemToSell);
+
+        Gold cost = itemToSell.getValue();
+        Gold wallet = player.gold;
+        int returnGold = Math.round(cost.getCount()/2);
+
+        wallet.setCount(wallet.getCount() + returnGold);
+
+        return "You received " + returnGold + " Gold for selling " + itemToSell.getName() + ".";
+    }
 }

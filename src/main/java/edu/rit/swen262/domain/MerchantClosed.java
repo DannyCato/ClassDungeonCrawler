@@ -11,4 +11,9 @@ public class MerchantClosed implements MerchantForm {
     public String handlePurchaseItem(int index, PlayerCharacter player) {
         return null;
     }
+
+    @Override
+    public String handleItemSale(Item item, PlayerCharacter player) {
+        return null;
+    }
 }

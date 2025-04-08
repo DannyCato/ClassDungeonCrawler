@@ -40,7 +40,10 @@ public class Gold extends Item {
             this.count = 0;
         }
     }
-
+    
+    /**
+     * Can set the value of gold to anything except below 0.
+     */
     public void setCount(int num) {
         this.count = num;
         if (this.count < 0) {

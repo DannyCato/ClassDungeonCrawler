@@ -1,6 +1,5 @@
 package edu.rit.swen262.domain;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
@@ -78,6 +77,16 @@ public class Merchant implements Occupant{
     public String purchaseItem(int index, PlayerCharacter player, Room currentRoom) {
         isSafe(currentRoom);
         String result = currentForm.handlePurchaseItem(index, player);
+        if (result == null) {
+            return "Shop is closed.";
+        }
+
+        return result;
+    }
+
+    public String sellItem(Item item, PlayerCharacter player, Room currentRoom) {
+        isSafe(currentRoom);
+        String result = currentForm.handleItemSale(item, player);
         if (result == null) {
             return "Shop is closed.";
         }
