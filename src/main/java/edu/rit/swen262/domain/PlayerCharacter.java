@@ -106,10 +106,10 @@ public class PlayerCharacter extends Character {
             }
         }
 
-        return "Your Stats are boosted for " + buff.getDuration() + " turns." +
-        "\nAttack: " + this.getAttack() + "(+" + buff.getAttack() + ")" +
-        "\nDefense: " + this.getDefense() + "(+" + buff.getDefense() + ")" +
-        "\nHealth: " + getMaxHP() + "(+" +buff.getHp() + ")";
+        return "Your Stats are boosted for " + buff.getDuration() + " turn(s)." +
+        "\nAttack: " + (this.getAttack() - buff.getAttack())+ " (+" + buff.getAttack() + ")" +
+        "\nDefense: " + (this.getDefense() - buff.getDefense()) + " (+" + buff.getDefense() + ")" +
+        "\nHealth: " + (this.getMaxHP() - buff.getHp()) + " (+" +buff.getHp() + ")";
 
     }
 

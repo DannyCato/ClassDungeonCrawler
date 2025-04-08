@@ -107,5 +107,4 @@ class BuffTest {
         assertEquals(0, buff.getDuration());
 
     }
-
 }
