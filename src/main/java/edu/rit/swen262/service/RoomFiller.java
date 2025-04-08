@@ -22,6 +22,15 @@ import edu.rit.swen262.domain.DungeonPiece.Tile;
 public class RoomFiller {
     private static final Random RAND = RandomInstance.instance();
 
+/**
+ * Generates an exit {@link Tile} if the current position matches the midpoint.
+ *
+ * @param current the current position to check against the midpoint
+ * @param mid the midpoint to compare the current position against
+ * @param exit the {@link DirectionalVector} that specifies the direction of the exit
+ * @return a {@link Tile} with an {@link Exit} if the current position is the midpoint, otherwise null
+ */
+
     private static Tile exitGen(int current, int mid, DirectionalVector exit) {
         Tile t = null ;
         if (current == mid) {
@@ -31,6 +40,14 @@ public class RoomFiller {
         return t;
     }
 
+    /**
+     * Fills the room with tiles. The tiles are either an exit if it is at the midpoint of the room in the direction of the exit, or a tile with an optional obstacle or enemy.
+     * The obstacle chance is the probability that a tile will have an obstacle or enemy instead of being empty.
+     * If the room does not have any exits, the method will be called recursively until the room is filled with tiles that have exits.
+     * The generated tiles are then added to the original room.
+     * @param room the room to fill
+     * @param obstacleChance the probability that a tile will have an obstacle or enemy
+     */
     public static void fill(Room room, double obstacleChance) {
         Room originalRoom = room; 
         room = new Room(room.width, room.height);
@@ -81,6 +98,11 @@ public class RoomFiller {
         } 
     }
 
+    /**
+     * Generates a random enemy, with a random name, max HP between 1 and 100, and attack and defense between 1 and 50.
+     * The names are from the list: Zombie, Vampire, Werewolf, Ghost, Goblin, Orc, Troll, Skeleton, Mummy, Golem, Lich, Demon, Dragon, Wraith, Kraken, Hydra, Griffin, Minotaur, Chimera, Harpy
+     * @return a new Enemy object
+     */
     private static Occupant generateEnemy() {
         List<String> names = Arrays.asList("Zombie", "Vampire", "Werewolf", "Ghost", "Goblin",
                                                 "Orc", "Troll", "Skeleton", "Mummy", "Golem",
@@ -89,6 +111,17 @@ public class RoomFiller {
         String name = names.get(RAND.nextInt(names.size()));
         return new Enemy(name, RAND.nextInt(101), RAND.nextInt(50), RAND.nextInt(50));
     }
+
+/**
+ * Validates if all exit tiles in the given {@link Room} are reachable from one another.
+ * 
+ * This method checks if there is a path between each pair of exit tiles in the room.
+ * It performs a breadth-first search (BFS) from one exit to another and ensures that
+ * each exit can be reached from every other exit.
+ * 
+ * @param room the {@link Room} to validate
+ * @return true if all exit tiles are reachable from one another, false otherwise
+ */
 
     private static boolean validateRoom(Room room) {
         Tile[] exits = new ArrayList<>(DirectionalVector.cardinals).stream().map(dir -> room.getExitTileByDirection(dir)).filter(Objects::nonNull).toArray(Tile[]::new);
