@@ -88,16 +88,19 @@ public class GameState implements IObservable {
 
         Room root = new Room(8, 4, "test starting room");
         Room room2 = new Room(10, 5, "test second room");
-        Room room3 = new Room(11, 3, "test second room");
+        Room room3 = new Room(11, 3, "test third room");
+        Room room4 = new Room(11, 3, "test fourth room");
 
         Map newMap = new Map(root);
 
         newMap.addRoom(root, room2, DirectionalVector.WEST, false);
-        newMap.addRoom(room2, room3, DirectionalVector.SOUTH, false);
+        newMap.addRoom(root, room3, DirectionalVector.SOUTH, false);
+        newMap.addRoom(room2, room4, DirectionalVector.NORTH, false);
         
         RoomFiller.fill(root, 0.1);
         RoomFiller.fill(room2, 0.1);
         RoomFiller.fill(room3, 0.1);
+        RoomFiller.fill(room4, 0.1);
         
         Tile startTile = (Tile)newMap.startUp();
         
