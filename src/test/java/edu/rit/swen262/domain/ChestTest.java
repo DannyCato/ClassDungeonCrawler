@@ -12,7 +12,7 @@ public class ChestTest {
     public void test_GenerateNewChest() {
 
         CreateItemFactory factory = new CreateItemFactory();
-        Chest chest = new Chest(new ArrayList<>(), 6);
+        Chest chest = new Chest(new ArrayList<>(), 6, "CHEST.");
         chest.generateChest(factory);
 
         assertNotNull(chest);

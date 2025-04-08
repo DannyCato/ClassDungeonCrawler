@@ -12,6 +12,7 @@ public class PlayerCharacter extends Character {
     Weapon weapon;
     Inventory inventory;
     Gold gold;
+    List<Buff> buffs;
 
     /**
      * initializes a PlayerCharacter with the given name and description. Their
@@ -33,12 +34,13 @@ public class PlayerCharacter extends Character {
     }
 
     public PlayerCharacter(String name, String description, Armor armor, Weapon weapon, Inventory inventory,
-            Gold gold) {
+            Gold gold, List<Buff> buffs) {
         super(name, description, 100, 10, 0);
         this.armor = armor;
         this.weapon = weapon;
         this.inventory = inventory;
         this.gold = gold;
+        this.buffs = buffs;
     }
 
     public String eatFood(Food food) {
@@ -91,6 +93,37 @@ public class PlayerCharacter extends Character {
             }
         }
         return "Now wielding: " + weapon.getName();
+    }
+
+    public String useBuff(Buff buff) {
+
+        if (buff.getDuration() > 0) {
+            buffs.add(buff);
+        }
+
+        return "Your Stats are boosted for " + buff.getDuration() + " turns." +
+        "\nAttack: " + this.getAttack() + "(+" + buff.getAttack() + ")" +
+        "\nDefense: " + this.getDefense() + "(+" + buff.getDefense() + ")" +
+        "\nHealth: " + getMaxHP() + "(+" +buff.getHp() + ")";
+
+    }
+
+    public void updateBuffs() {
+
+        if (buffs.size() > 0) {
+            for (Buff buff : buffs) {
+                this.attack += buff.getAttack();
+                this.defense += buff.getDefense();
+                this.maxHP += buff.getHp();
+            }
+        }
+
+        for (int i = 0; i < buffs.size(); i++) {
+            buffs.get(i).decreaseDuration();
+            if (buffs.get(i).getDuration() <= 0) {
+                buffs.remove(i);
+            }
+        }
     }
 
     public String useItem(Item item) {
