@@ -90,6 +90,13 @@ public class GameState implements IObservable {
         Room room2 = new Room(10, 5, "test second room");
         Room room3 = new Room(11, 3, "test third room");
         Room room4 = new Room(11, 3, "test fourth room");
+        Room room5 = new Room(4, 12, "test fifth room");
+        Room room6 = new Room(10, 4, "test sixth room");
+        Room room7 = new Room(16, 8, "test seventh room");
+        Room room8 = new Room(5, 4, "test eighth room");
+        Room room9 = new Room(9, 10, "test ninth room");
+        Room room10 = new Room(8, 4, "test tenth room");
+        Room goal = new Room(1, 1, "test goal room");
 
         Map newMap = new Map(root);
 
