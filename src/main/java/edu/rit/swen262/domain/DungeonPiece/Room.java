@@ -333,7 +333,7 @@ public class Room implements DungeonPiece<Room>, java.io.Serializable {
         }
         for (DirectionalVector dir : DirectionalVector.directions) {
             int adjIndex = getAdjactentTileInDir(index, dir);
-            if (adjIndex != index) {
+            if (adjIndex != index && adjIndex < tiles.size()) {
                 returnCol.add(tiles.get(adjIndex));
             } else {
                 returnCol.add(null);
