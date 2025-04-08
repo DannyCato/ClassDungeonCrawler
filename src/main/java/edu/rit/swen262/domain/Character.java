@@ -6,13 +6,15 @@
      * 
      * @author Victor Bovat
      */
-    public abstract class Character implements Occupant, java.io.Serializable {
+    public abstract class Character implements Occupant, java.io.Serializable, Attackable {
         String name;
         String description;
         int health;
         int maxHP;
         int attack;
         int defense;
+
+        private GameMediator mediator;
 
         /**
          * initializes a {@link Character} with the given name, description, 
@@ -33,6 +35,10 @@
             this.maxHP = maxHP;
             this.attack = attack;
             this.defense = defense;
+        }
+
+        public void setMediator(GameMediator mediator) {
+            this.mediator = mediator;
         }
 
         /**
@@ -57,6 +63,18 @@
                 return getName() + " attacked " + opponent.getName() + " for " + damage;
             }
 
+        }
+
+        public String takeDamage(int damage) {
+            int damageTaken = damage - this.defense;
+
+            if (this.health >= damageTaken) {
+                this.health -= damageTaken;
+            } else {
+                this.health = 0;
+            }
+
+            return this.name + "took damage for " + damageTaken + "points!";
         }
 
         /**
