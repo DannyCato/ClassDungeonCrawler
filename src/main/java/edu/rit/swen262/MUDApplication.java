@@ -15,6 +15,7 @@ import edu.rit.swen262.domain.Armor;
 import edu.rit.swen262.domain.DirectionalVector;
 import edu.rit.swen262.domain.Food;
 import edu.rit.swen262.domain.Gold;
+import edu.rit.swen262.domain.Buff;
 import edu.rit.swen262.domain.PlayerCharacter;
 import edu.rit.swen262.domain.Weapon;
 import edu.rit.swen262.service.ActionVisitor;
@@ -137,7 +138,7 @@ class SampleCommandLineRunner implements CommandLineRunner {
 	
 	@Override
 	public void run(String... args) throws Exception {
-		PlayerCharacter player = new PlayerCharacter("Bobert", "can lift at least 5 worms.");
+		PlayerCharacter player = new PlayerCharacter("Bobert", "can lift at least 7 worms.");
 		GameState gameState = new GameState(player);
 		ActionVisitor actionVisitor = new ActionVisitor(gameState);
 
@@ -148,12 +149,9 @@ class SampleCommandLineRunner implements CommandLineRunner {
 		gameState.register(client);
 
 		//simulate adding items to player inv for testing : )
-		gameState.pickUpItem(new Food("Beans", "", 10, new Gold(100)));
-		gameState.pickUpItem(new Food("Burgar", "", 10, new Gold(100)));
+		gameState.pickUpItem(new Food("Beans", "Little yummy guys", 10, new Gold(100))); 
+		gameState.pickUpItem(new Buff("Yo-Yo", "Walk that dog", 10, 10, 0, 0, new Gold(100)));
 		gameState.pickUpItem(new Weapon("BEANS", "", 10, new Gold(100)));
-		gameState.pickUpItem(new Weapon("Gun", "", 10, new Gold(100)));
-		gameState.pickUpItem(new Weapon("The Rock (Dwanye)", "", 9999, new Gold(100)));
-		gameState.pickUpItem(new Armor("The Master Shield", "", 9999, new Gold(100)));
 
 		client.start();
 	}
