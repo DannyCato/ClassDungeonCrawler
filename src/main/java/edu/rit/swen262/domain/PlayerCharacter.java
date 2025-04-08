@@ -134,7 +134,7 @@ public class PlayerCharacter extends Character {
         for (Item item : chest.getContents()) {
             addItemToBag(item);
         }
-        chest.getContents().clear();
+        //chest.getContents().clear();
     }
 
     public List<Item> getCorpse() {

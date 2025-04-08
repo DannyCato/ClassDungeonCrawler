@@ -3,15 +3,17 @@ package edu.rit.swen262.domain;
 import java.util.List;
 import java.util.Random;
 
-public class Chest {
+public class Chest implements Occupant {
 
     private List<Item> contents;
     private int capacity;
+    private String description;
     private Random r = new Random();
 
-    public Chest(List<Item> contents, int capacity) {
+    public Chest(List<Item> contents, int capacity, String description) {
         this.contents = contents;
         this.capacity = capacity;
+        this.description = description;
         generateChest(new CreateItemFactory());
     }
 
@@ -54,5 +56,15 @@ public class Chest {
                 }
             }
         }
+    }
+
+    @Override
+    public RenderRepresentation render() {
+        return RenderRepresentation.CHEST;
+    }
+
+    @Override
+    public String description() {
+        return this.description;
     }
 }
