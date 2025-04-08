@@ -26,6 +26,8 @@ import java.util.HashSet;
  * @author Victor Bovat, Philip Rubbo
  */
 public class GameState implements IObservable {
+    private static ArrayList<GameState> gameStates = new ArrayList<>() ;
+
     private List<GameObserver> observers;
     private PlayerCharacter player;
     private Map map;
@@ -40,6 +42,7 @@ public class GameState implements IObservable {
      * @param player the player starting the new game
      */
     public GameState(PlayerCharacter player) {
+        addGameState(this);
         this.observers = new ArrayList<>();
         this.player = player;
         this.map = this.buildMap();
@@ -51,7 +54,9 @@ public class GameState implements IObservable {
      * {@inheritDoc}
      */
     public void register(GameObserver go) {
-        observers.add(go);
+        if (!observers.contains(go)) {
+            observers.add(go);
+        }
     }
 
     /**
@@ -115,6 +120,7 @@ public class GameState implements IObservable {
         GameEvent event = new GameEvent(GameEventType.MOVE_PLAYER);
         event.addData("direction", direction);
         event.addData("currentRoom", currentRoomRender);
+        event.addData("mapReference", this.map);
 
         this.notifyObservers(event);
 
@@ -232,4 +238,27 @@ public class GameState implements IObservable {
     public int getTurnNumber() {
         return this.turnNumber;
     }
+
+    /**
+     * Returns the instances of {@link GameState} by what {@link Map} it has. Exists to help with {@link GameObserver GameObservers} at the {@link Room}-level 
+     * @param m {@link Map}
+     * 
+     * @return {@link GameState}
+     */
+    public static GameState getGameStateByMap(Map m) {
+        for (GameState gs : gameStates) {
+            if (gs.map.equals(m)) {
+                return gs;
+            }
+        }
+        return null ;
+    }
+
+    /**
+     * Add Game States
+     * @param gs {@link GameState}
+     */
+    private static void addGameState(GameState gs) {
+        gameStates.add(gs) ;
+    } 
 }

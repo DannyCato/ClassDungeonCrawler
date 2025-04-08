@@ -229,7 +229,7 @@ public class Room implements DungeonPiece<Room>, java.io.Serializable {
      * @return boolean. True if Occupant was moved
      */
     public Tile moveOccupant(Occupant o, DirectionalVector dir) {
-        Tile t = (Tile) getTileOfOccpant(o);
+        Tile t = (Tile) getTileOfOccupant(o);
         int index = lookupTiles.get(t);
         if (t == null) { // if a tile with TransientOccupant o is not found
             return null;
@@ -356,7 +356,7 @@ public class Room implements DungeonPiece<Room>, java.io.Serializable {
      * @param o {@link Occupant}
      * @return {@link DungeonPiece}<{@link Tile}> of {@link Occupant}. null otherwise.
      */
-    public DungeonPiece<Tile> getTileOfOccpant(Occupant o) {
+    public DungeonPiece<Tile> getTileOfOccupant(Occupant o) {
         for (DungeonPiece<Tile> t : tiles) {
             if (t.getOccupants().contains(o)) {
                 return t;
