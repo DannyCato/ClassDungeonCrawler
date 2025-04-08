@@ -46,6 +46,7 @@ public class GameState implements IObservable {
         this.observers = new ArrayList<>();
         this.player = player;
         this.map = this.buildMap();
+        this.map.bindNewGameObserversInRoom();
         this.turnNumber = 1;
         this.setTime(new DayTime(this));
     }

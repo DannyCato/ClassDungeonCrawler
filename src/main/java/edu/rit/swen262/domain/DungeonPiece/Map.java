@@ -215,7 +215,7 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
     /**
      * This binds new {@link GameObserver GameObservers} that work on a {@link Room}-Level
      */
-    private void bindNewGameObserversInRoom() {
+    public void bindNewGameObserversInRoom() {
         GameState gs = GameState.getGameStateByMap(this) ;
         for (GameObserver go : gos) {
             gs.deregister(go);
