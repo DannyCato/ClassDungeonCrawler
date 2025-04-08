@@ -11,5 +11,7 @@ public enum GameEventType {
     CHANGE_TIME,
     FINISH_TURN,
     USE_ITEM,
-    QUIT_GAME
+    QUIT_GAME,
+    DISARM_TRAP
+    // Find Trap?
 }

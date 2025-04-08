@@ -122,5 +122,4 @@ public class Trap implements Occupant, GameObserver {
             }
         }
     }
-    
 }
