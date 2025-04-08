@@ -171,7 +171,7 @@ public class GameState implements IObservable {
      * @param item the item to be added to the inventory
      */
     public void pickUpItem(Item item) {
-        player.pickUpItem(item);
+        player.addItemToBag(item);
     }
 
     /**
