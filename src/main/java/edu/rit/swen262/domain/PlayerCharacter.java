@@ -121,13 +121,12 @@ public class PlayerCharacter extends Character {
     }
 
     public String addItemToBag(Item item) {
+        boolean result = inventory.addItem(item);
 
-        for (Bag bag : inventory.getBags()) {
-        if (bag.getItems().size() < bag.getCapacity()) {
-            bag.addItem(item);
+        if (result) {
             return item.getName() + " added to Bag.";
         }
-        }
+
         return "Inventory full!";
     }
 

@@ -1,5 +1,5 @@
 package edu.rit.swen262.domain;
 
 public interface MerchantForm {
-    void handlePurchaseItem();
+    String handlePurchaseItem(int index, PlayerCharacter player);
 }

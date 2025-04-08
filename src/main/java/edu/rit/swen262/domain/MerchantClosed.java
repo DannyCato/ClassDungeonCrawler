@@ -8,7 +8,7 @@ public class MerchantClosed implements MerchantForm {
     }
 
     @Override
-    public void handlePurchaseItem() {
-        
+    public String handlePurchaseItem(int index, PlayerCharacter player) {
+        return null;
     }
 }

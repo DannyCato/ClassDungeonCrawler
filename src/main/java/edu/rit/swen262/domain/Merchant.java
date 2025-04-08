@@ -15,7 +15,7 @@ public class Merchant implements Occupant{
     private boolean safe;
 
     public Merchant(String description) {
-        this.currentForm = new MerchantOpened(this);
+        this.currentForm = new MerchantClosed(this);
         generateStoreItems();
         this.description = description;
         this.safe = false;
@@ -53,21 +53,36 @@ public class Merchant implements Occupant{
         }
     }
 
-    public void isSafe(Room currentRoom) {
+    public boolean isSafe(Room currentRoom) {
         Collection<Occupant> occupants = currentRoom.getOccupants();
-        
+
         for (Occupant each : occupants) {
             if (each.render() == RenderRepresentation.ENEMY) {
-                this.safe = false;
-                break;
+                if (this.safe) {
+                    this.safe = false;
+                    this.currentForm = new MerchantClosed(this);
+                }
+                return this.safe;
             }
         }
 
         this.safe = true;
+        this.currentForm = new MerchantOpened(this);
+        return this.safe;
     }
 
     public List<Item> getShopItems() {
         return this.list;
+    }
+
+    public String purchaseItem(int index, PlayerCharacter player, Room currentRoom) {
+        isSafe(currentRoom);
+        String result = currentForm.handlePurchaseItem(index, player);
+        if (result == null) {
+            return "Shop is closed.";
+        }
+
+        return result;
     }
 
     @Override

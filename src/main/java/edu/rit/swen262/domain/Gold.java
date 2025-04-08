@@ -41,6 +41,13 @@ public class Gold extends Item {
         }
     }
 
+    public void setCount(int num) {
+        this.count = num;
+        if (this.count < 0) {
+            this.count = 0;
+        }
+    }
+
     /**
      * Gets the value of the gold (Returns itself.)
      */
