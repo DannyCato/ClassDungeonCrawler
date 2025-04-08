@@ -98,7 +98,12 @@ public class PlayerCharacter extends Character {
     public String useBuff(Buff buff) {
 
         if (buff.getDuration() > 0) {
-            buffs.add(buff);
+            boolean add = buffs.add(buff);
+            if (add) {
+                this.attack += buff.getAttack();
+                this.defense += buff.getDefense();
+                this.maxHP += buff.getHp();
+            }
         }
 
         return "Your Stats are boosted for " + buff.getDuration() + " turns." +
@@ -110,18 +115,15 @@ public class PlayerCharacter extends Character {
 
     public void updateBuffs() {
 
-        if (buffs.size() > 0) {
-            for (Buff buff : buffs) {
-                this.attack += buff.getAttack();
-                this.defense += buff.getDefense();
-                this.maxHP += buff.getHp();
-            }
-        }
-
         for (int i = 0; i < buffs.size(); i++) {
             buffs.get(i).decreaseDuration();
             if (buffs.get(i).getDuration() <= 0) {
-                buffs.remove(i);
+                boolean delete = buffs.remove(buffs.get(i));
+                if (delete) {
+                    this.attack -= buffs.get(i).getAttack();
+                    this.defense -= buffs.get(i).getDefense();
+                    this.maxHP -= buffs.get(i).getHp();
+                }
             }
         }
     }
