@@ -37,7 +37,6 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
         this.rooms = new MapStructure();
         this.startRoom = root;
         this.currentRoom = root;
-        bindNewGameObserversInRoom();
 
         rooms.addLooseRoom(((Room) root).getRoomNode());
     }
