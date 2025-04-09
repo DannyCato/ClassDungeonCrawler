@@ -297,6 +297,7 @@ public class MUDGameUI implements GameObserver {
             // create panel displaying game status update messages
             Panel statusPanel = new Panel(new GridLayout(2));
             this.eventLogDisplay = new Label("Event Log: \n\n");
+            eventLogDisplay.setPreferredSize(new TerminalSize(25, 10));
             statusPanel.addComponent(this.eventLogDisplay);
 
             // create 2-column panel displaying turn info (number/time)

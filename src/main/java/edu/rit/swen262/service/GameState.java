@@ -206,7 +206,7 @@ public class GameState implements IObservable, GameMediator {
         // test enemy
         PlayerCharacter recipient = new PlayerCharacter("target dummy", "a sword pincushion");
 
-        String attackMessage = recipient.getName() + " launched an attack on " + player.getName() + "!";
+        String attackMessage = player.getName() + " launched an attack on " + recipient.getName() + "!";
         String dmgMessage = attackCharacter(player, recipient);
 
         event.addData("attackMessage", attackMessage);
