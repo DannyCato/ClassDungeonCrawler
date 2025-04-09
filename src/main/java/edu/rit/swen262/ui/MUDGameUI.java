@@ -100,6 +100,15 @@ public class MUDGameUI implements GameObserver {
                 }
                 this.redrawMap(event.getData("currentRoom").toString());
                 this.redrawMenuDefault();
+
+                Object endGameData = event.getData("canEndGame");
+                if (endGameData != null) {
+                    boolean canEndGame = (Boolean) endGameData;
+                    if (canEndGame) {
+                        this.drawEndGameUI((String) event.getData("playerName"), 
+                                           (String) event.getData("playerDescription"));
+                    }
+                }
                 break;
             case FINISH_TURN:
                 this.redrawTurn(event.getData("turnNumber").toString());
@@ -355,6 +364,62 @@ public class MUDGameUI implements GameObserver {
                 this.stop();
             }
         }
+    }
+
+    public void drawEndGameUI(String playerName, String playerDescription) {
+        // set no shadow decorations for panels + full screen
+        Window.Hint[] windowHints = new Window.Hint[] {
+            Window.Hint.NO_DECORATIONS,
+            //Window.Hint.NO_POST_RENDERING,
+            Window.Hint.EXPANDED};
+
+        final Window window = new BasicWindow("Welcome!");
+        window.setHints(Arrays.asList(windowHints));
+
+        Panel contentPanel = new Panel();
+        LinearLayout layout = new LinearLayout(Direction.VERTICAL);
+        layout.setSpacing(1);
+        contentPanel.setLayoutManager(layout);
+        LayoutData centerLayoutData = LinearLayout.createLayoutData(LinearLayout.Alignment.Center);
+
+        Label congratsLabel = new Label("Congrats, you reached the goal!");
+        congratsLabel.setLayoutData(centerLayoutData);
+
+        Label playerDataText = new Label("And so ends the tale of " + playerName + 
+                                    ", starting a legend anew in the lands of MUD of the one who \"" 
+                                    + playerDescription + ".\"");
+        playerDataText.setPreferredSize(new TerminalSize(60, 4));
+        playerDataText.setLayoutData(centerLayoutData);
+
+        Label queryLabel = new Label("End your adventure?");
+        queryLabel.setLayoutData(centerLayoutData);
+
+        Panel buttonPanel = new Panel();
+        buttonPanel.setLayoutManager(new GridLayout(2));
+
+        // if selected, immediately closes out the window + ends the game
+        Button yesButton = new Button("Yes", () -> {
+            window.close(); // close the name prompt window
+            this.stop();
+        });
+
+        // if selected, dismiss the ending notification window and resume gameplay
+        Button noButton = new Button("No", () -> {
+            window.close(); // close the name prompt window
+        });
+
+        buttonPanel.addComponent(yesButton);
+        buttonPanel.addComponent(noButton);
+        buttonPanel.setLayoutData(centerLayoutData);
+
+        contentPanel.addComponent(congratsLabel);
+        contentPanel.addComponent(playerDataText);
+
+        contentPanel.addComponent(queryLabel);
+        contentPanel.addComponent(buttonPanel);
+
+        window.setComponent(contentPanel);
+        this.textGUI.addWindowAndWait(window);
     }
 
     /**

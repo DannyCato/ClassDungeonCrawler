@@ -31,6 +31,8 @@ import java.util.HashSet;
  * @author Victor Bovat, Philip Rubbo
  */
 public class GameState implements IObservable, GameMediator {
+    private static ArrayList<GameState> gameStates = new ArrayList<>() ;
+
     private List<GameObserver> observers;
     private PlayerCharacter player;
     private Map map;
@@ -45,9 +47,11 @@ public class GameState implements IObservable, GameMediator {
      * @param player the player starting the new game
      */
     public GameState(PlayerCharacter player) {
+        addGameState(this);
         this.observers = new ArrayList<>();
         this.player = player;
         this.map = this.buildMap();
+        this.map.bindNewGameObserversInRoom();
         this.turnNumber = 1;
         this.setTime(new DayTime(this));
     }
@@ -56,7 +60,9 @@ public class GameState implements IObservable, GameMediator {
      * {@inheritDoc}
      */
     public void register(GameObserver go) {
-        observers.add(go);
+        if (!observers.contains(go)) {
+            observers.add(go);
+        }
     }
 
     /**
@@ -87,16 +93,46 @@ public class GameState implements IObservable, GameMediator {
 
         Room root = new Room(8, 4, "test starting room");
         Room room2 = new Room(10, 5, "test second room");
+        // Room room3 = new Room(11, 3, "test third room");
+        // Room room4 = new Room(11, 3, "test fourth room");
+        // Room room5 = new Room(4, 12, "test fifth room");
+        // Room room6 = new Room(10, 4, "test sixth room");
+        // Room room7 = new Room(16, 8, "test seventh room");
+        // Room room8 = new Room(5, 4, "test eighth room");
+        // Room room9 = new Room(9, 10, "test ninth room");
+        // Room room10 = new Room(8, 4, "test tenth room");
+        // Room room11 = new Room(8, 4, "test tenth room");
+        Room goal = new Room(2, 1, "test goal room");
 
         Map newMap = new Map(root);
 
         newMap.addRoom(root, room2, DirectionalVector.WEST, false);
-        
-        // root.getRoomNode().setConnection(room2.getRoomNode(), DirectionalVector.EAST);
-        // room2.getRoomNode().setConnection(root.getRoomNode(), DirectionalVector.WEST);
+        newMap.addRoom(room2, goal, DirectionalVector.NORTH, true);
+        // newMap.addRoom(room3, room4, DirectionalVector.WEST, false);
+        // newMap.addRoom(room4, room5, DirectionalVector.NORTH, false);
+        // newMap.addRoom(room5, room6, DirectionalVector.EAST, false);
+        // newMap.addRoom(room3, room6, DirectionalVector.NORTH, false);
+        // newMap.addRoom(room6, room7, DirectionalVector.EAST, false);
+        // newMap.addRoom(root, room9, DirectionalVector.EAST, false);
+        // newMap.addRoom(root, room11, DirectionalVector.SOUTH, false);
+        // newMap.addRoom(room9, room10, DirectionalVector.SOUTH, false);
+        // newMap.addRoom(room10, room11, DirectionalVector.WEST, false);
+        // newMap.addRoom(room9, room8, DirectionalVector.NORTH, false);
+        // newMap.addRoom(room7, goal, DirectionalVector.SOUTH, true);
+        // newMap.addRoom(room8, goal, DirectionalVector.WEST, true);
         
         RoomFiller.fill(root, 0.1);
         RoomFiller.fill(room2, 0.1);
+        // RoomFiller.fill(room3, 0.1);
+        // RoomFiller.fill(room4, 0.1);
+        // RoomFiller.fill(room5, 0.1);
+        // RoomFiller.fill(room6, 0.1);
+        // RoomFiller.fill(room7, 0.1);
+        // RoomFiller.fill(room8, 0.1);
+        // RoomFiller.fill(room9, 0.1);
+        // RoomFiller.fill(room10, 0.1);
+        // RoomFiller.fill(room11, 0.1);
+        RoomFiller.fill(goal, 0.1);
         
         Tile startTile = (Tile)newMap.startUp();
         
@@ -120,10 +156,12 @@ public class GameState implements IObservable, GameMediator {
 
     /**
      * updates the data of the player character currently playing the game
+     * if a new name and description is provided at start-up
      * 
      * @param p the new player character to update to
      */
     public void updatePlayer(PlayerCharacter p) {
+        this.map.updateOccupant(p);
         this.player = p;
     }
 
@@ -133,15 +171,21 @@ public class GameState implements IObservable, GameMediator {
      * @param direction the direction to move in on the map
      */
     public void movePlayer(DirectionalVector direction) {
-        //update map??
+        GameEvent event = new GameEvent(GameEventType.MOVE_PLAYER);
+
         this.map.move(player, direction);
+        if (this.map.canEndGame(this.player)) {
+            event.addData("canEndGame", true);  
+            event.addData("playerName", this.player.getName());
+            event.addData("playerDescription", this.player.description());    
+        }
         
         //convert current Room to String render, then pass along to UI
         String currentRoomRender = this.map.structuredRender();
 
-        GameEvent event = new GameEvent(GameEventType.MOVE_PLAYER);
         event.addData("direction", direction);
         event.addData("currentRoom", currentRoomRender);
+        event.addData("mapReference", this.map);
 
         this.notifyObservers(event);
 
@@ -319,6 +363,29 @@ public class GameState implements IObservable, GameMediator {
     public int getTurnNumber() {
         return this.turnNumber;
     }
+
+    /**
+     * Returns the instances of {@link GameState} by what {@link Map} it has. Exists to help with {@link GameObserver GameObservers} at the {@link Room}-level 
+     * @param m {@link Map}
+     * 
+     * @return {@link GameState}
+     */
+    public static GameState getGameStateByMap(Map m) {
+        for (GameState gs : gameStates) {
+            if (gs.map.equals(m)) {
+                return gs;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Add Game States
+     * @param gs {@link GameState}
+     */
+    private static void addGameState(GameState gs) {
+        gameStates.add(gs) ;
+    } 
 
      /**
      * fetches the {@link Inventory Inventory} of the current player

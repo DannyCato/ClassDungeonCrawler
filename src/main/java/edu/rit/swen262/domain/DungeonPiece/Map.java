@@ -8,6 +8,8 @@ import edu.rit.swen262.domain.DirectionalVector;
 import edu.rit.swen262.domain.Exit;
 import edu.rit.swen262.domain.Occupant;
 import edu.rit.swen262.domain.RenderRepresentation;
+import edu.rit.swen262.service.GameObserver;
+import edu.rit.swen262.service.GameState;
 
 /**
  * A representation of {@link Map} {@link DungeonPiece} a composite of {@link Room Rooms}
@@ -24,6 +26,10 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
     private DungeonPiece<Room> goal;
 
     private DungeonPiece<Room> currentRoom;
+
+    private boolean goalReached = false;
+
+    private Collection<GameObserver> gos = new HashSet<>() ;
 
     // <-----------------------Constructors----------------------->
 
@@ -122,15 +128,27 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
         return currentRoom;
     }
 
+    /**
+     * Checks if there is a connection from the current {@link Room} in the specified {@link DirectionalVector}.
+     *
+     * @param dir {@link DirectionalVector} indicating the direction to check for an exit
+     * @return boolean indicating whether an exit exists in the given direction
+     */
     public boolean canExitRoom(DirectionalVector dir) {
         return (((Room) currentRoom).getRoomNode().getConnection(dir)) != null;
     }
 
     /**
+     * Moves an {@link Occupant} within the current {@link Room} in the specified {@link DirectionalVector}.
+     * If the occupant is moved onto an exit {@link Tile}, an attempt is made to exit the room.
      * 
+     * @param o {@link Occupant} to be moved
+     * @param dir {@link DirectionalVector} indicating the direction to move
+     * @return boolean indicating whether the move was successful
      */
     public boolean move(Occupant o, DirectionalVector dir) {
         Tile t = ((Room)currentRoom).moveOccupant(o, dir);
+
         if (t != null && t.isExit()) {
             exitRoom(o, t.getExitDirection());
         };
@@ -152,7 +170,7 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
         if (!canExitRoom(dir)) { // if they can exit from the direction given
             return false;
         }
-        Tile exitTile = (Tile)r.getTileOfOccpant(o);
+        Tile exitTile = (Tile)r.getTileOfOccupant(o);
         Occupant thisExit = exitTile.getPermanentOccupant();
         if (!(thisExit instanceof Exit)) { // if the permanent occupant is an exit then pass
             return false;
@@ -172,9 +190,21 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
         exitTile.removeOccupant(o); // finally do process
         otherTile.addOccupant(o);
         currentRoom = otherRoom;
+        bindNewGameObserversInRoom();
+        if (playerOnGoal()) {
+            this.goalReached = true;
+        } else {
+            this.goalReached = false;
+        }
         return true;
     }
-    
+
+    /**
+     * Finds the first stackable {@link Tile} in the {@link Room} given by {@link #setStartRoom(DungeonPiece)}
+     * and returns it. This is the tile that the player should start on.
+     * 
+     * @return the first stackable {@link Tile} in the {@link Room} given by {@link #setStartRoom(DungeonPiece)}
+     */
     public DungeonPiece<Tile> startUp() {
         int i = 0;
         startTile = ((Room)startRoom).getTileByIndex(i);
@@ -183,5 +213,75 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
             startTile = ((Room)startRoom).getTileByIndex(i);
         }
         return startTile;
+    }
+
+    /**
+     * This binds new {@link GameObserver GameObservers} that work on a {@link Room}-Level
+     */
+    public void bindNewGameObserversInRoom() {
+        GameState gs = GameState.getGameStateByMap(this) ;
+        for (GameObserver go : gos) {
+            gs.deregister(go);
+        }
+        for (Occupant o : getOccupants()) {
+            if (o instanceof GameObserver) {
+                gs.register((GameObserver) o);
+            }
+        }        
+    }
+
+    /**
+     * Checks if the player has reached the goal {@link Room}.
+     *
+     * @return boolean indicating whether the current room is the goal room
+     */
+    private boolean playerOnGoal() {
+        return currentRoom == goal;
+    }
+
+    /**
+     * Sets the goal {@link Room} in the map.
+     * 
+     * @param goal the {@link DungeonPiece}<{@link Room}> to be set as the goal
+     */
+    public void setGoal(DungeonPiece<Room> goal) {
+        this.goal = goal;
+    }
+
+    /**
+     * updates the Occupant currently residing upon the starting tile in the map
+     * if it is not the same
+     * 
+     * @param o the entity to be updated on the starting tile
+     */
+    public boolean updateOccupant(Occupant o) {
+        Tile startTile = (Tile) this.startUp();
+        if (!(startTile.containsTransientOccupantOf(o))) {
+            startTile.clearTransientOccupants();
+            startTile.addOccupant(o);
+            return true;
+        } return false;
+    }
+
+    /**
+     * fetches whether or not the map is currently in a valid win condition of the
+     * moving occupant (generally, the player) being inside of the goal room, then determines if 
+     * the conditions are met to send the "end game?" notification
+     * 
+     * @param o occupant to check the position of
+     * @return {@code true} if the player is inside the goal room and should be notified to end the game,
+     * {@code false} otherwise
+     */
+    public boolean canEndGame(Occupant o) {
+        Collection<Occupant> occupantsOnTile = (((Room) currentRoom).getTileOfOccupant(o).getOccupants());
+        boolean exitFound = false;
+        for (Occupant occupant : occupantsOnTile) {
+            if (occupant instanceof Exit) {
+                exitFound = true;
+                break;
+            }
+        }
+        
+        return this.goalReached && exitFound;
     }
 }

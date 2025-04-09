@@ -216,6 +216,13 @@ public class Tile implements DungeonPiece<Tile>, java.io.Serializable {
     }
 
     /**
+     * removes all transient occupants from this tile
+     */
+    public void clearTransientOccupants() {
+        this.transientOccupant = new HashSet<Occupant>();
+    }
+
+    /**
      * True if has a permanentOccupant. See class for description on permanent occupant
      * 
      * @return boolean
