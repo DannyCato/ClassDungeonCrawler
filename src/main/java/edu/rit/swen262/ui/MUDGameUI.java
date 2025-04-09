@@ -101,8 +101,11 @@ public class MUDGameUI implements GameObserver {
 
                 Object endGameData = event.getData("canEndGame");
                 if (endGameData != null) {
-                    boolean canEndData = (Boolean) endGameData;
-                    this.drawEndGameUI();
+                    boolean canEndGame = (Boolean) endGameData;
+                    if (canEndGame) {
+                        this.drawEndGameUI((String) event.getData("playerName"), 
+                                           (String) event.getData("playerDescription"));
+                    }
                 }
                 break;
             case GameEventType.FINISH_TURN:
@@ -343,7 +346,7 @@ public class MUDGameUI implements GameObserver {
         }
     }
 
-    public void drawEndGameUI() {
+    public void drawEndGameUI(String playerName, String playerDescription) {
         // set no shadow decorations for panels + full screen
         Window.Hint[] windowHints = new Window.Hint[] {
             Window.Hint.NO_DECORATIONS,
@@ -362,8 +365,13 @@ public class MUDGameUI implements GameObserver {
         Label congratsLabel = new Label("Congrats, you reached the goal!");
         congratsLabel.setLayoutData(centerLayoutData);
 
-        // populate with player information to personalize?
-        Label queryLabel = new Label("");
+        Label playerDataText = new Label("And so ends the tale of " + playerName + 
+                                    ", starting a legend anew in the lands of MUD of the one who \"" 
+                                    + playerDescription + ".\"");
+        playerDataText.setPreferredSize(new TerminalSize(60, 4));
+        playerDataText.setLayoutData(centerLayoutData);
+
+        Label queryLabel = new Label("End your adventure?");
         queryLabel.setLayoutData(centerLayoutData);
 
         Panel buttonPanel = new Panel();
@@ -385,9 +393,9 @@ public class MUDGameUI implements GameObserver {
         buttonPanel.setLayoutData(centerLayoutData);
 
         contentPanel.addComponent(congratsLabel);
+        contentPanel.addComponent(playerDataText);
 
         contentPanel.addComponent(queryLabel);
-
         contentPanel.addComponent(buttonPanel);
 
         window.setComponent(contentPanel);

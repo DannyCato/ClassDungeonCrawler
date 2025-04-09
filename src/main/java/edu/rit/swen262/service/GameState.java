@@ -170,7 +170,9 @@ public class GameState implements IObservable {
 
         this.map.move(player, direction);
         if (this.map.canEndGame(this.player)) {
-            event.addData("canEndGame", true);    
+            event.addData("canEndGame", true);  
+            event.addData("playerName", this.player.getName());
+            event.addData("playerDescription", this.player.description());    
         }
         
         //convert current Room to String render, then pass along to UI
