@@ -18,11 +18,18 @@ public class Chest implements Occupant, Lootable {
      * 
      * Chest Constructor
      */
-    public Chest(List<Item> contents, int capacity) {
+    public Chest(List<Item> contents, int capacity, String description) {
         this.contents = contents;
         this.capacity = capacity;
         this.description = description;
         generateChest(new CreateItemFactory());
+    }
+
+    public Chest(List<Item> contents, int capacity) {
+        this.contents = contents;
+        this.capacity = capacity;
+        generateChest(new CreateItemFactory());
+        this.description = this.contents.toString();
     }
 
     /**
