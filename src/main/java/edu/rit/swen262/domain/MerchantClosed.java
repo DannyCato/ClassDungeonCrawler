@@ -1,17 +1,14 @@
 package edu.rit.swen262.domain;
 
 public class MerchantClosed implements MerchantForm {
-    private Merchant merchant;
 
-    public MerchantClosed (Merchant merchant) {
-        this.merchant = merchant;
-    }
+    public MerchantClosed () {}
 
     /**
      * @return      Is Null since the shop is closed.
      */
     @Override
-    public String handlePurchaseItem(int index, PlayerCharacter player) {
+    public String handlePurchaseItem(int index, PlayerCharacter player, Merchant merchant) {
         return null;
     }
 

@@ -1,5 +1,6 @@
 package edu.rit.swen262.domain;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
@@ -19,7 +20,8 @@ public class Merchant implements Occupant{
      * @param description   A description needed for the Occupant implementation
      */
     public Merchant(String description) {
-        this.currentForm = new MerchantClosed(this);
+        this.currentForm = new MerchantClosed();
+        this.list = new ArrayList<Item>();
         generateStoreItems();
         this.description = description;
         this.safe = false;
@@ -81,14 +83,14 @@ public class Merchant implements Occupant{
             if (each.render() == RenderRepresentation.ENEMY) {
                 if (this.safe) {
                     this.safe = false;
-                    this.currentForm = new MerchantClosed(this);
+                    this.currentForm = new MerchantClosed();
                 }
                 return this.safe;
             }
         }
 
         this.safe = true;
-        this.currentForm = new MerchantOpened(this);
+        this.currentForm = new MerchantOpened();
         return this.safe;
     }
 
@@ -111,7 +113,7 @@ public class Merchant implements Occupant{
      */
     public String purchaseItem(int index, PlayerCharacter player, Room currentRoom) {
         isSafe(currentRoom);
-        String result = currentForm.handlePurchaseItem(index, player);
+        String result = currentForm.handlePurchaseItem(index, player, this);
         if (result == null) {
             return "Shop is closed.";
         }

@@ -3,11 +3,8 @@ package edu.rit.swen262.domain;
 import java.util.List;
 
 public class MerchantOpened implements MerchantForm {
-    private Merchant merchant;
 
-    public MerchantOpened(Merchant merchant) {
-        this.merchant = merchant;
-    }
+    public MerchantOpened() {}
 
     /**
      * Gets the items from the passed in Merchant, uses the index to find the item wanted and gives the player the item
@@ -18,7 +15,7 @@ public class MerchantOpened implements MerchantForm {
      * @return              The String result stating what happened
      */
     @Override
-    public String handlePurchaseItem(int index, PlayerCharacter player) {
+    public String handlePurchaseItem(int index, PlayerCharacter player, Merchant merchant) {
         List<Item> shop = merchant.getShopItems();
         Item wanted = shop.get(index);
         Gold cost = wanted.getValue();
