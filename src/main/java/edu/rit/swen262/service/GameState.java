@@ -132,7 +132,7 @@ public class GameState implements IObservable {
      * @param p the new player character to update to
      */
     public void updatePlayer(PlayerCharacter p) {
-        System.out.println(this.map.updateOccupant(p));
+        this.map.updateOccupant(p);
         this.player = p;
     }
 
