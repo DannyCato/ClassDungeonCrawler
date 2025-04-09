@@ -70,10 +70,16 @@ public class MUDGameUI implements GameObserver {
             case GameEventType.MOVE_PLAYER:
                 if (event.getData("direction") != null) {
                     this.eventLogMsgs.offer("You moved.");
-                this.redrawEventLog();
+                    this.redrawEventLog();
                 }
                 this.redrawMap(event.getData("currentRoom").toString());
                 this.redrawMenuDefault();
+
+                Object endGameData = event.getData("canEndGame");
+                if (endGameData != null) {
+                    boolean canEndData = (Boolean) endGameData;
+                    System.out.println("notify end game");
+                }
                 break;
             case GameEventType.FINISH_TURN:
                 this.redrawTurn(event.getData("turnNumber").toString());

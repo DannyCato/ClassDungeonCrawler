@@ -97,12 +97,13 @@ public class GameState implements IObservable {
         newMap.addRoom(root, room3, DirectionalVector.SOUTH, false);
         newMap.addRoom(room2, room4, DirectionalVector.NORTH, false);
         
-        newMap.addRoom(room2, goalRoom, DirectionalVector.NORTH, true);
+        newMap.addRoom(root, goalRoom, DirectionalVector.NORTH, true);
 
         RoomFiller.fill(root, 0.1);
         RoomFiller.fill(room2, 0.1);
         RoomFiller.fill(room3, 0.1);
         RoomFiller.fill(room4, 0.1);
+        RoomFiller.fill(goalRoom, 0);
         
         Tile startTile = (Tile)newMap.startUp();
         
@@ -117,16 +118,16 @@ public class GameState implements IObservable {
      * @param direction the direction to move in on the map
      */
     public void movePlayer(DirectionalVector direction) {
-        //update map??
+        GameEvent event = new GameEvent(GameEventType.MOVE_PLAYER);
+        
         this.map.move(player, direction);
-        if (this.map.isGoalReached()) {
-            System.out.println("ENTERING THE GOAL WOOOO");
+        if (this.map.canEndGame(this.player)) {
+            event.addData("canEndGame", true);    
         }
         
         //convert current Room to String render, then pass along to UI
         String currentRoomRender = this.map.structuredRender();
 
-        GameEvent event = new GameEvent(GameEventType.MOVE_PLAYER);
         event.addData("direction", direction);
         event.addData("currentRoom", currentRoomRender);
         event.addData("mapReference", this.map);
@@ -260,7 +261,7 @@ public class GameState implements IObservable {
                 return gs;
             }
         }
-        return null ;
+        return null;
     }
 
     /**
