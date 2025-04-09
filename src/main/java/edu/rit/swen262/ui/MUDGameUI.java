@@ -90,7 +90,7 @@ public class MUDGameUI implements GameObserver {
                 //update status panel w/ menu options
                 this.redrawMenu(event.getData("menuText").toString());
                 break;
-            case GameEventType.UPDATE_MAP:
+            case UPDATE_MAP:
                 this.redrawMap(event.getData("currentRoom").toString());
                 break;
             case MOVE_PLAYER:
