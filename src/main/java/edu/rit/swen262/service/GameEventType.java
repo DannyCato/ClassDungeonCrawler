@@ -10,7 +10,9 @@ public enum GameEventType {
     TAKE_DAMAGE,
     CHANGE_TIME,
     FINISH_TURN,
+    ADD_ITEM,
     USE_ITEM,
+    UPDATE_MAP,
     QUIT_GAME,
     DISARM_TRAP
     // Find Trap?

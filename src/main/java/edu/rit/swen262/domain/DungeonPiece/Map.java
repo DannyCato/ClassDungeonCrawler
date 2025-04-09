@@ -148,6 +148,7 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
      */
     public boolean move(Occupant o, DirectionalVector dir) {
         Tile t = ((Room)currentRoom).moveOccupant(o, dir);
+
         if (t != null && t.isExit()) {
             exitRoom(o, t.getExitDirection());
         };
@@ -192,6 +193,8 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
         bindNewGameObserversInRoom();
         if (playerOnGoal()) {
             this.goalReached = true;
+        } else {
+            this.goalReached = false;
         }
         return true;
     }
@@ -243,5 +246,42 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
      */
     public void setGoal(DungeonPiece<Room> goal) {
         this.goal = goal;
+    }
+
+    /**
+     * updates the Occupant currently residing upon the starting tile in the map
+     * if it is not the same
+     * 
+     * @param o the entity to be updated on the starting tile
+     */
+    public boolean updateOccupant(Occupant o) {
+        Tile startTile = (Tile) this.startUp();
+        if (!(startTile.containsTransientOccupantOf(o))) {
+            startTile.clearTransientOccupants();
+            startTile.addOccupant(o);
+            return true;
+        } return false;
+    }
+
+    /**
+     * fetches whether or not the map is currently in a valid win condition of the
+     * moving occupant (generally, the player) being inside of the goal room, then determines if 
+     * the conditions are met to send the "end game?" notification
+     * 
+     * @param o occupant to check the position of
+     * @return {@code true} if the player is inside the goal room and should be notified to end the game,
+     * {@code false} otherwise
+     */
+    public boolean canEndGame(Occupant o) {
+        Collection<Occupant> occupantsOnTile = (((Room) currentRoom).getTileOfOccupant(o).getOccupants());
+        boolean exitFound = false;
+        for (Occupant occupant : occupantsOnTile) {
+            if (occupant instanceof Exit) {
+                exitFound = true;
+                break;
+            }
+        }
+        
+        return this.goalReached && exitFound;
     }
 }
