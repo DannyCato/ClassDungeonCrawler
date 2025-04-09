@@ -47,6 +47,12 @@ public enum MenuState {
     BAG {
         @Override
         public void handleInput(InputParser p, char keystroke) {
+            p.setMenu(ITEM);
+        }
+    },
+    ITEM {
+        @Override
+        public void handleInput(InputParser p, char keystroke) {
             p.setMenu(DEFAULT);
         }
     };

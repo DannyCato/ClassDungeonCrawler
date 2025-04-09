@@ -11,8 +11,15 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import edu.rit.swen262.domain.Armor;
 import edu.rit.swen262.domain.DirectionalVector;
+import edu.rit.swen262.domain.Food;
+import edu.rit.swen262.domain.Gold;
+import edu.rit.swen262.domain.Buff;
+import edu.rit.swen262.domain.Armor;
 import edu.rit.swen262.domain.PlayerCharacter;
+import edu.rit.swen262.domain.Weapon;
+import edu.rit.swen262.service.ActionVisitor;
 import edu.rit.swen262.service.GameSetupParser;
 import edu.rit.swen262.service.GameState;
 import edu.rit.swen262.service.InputParser;
@@ -81,20 +88,16 @@ class SampleCommandLineRunner implements CommandLineRunner {
 		}};
 
 		/*
-		 inv command map should change based upon what's in the inventory?
-		 AKA Bags/Individual Items
+		 inventory, bag, and item keystroke maps are populated dynamically by the
+		 {@link InputParser} based upon the current state of the inventory when it
+		 is opened
 		 */
-		HashMap<Character, Action> inventoryKeystrokes = new HashMap<>() {{
+		HashMap<Character, Action> inventoryKeystrokes = new HashMap<>();
 
-		}};
+		HashMap<Character, Action> bagKeystrokes = new HashMap<>();
 
-		HashMap<Character, Action> bagKeystrokes = new HashMap<>() {{
+		HashMap<Character, Action> itemKeystrokes = new HashMap<>();
 
-		}};
-
-		HashMap<Character, Action> itemKeystrokes = new HashMap<>() {{
-
-		}};
 
 		String moveMenuString = this.buildMenuString(moveKeystrokes);
 		String attackMenuString = this.buildMenuString(attackKeystrokes);
@@ -112,6 +115,7 @@ class SampleCommandLineRunner implements CommandLineRunner {
 		keystrokes.put(MenuState.ATTACK, attackKeystrokes);
 		keystrokes.put(MenuState.INVENTORY, inventoryKeystrokes);
 		keystrokes.put(MenuState.BAG, bagKeystrokes);
+		keystrokes.put(MenuState.ITEM, itemKeystrokes);
 
 		return keystrokes;
 	}
@@ -137,18 +141,25 @@ class SampleCommandLineRunner implements CommandLineRunner {
 	
 	@Override
 	public void run(String... args) throws Exception {
-		PlayerCharacter player = new PlayerCharacter("Bobert", "can lift at least 5 worms.");
+		PlayerCharacter player = new PlayerCharacter("Bobert", "can lift at least 7 worms.");
 		GameState gameState = new GameState(player);
+		ActionVisitor actionVisitor = new ActionVisitor(gameState);
 
 		HashMap<MenuState, HashMap<Character, Action>> keystrokes = this.bindCommands(gameState);
 		SetPlayerAction setPlayer = new SetPlayerAction(gameState, player);
 
-		InputParser inputParser = new InputParser(keystrokes);
+		InputParser inputParser = new InputParser(keystrokes, actionVisitor, gameState.getInventory());
 		GameSetupParser setupParser = new GameSetupParser(setPlayer);
 
 		MUDGameUI client = new MUDGameUI(setupParser, inputParser);
 		gameState.register(client);
 		gameState.updateMap();
+
+		//simulate adding items to player inv for testing : )
+		gameState.pickUpItem(new Food("BEANS", "Little yummy guys", 10, new Gold(10))); 
+		gameState.pickUpItem(new Buff("Yo-Yo", "Walk that dog", 5, 10, 0, 0, new Gold(10)));
+		gameState.pickUpItem(new Weapon("Rusty Dagger", "¿Back Scratcher?", 1, new Gold(10)));
+		gameState.pickUpItem(new Armor("Holey Armor", "Praise Hole God!", 1, new Gold(10)));
 
 		client.start();
 	}

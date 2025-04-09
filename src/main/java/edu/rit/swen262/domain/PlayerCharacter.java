@@ -1,32 +1,287 @@
-package edu.rit.swen262.domain;
+    package edu.rit.swen262.domain;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * represents the Player Character traveling through the dungeon, extends the 
- * {@link Character}
+ * represents the Player Character traveling through the dungeon, extends the
+ * {@link GameCharacter}
  */
-public class PlayerCharacter extends Character {
-    private Inventory inventory;
+public class PlayerCharacter extends GameCharacter {
+    Armor armor;
+    Weapon weapon;
+    Inventory inventory;
+    Gold gold;
+    List<Buff> buffs;
+
     /**
      * initializes a PlayerCharacter with the given name and description. Their
-     * maxHP, attack, and defense stats are set to 100, 10, and 0 respectively by default.
-     * 
-     * @param name the given name of the player
+     * maxHP, attack, and defense stats are set to 100, 10, and 0 respectively by
+     * default.
+     *
+     * @param name        the given name of the player
      * @param description the given brief description of the player
+     * @param armor       the equipped armor
+     * @param weapon      the equipped weapon
+     * @param gold        the gold held by the player
      */
     public PlayerCharacter(String name, String description) {
         super(name, description, 100, 10, 0);
-        this.inventory = new Inventory();
+        this.armor = null;
+        this.weapon = null;
+        this.inventory = new Inventory(6);
+        this.gold = new Gold(0);
+    }
+
+
+    /**
+     * Initializes a PlayerCharacter with the given name, description, equipped armor, weapon,
+     * inventory, gold, and buffs.
+     * 
+     * Player Character has the default stats: maxHP = 100, attack = 10, and defense = 0.
+     * 
+     * @param name        the name of the player character
+     * @param description a brief description of the player character
+     * @param armor       the armor equipped by the player character
+     * @param weapon      the weapon equipped by the player character
+     * @param inventory   the inventory of the player character
+     * @param gold        the amount of gold the player character has
+     * @param buffs       a list of buffs currently affecting the player character
+     */
+    public PlayerCharacter(String name, String description, Armor armor, Weapon weapon, Inventory inventory,
+            Gold gold, List<Buff> buffs) {
+        super(name, description, 100, 10, 0);
+        this.armor = armor;
+        this.weapon = weapon;
+        this.inventory = inventory;
+        this.gold = gold;
+        this.buffs = new ArrayList<>();
     }
 
     /**
-     * {@inheritDoc}
+     * @param food the {@link Food} item the Player Character is consumin
+     * 
+     * 
+     */
+    public String eatFood(Food food) {
+        this.health += food.getHp();
+        if (this.health > this.maxHP) {
+            this.health = this.maxHP;
+        }
+
+        return "Ate food: " + food.getName();
+    }
+
+    /**
+     * Attempts to equip the specified {@link Armor} item into the player's
+     * active armor slot
+     * 
+     * @param armor the armor to be equipped
+     * @return a String status message reporting the result of the operation
+     */
+    public String equipArmor(Armor armor) {
+        if (this.armor == null) {
+            this.armor = armor;
+            this.defense += armor.getDefense();
+        }
+
+        else {
+            Armor temp = this.armor;
+            this.defense -= temp.getDefense();
+            this.armor = armor;
+            this.defense += armor.getDefense();
+            for (Bag bag : inventory.getBags()) {
+                boolean result = bag.addItem(temp);
+                if (result) {
+                    break;
+                }
+            }
+        }
+
+        return "Now wearing: " + armor.getName();
+    }
+
+    /**
+     * Attempts to equip the specified {@link Weapon} item into the player's
+     * active weapon slot
+     * 
+     * @param weapon the weapon to be equipped
+     * @return a String status message reporting the result of the operation
+     */
+    public String equipWeapon(Weapon weapon) {
+        if (this.weapon == null) {
+            this.weapon = weapon;
+            this.attack += weapon.getAttack();
+        }
+
+        else {
+            Weapon temp = this.weapon;
+            this.attack -= temp.getAttack();
+            this.weapon = weapon;
+            this.attack += weapon.getAttack();
+            for (Bag bag : inventory.getBags()) {
+                boolean result = bag.addItem(temp);
+                if (result) {
+                    break;
+                }
+            }
+        }
+        return "Now wielding: " + weapon.getName();
+    }
+
+    /**
+     * uses the specified Buff item and applies the corrosponding stat buff
+     * to the player character's stats
+     * 
+     * @param buff the buff item to be used
+     * @return a String status message reporting the result of the operation
+     */
+    public String useBuff(Buff buff) {
+
+        if (buff.getDuration() > 0) {
+            boolean add = buffs.add(buff);
+            if (add) {
+                this.attack += buff.getAttack();
+                this.defense += buff.getDefense();
+                this.maxHP += buff.getHp();
+            }
+        }
+
+        return "Your Stats are boosted for " + buff.getDuration() + " turn(s)." +
+        "\nAttack: " + (this.getAttack() - buff.getAttack())+ " (+" + buff.getAttack() + ")" +
+        "\nDefense: " + (this.getDefense() - buff.getDefense()) + " (+" + buff.getDefense() + ")" +
+        "\nHealth: " + (this.getMaxHP() - buff.getHp()) + " (+" +buff.getHp() + ")";
+
+    }
+
+    /**
+     * updates the durations of the active buff effects on the
+     * player character, decreasing each ones length by one turn
+     */
+    public void updateBuffs() {
+
+        for (int i = 0; i < buffs.size(); i++) {
+            buffs.get(i).decreaseDuration();
+            if (buffs.get(i).getDuration() <= 0) {
+                this.attack -= buffs.get(i).getAttack();
+                this.defense -= buffs.get(i).getDefense();
+                this.maxHP -= buffs.get(i).getHp();
+                buffs.remove(i);
+                i--;
+            }
+        }
+    }
+
+    /**
+     * applies the effects of the given item to the player character
+     * 
+     * @param item the item to be used
+     * @return the status message reporting the results of this operation
+     */
+    public String useItem(Item item) {
+        if (item instanceof Food) {
+            Food food = (Food) item;
+            return this.eatFood(food);
+        } else if (item instanceof Weapon) {
+            Weapon weapon = (Weapon) item;
+            return this.equipWeapon(weapon);
+        } else if (item instanceof Armor) {
+            Armor armor = (Armor) item;
+            return this.equipArmor(armor);
+        } else {
+            return "The" + item.getName() + "cannot be used.";
+        }
+    }
+
+    /**
+     * locates the given {@link Item} from within the player's {@link Inventory}
+     * 
+     * @param item the item to search for
+     * @return the matching {@link Item} if found, or {@code null} otherwise
+     */
+    public Item findItem(Item item) {
+        for (Bag bag : inventory.getBags()) {
+            for (Item each : bag.getItems()) {
+                if (each.equals(item)) {
+                    bag.removeItem(each);
+                    return each;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * attempts to add a single item to the player's {@link Inventory}
+     * 
+     * @param item
+     * @return
+     */
+    public String addItemToBag(Item item) {
+        boolean result = inventory.addItem(item);
+
+        if (result) {
+            return item.getName() + " added to Bag.";
+        }
+
+        return "Inventory full!";
+    }
+
+    /**
+     * 
+     * 
+     * @param contents
+     */
+    public void takeLoot(List<Item> contents) {
+        for (Item item : contents) {
+            addItemToBag(item);
+        }
+    }
+
+    public List<Item> getLoot() {
+        if (getHealth() > 0) {
+            return null;
+        }
+
+        List<Item> corpse = new ArrayList<Item>();
+
+        if (armor != null) {corpse.add(armor);}
+        if (weapon != null) {corpse.add(weapon);}
+        if (gold != null) {corpse.add(gold);}
+
+        for (Bag bag : inventory.getBags()) {
+            corpse.addAll(bag.getItems());
+        }
+
+        return corpse;
+
+    }
+
+    public void lootCorpse(PlayerCharacter player) {
+        List<Item> items = player.getLoot();
+        for (Item item : items) {
+            addItemToBag(item);
+        }
+    }
+
+    /**
+     * removes a single {@link Item} from the player character's {@link Inventory}
+     * 
+     * @param item the item to be removed
+     */
+    public void dropItem(Item item) {
+        inventory.removeItem(item);
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public String description() {
-        return this.description;
+        return "the player, " + this.name;
     }
 
     /**
-     * {@link inheritDoc}
+     * {@inheritdoc}
      */
     public RenderRepresentation render() {
         return RenderRepresentation.CHARACTER;

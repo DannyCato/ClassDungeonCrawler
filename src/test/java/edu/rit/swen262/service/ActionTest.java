@@ -92,6 +92,6 @@ public class ActionTest {
                                             DisplayMenuType.MOVE, "dummy text");
         
         menuAction.performAction();
-        verify(spyGameState).displayMenu(DisplayMenuType.MOVE, "dummy text");
+        verify(spyGameState).displayMenu(DisplayMenuType.MOVE, "dummy text", null);
     }
 }

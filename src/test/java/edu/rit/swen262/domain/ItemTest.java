@@ -15,7 +15,7 @@ class ItemTest {
 
     @Test
     public void test_ItemConstructor() {
-        Gold gold = new Gold(10, 1);
+        Gold gold = new Gold(10);
         Item item = new MockItem("Item", "Description", gold);
 
         assertEquals(gold, gold.getValue());
@@ -26,7 +26,7 @@ class ItemTest {
 
     @Test
     public void test_ItemEquals() {
-        Gold gold = new Gold(10, 1);
+        Gold gold = new Gold(10);
         Item item = new MockItem("Item", "Description", gold);
         Item item2 = new MockItem("Item", "Description", gold);
 
@@ -36,7 +36,7 @@ class ItemTest {
 
     @Test
     public void test_ItemNotEquals() {
-        Gold gold = new Gold(10, 1);
+        Gold gold = new Gold(10);
         Item item = new MockItem("Item", "Description", gold);
         Item item2 = new MockItem("Cool Item", "Description", gold);
 

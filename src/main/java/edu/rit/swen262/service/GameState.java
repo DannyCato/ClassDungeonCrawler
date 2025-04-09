@@ -2,20 +2,25 @@ package edu.rit.swen262.service;
 
 import java.util.List;
 
+import edu.rit.swen262.domain.Armor;
+import edu.rit.swen262.domain.Attackable;
+import edu.rit.swen262.domain.Bag;
 import edu.rit.swen262.domain.DayTime;
 import edu.rit.swen262.domain.DirectionalVector;
+import edu.rit.swen262.domain.GameCharacter;
+import edu.rit.swen262.domain.Inventory;
+import edu.rit.swen262.domain.Item;
+import edu.rit.swen262.domain.Lootable;
 import edu.rit.swen262.domain.Occupant;
 import edu.rit.swen262.domain.PlayerCharacter;
-import edu.rit.swen262.domain.RenderRepresentation;
-import edu.rit.swen262.domain.DungeonPiece.DungeonPiece;
 import edu.rit.swen262.domain.DungeonPiece.Map;
 import edu.rit.swen262.domain.DungeonPiece.Room;
 import edu.rit.swen262.domain.DungeonPiece.Tile;
 import edu.rit.swen262.domain.TimePeriod;
+import edu.rit.swen262.domain.Weapon;
 import edu.rit.swen262.service.Action.DisplayMenuType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 
 /**
@@ -25,7 +30,7 @@ import java.util.HashSet;
  * 
  * @author Victor Bovat, Philip Rubbo
  */
-public class GameState implements IObservable {
+public class GameState implements IObservable, GameMediator {
     private List<GameObserver> observers;
     private PlayerCharacter player;
     private Map map;
@@ -152,32 +157,88 @@ public class GameState implements IObservable {
         GameEvent event = new GameEvent(GameEventType.TAKE_DAMAGE);
         event.addData("direction", direction);
         
+        //check if valid target found in attack direction on map, awaiting integration :(
+
+        // test enemy
+        PlayerCharacter recipient = new PlayerCharacter("target dummy", "a sword pincushion");
+
+        String attackMessage = recipient.getName() + " launched an attack on " + player.getName() + "!";
+        String dmgMessage = attackCharacter(player, recipient);
+
+        event.addData("attackMessage", attackMessage);
+        event.addData("dmgMessage", dmgMessage);
+
         this.notifyObservers(event);
         this.playerTurnFinished();
     }
-
-    /**
-     *  opens the inventory of the player character
+    
+    /** 
+     * handles combat between an initator attacking and a receiver "defending" the attack
+     * 
+     * @param initiator the character initiating combat and attacking
+     * @param receiver the character receiving the attack
      */
-    public void openInventory() {
-        //still waiting on integration w/ inventory subsystem
-        this.notifyObservers(null); 
+    public String attackCharacter(GameCharacter initiator, Attackable receiver) {
+        return receiver.takeDamage(initiator.getAttack());
+    }
+
+    /** 
+     * handles a player interacting with a lootable object
+     *
+     * @param player the Player Character attempting to loot the object
+     * @param lootObject object that is being looted by the Player Character
+     */
+    public void lootObject(PlayerCharacter player, Lootable lootObject) {
+        List<Item> loot = lootObject.takeLoot();
+
+        player.takeLoot(loot);
     }
     
     /**
-     * uses the item found in player character Inventory
+     * uses the item found in player character {@link Inventory}
      * 
-     * needs an @param item the player character is using
+     * @param item the item the player character is using
      */
-    public void useItem(String item) {
-        //still waiting on integration w/ inventory subsystem
-        //this.notifyObservers(new GameEvent(GameEventType.USE_ITEM)); 
+    public void useItem(Item item) {
+        String itemMsg = player.useItem(item);
+        GameEvent event = new GameEvent(GameEventType.USE_ITEM);
+        event.addData("item", item);
+        event.addData("message", itemMsg);
+
+        if (!(item instanceof Weapon) && !(item instanceof Armor)) {
+            player.dropItem(item);
+        }
+        
+        this.notifyObservers(event); 
     }
 
     /**
-     * disarms the trap found in a cardinal direction away from player character in room
+     * drops the item found in player character {@link Inventory}
      * 
-     * needs an @param trap the player character is deactivating in a cardinal direction
+     * @param item the item the player character is dropping
+     */
+    public void dropItem(Item item) {
+        GameEvent event = new GameEvent(GameEventType.DROP_ITEM);
+        event.addData("item", item);
+
+        player.dropItem(item);
+
+        this.notifyObservers(event); 
+    }
+
+    /**
+     * adds a single item to the {@link PlayerCharacter player's} {@link Inventory}
+     * @param item the item to be added to the inventory
+     */
+    public void pickUpItem(Item item) {
+        player.addItemToBag(item);
+    }
+
+    /**
+     * disarms the trap found in a cardinal direction away from the 
+     * {@link PlayerCharacter player character} in a {@link Room room}
+     * 
+     * @param trap the trap being deactivated adjacent to the player
      */
     public void disarmTrap(String trap) {
         this.notifyObservers(null); 
@@ -200,12 +261,15 @@ public class GameState implements IObservable {
      * 
      * @param menuType Enum value that dictates the type of menu
      * @param menuText String representation of all the actions the user can take
+     * @param menuPath optional
      */
-    public void displayMenu(DisplayMenuType menuType, String menuText) {
+    public void displayMenu(DisplayMenuType menuType, String menuText, List<Character> menuPath) {
         // build event with additional data of type + display text
         GameEvent event = new GameEvent(GameEventType.DISPLAY_SUBMENU);
         event.addData("menuType", menuType);
         event.addData("menuText", menuText);
+
+        event.addData("goldValue", 0);
 
         //update UI w/ menu
         this.notifyObservers(event);
@@ -254,5 +318,14 @@ public class GameState implements IObservable {
      */
     public int getTurnNumber() {
         return this.turnNumber;
+    }
+
+     /**
+     * fetches the {@link Inventory Inventory} of the current player
+     * 
+     * @return the a list of {@link Bag Bags} of the current player's inventory
+     */
+    public Inventory getInventory() {
+        return this.player.getInventory();
     }
 }

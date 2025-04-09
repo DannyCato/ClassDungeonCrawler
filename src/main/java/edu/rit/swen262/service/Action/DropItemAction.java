@@ -9,7 +9,7 @@ import edu.rit.swen262.service.GameState;
  * 
  * @author Victor Bovat, Philip Rubbo
  */
-public class UseItemAction implements Action {
+public class DropItemAction implements Action {
     private GameState gameState;
     private Item item;
 
@@ -17,9 +17,9 @@ public class UseItemAction implements Action {
      * instantiates a {@link Action concrete command} with the given {@link GameState}
      * 
      * @param gameState object containing the current state of the game
-     * @param item the item to be used by the player
+     * @param item the item to be dropped by the player
      */
-    public UseItemAction(GameState gameState, Item item) {
+    public DropItemAction(GameState gameState, Item item) {
         this.gameState = gameState;
         this.item = item;
     }
@@ -28,7 +28,7 @@ public class UseItemAction implements Action {
      * {@inheritDoc}
      */
     public void performAction() {
-        gameState.useItem(this.item);
+        gameState.dropItem(this.item);
     }
 
     /**
@@ -39,5 +39,3 @@ public class UseItemAction implements Action {
         return this.item.toString();
     }
 }
-
-
