@@ -14,8 +14,10 @@ import com.googlecode.lanterna.graphics.Theme;
 import com.googlecode.lanterna.gui2.BasicWindow;
 import com.googlecode.lanterna.gui2.Button;
 import com.googlecode.lanterna.gui2.Direction;
+import com.googlecode.lanterna.gui2.EmptySpace;
 import com.googlecode.lanterna.gui2.GridLayout;
 import com.googlecode.lanterna.gui2.Label;
+import com.googlecode.lanterna.gui2.LayoutData;
 import com.googlecode.lanterna.gui2.LinearLayout;
 import com.googlecode.lanterna.gui2.MultiWindowTextGUI;
 import com.googlecode.lanterna.gui2.Panel;
@@ -33,6 +35,7 @@ import ch.qos.logback.core.net.QueueFactory;
 import edu.rit.swen262.service.GameEvent;
 import edu.rit.swen262.service.GameEventType;
 import edu.rit.swen262.service.GameObserver;
+import edu.rit.swen262.service.GameSetupParser;
 import edu.rit.swen262.service.GameState;
 import edu.rit.swen262.service.InputParser;
 import edu.rit.swen262.service.Action.Action;
@@ -44,8 +47,16 @@ import edu.rit.swen262.service.Action.Action;
  * @author Victor Bovat
  */
 public class MUDGameUI implements GameObserver {
+    // invokers
+    private GameSetupParser setupParser;
     private InputParser inputParser;
+
+    // functional display components
+    private SwingTerminalFrame terminal;
+    private WindowBasedTextGUI textGUI;
     private Screen screen;
+
+    // data display elements
     private Label mapDisplay;
     private Label turnDisplay;
     private Label timeDisplay;
@@ -53,8 +64,18 @@ public class MUDGameUI implements GameObserver {
     private Queue<String> eventLogMsgs;
     private Label eventLogDisplay;
 
-    public MUDGameUI(InputParser inputParser) {
+    /**
+     * initiazes a new UI component which manages displaying all data and
+     * interactions involved with a single instance of the MUD Game
+     * 
+     * @param setupParser invoker which manages inputs regarding game setup
+     * @param inputParser invoker which manages inputs regarding gameplay
+     */
+    public MUDGameUI(GameSetupParser setupParser, InputParser inputParser) {
+        this.setupParser = setupParser;
         this.inputParser = inputParser;
+        //init map with placeholder to be replaced once startup is complete
+        this.mapDisplay = new Label("|..|" + "\n|..|");
         this.eventLogMsgs = new LinkedList<>();
     }
 
@@ -66,6 +87,9 @@ public class MUDGameUI implements GameObserver {
             case GameEventType.DISPLAY_SUBMENU:
                 //update status panel w/ menu options
                 this.redrawMenu(event.getData("menuText").toString());
+                break;
+            case GameEventType.UPDATE_MAP:
+                this.redrawMap(event.getData("currentRoom").toString());
                 break;
             case GameEventType.MOVE_PLAYER:
                 if (event.getData("direction") != null) {
@@ -106,13 +130,48 @@ public class MUDGameUI implements GameObserver {
     }
 
     /**
-     * starts a new game, initializing all relevent objects then taking control
-     * of the window to draw the starting game screen
+     * starts a new game, initializing all relevent objects (terminal, textGUI), sets the color
+     * theme, then takes control of the window to draw the starting game screen
      */
     public void start() {
-        System.out.println("game initialized!");
+        try {
+            /* create a Swing-based terminal emulator -- UNIX-based terminal
+            works, but seems to cause graphical errors based upon the system running it
+            */
+            this.terminal = new SwingTerminalFrame(
+                "MUD Game",
+                TerminalEmulatorAutoCloseTrigger.CloseOnExitPrivateMode
+            );
 
-        this.drawUI();
+            this.terminal.setVisible(true);
+
+            // create screen component
+            //DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory();
+            this.screen = new TerminalScreen(this.terminal);
+            this.screen.startScreen();
+
+            this.textGUI = new MultiWindowTextGUI(this.screen);
+
+            // set tui color scheme
+            Theme theme = SimpleTheme.makeTheme(
+                true,               
+                TextColor.ANSI.WHITE,             // normal foreground
+                TextColor.ANSI.BLACK,             // normal background
+                TextColor.ANSI.GREEN,             // editable foreground
+                TextColor.ANSI.BLACK_BRIGHT,              // editable background
+                TextColor.ANSI.GREEN_BRIGHT,             // focused foreground
+                TextColor.ANSI.BLACK_BRIGHT,       // focused background (highlight)
+                TextColor.ANSI.BLACK              // gui background
+            );
+
+            this.textGUI.setTheme(theme);
+
+            System.out.println("game initialized!");
+
+            this.drawStartUp();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -129,53 +188,75 @@ public class MUDGameUI implements GameObserver {
     }
 
     /**
+     * takes control of the console and draws the starting screen for the game,
+     * then boots up the main game's UI once setup is complete
+     */
+    private void drawStartUp() {
+        // set no shadow decorations for panels + full screen
+        Window.Hint[] windowHints = new Window.Hint[] {
+            Window.Hint.NO_DECORATIONS,
+            //Window.Hint.NO_POST_RENDERING,
+            Window.Hint.EXPANDED};
+
+        final Window window = new BasicWindow("Welcome!");
+        window.setHints(Arrays.asList(windowHints));
+
+        Panel contentPanel = new Panel();
+        LinearLayout layout = new LinearLayout(Direction.VERTICAL);
+        layout.setSpacing(1);
+        contentPanel.setLayoutManager(layout);
+        LayoutData centerLayoutData = LinearLayout.createLayoutData(LinearLayout.Alignment.Center);
+
+        Label welcomeLabel = new Label("Welcome, Adventurer!");
+        welcomeLabel.setLayoutData(centerLayoutData);
+
+        Label nameLabel = new Label("Enter your name before you plunge into the dungeons of MUD.");
+        nameLabel.setLayoutData(centerLayoutData);
+
+        TextBox nameBox = new TextBox().setPreferredSize(new TerminalSize(20, 1));
+        nameBox.setLayoutData(centerLayoutData);
+
+        Label descriptionLabel = new Label("Leave a few words behind--who are you?");
+        descriptionLabel.setLayoutData(centerLayoutData);
+
+        TextBox descriptionBox = new TextBox().setPreferredSize(new TerminalSize(40, 1));
+        descriptionBox.setLayoutData(centerLayoutData);
+
+        // fetch inputted name + description on submit
+        Button submitButton = new Button("Submit", () -> {
+            String playerName = nameBox.getText();
+            String playerDescription = descriptionBox.getText();
+            this.setupParser.setupPlayer(playerName, playerDescription);
+
+            window.close(); // close the name prompt window
+            drawUI(); // now start the main UI
+        });
+        submitButton.setLayoutData(centerLayoutData);
+
+        contentPanel.addComponent(welcomeLabel);
+
+        contentPanel.addComponent(nameLabel);
+        contentPanel.addComponent(nameBox);
+
+        contentPanel.addComponent(descriptionLabel);
+        contentPanel.addComponent(descriptionBox);
+
+        contentPanel.addComponent(submitButton);
+
+        window.setComponent(contentPanel);
+        this.textGUI.addWindowAndWait(window);
+    }
+
+    /**
      * takes control of the console and draws the main screen which displays all of the information currently
      * available to the player (map, turn number, etc.)
      */
     private void drawUI() {
-        this.screen = null;
-        this.turnDisplay = null;
-        this.timeDisplay = null;
-        this.mapDisplay = null;
-        this.menuDisplay = null;
-        this.eventLogDisplay = null;
-
         try {
-            /* create a Swing-based terminal window -- UNIX-based terminal
-            works, but seems to cause graphical errors based upon the system running it
-            */
-            SwingTerminalFrame terminal = new SwingTerminalFrame(
-                "MUD Game",
-                TerminalEmulatorAutoCloseTrigger.CloseOnExitPrivateMode
-            );
-    
-            terminal.setVisible(true);
-
-            // create screen component
-            //DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory();
-            this.screen = new TerminalScreen(terminal);
-            this.screen.startScreen();
-
-            final WindowBasedTextGUI textGUI = new MultiWindowTextGUI(this.screen);
-
-            // set tui color scheme
-            Theme theme = SimpleTheme.makeTheme(
-                true,               
-                TextColor.ANSI.WHITE,             // normal foreground
-                TextColor.ANSI.BLACK,             // normal background
-                TextColor.ANSI.GREEN,             // editable foreground
-                TextColor.ANSI.BLACK_BRIGHT,              // editable background
-                TextColor.ANSI.GREEN_BRIGHT,             // Focused foreground
-                TextColor.ANSI.BLACK_BRIGHT,       // Focused background (highlight)
-                TextColor.ANSI.BLACK              // GUI background
-            );
-
-            textGUI.setTheme(theme);
-
             // set no shadow decorations for panels + full screen
             Window.Hint[] windowHints = new Window.Hint[] {
                 Window.Hint.NO_DECORATIONS,
-                Window.Hint.NO_POST_RENDERING,
+                //Window.Hint.NO_POST_RENDERING,
                 Window.Hint.EXPANDED};
 
             final Window window = new BasicWindow("MUD Game");
@@ -208,7 +289,6 @@ public class MUDGameUI implements GameObserver {
 
             // create panel displaying map
             Panel mapPanel = new Panel(new GridLayout(2));
-            this.mapDisplay = new Label("|..|" + "\n|..|");
             mapPanel.addComponent(this.mapDisplay);
 
             // create panel recieving input (spans entire screen)
@@ -254,9 +334,7 @@ public class MUDGameUI implements GameObserver {
             window.setComponent(contentPanel.setLayoutData(
                 GridLayout.createLayoutData(GridLayout.Alignment.CENTER, GridLayout.Alignment.CENTER)));
 
-            textGUI.addWindowAndWait(window);
-        } catch (IOException e) {
-            e.printStackTrace();
+            this.textGUI.addWindowAndWait(window);
         } finally {
             // if control over the window has not already been yielded, do so
             if(this.screen != null) {

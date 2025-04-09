@@ -1,9 +1,13 @@
 package edu.rit.swen262.domain;
 
+import edu.rit.swen262.service.InventoryVisitor;
+
 public interface InventoryComponent {
-    String getName();
+    public String getName();
 
-    String getDescription();
+    public String getDescription();
 
-    Gold getValue();
+    public Gold getValue();
+
+    public void accept(InventoryVisitor visitor);
 }

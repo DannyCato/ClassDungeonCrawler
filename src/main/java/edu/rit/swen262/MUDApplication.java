@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Profile;
 
 import edu.rit.swen262.domain.DirectionalVector;
 import edu.rit.swen262.domain.PlayerCharacter;
+import edu.rit.swen262.service.GameSetupParser;
 import edu.rit.swen262.service.GameState;
 import edu.rit.swen262.service.InputParser;
 import edu.rit.swen262.service.MenuState;
@@ -23,6 +24,7 @@ import edu.rit.swen262.service.Action.DisplayMenuAction;
 import edu.rit.swen262.service.Action.DisplayMenuType;
 import edu.rit.swen262.service.Action.MoveAction;
 import edu.rit.swen262.service.Action.QuitGameAction;
+import edu.rit.swen262.service.Action.SetPlayerAction;
 import edu.rit.swen262.ui.MUDGameUI;
 
 @SpringBootApplication
@@ -79,15 +81,20 @@ class SampleCommandLineRunner implements CommandLineRunner {
 			put('8', new AttackAction(gameState, DirectionalVector.NORTHWEST));
 		}};
 
-		/*inv command map should change based upon what's in the inventory?
+		/*
+		 inv command map should change based upon what's in the inventory?
 		 AKA Bags/Individual Items
-
-		 (generation of these maps may need to move to another class depending upon
-		 integraton)
 		 */
 		HashMap<Character, Action> inventoryKeystrokes = new HashMap<>() {{
-			// put('1', new UseItemAction(gameState, "North East"));
-			// put('2', new UseItemAction(gameState, "North"));
+
+		}};
+
+		HashMap<Character, Action> bagKeystrokes = new HashMap<>() {{
+
+		}};
+
+		HashMap<Character, Action> itemKeystrokes = new HashMap<>() {{
+
 		}};
 
 		String moveMenuString = this.buildMenuString(moveKeystrokes);
@@ -105,6 +112,7 @@ class SampleCommandLineRunner implements CommandLineRunner {
 		keystrokes.put(MenuState.MOVE, moveKeystrokes);
 		keystrokes.put(MenuState.ATTACK, attackKeystrokes);
 		keystrokes.put(MenuState.INVENTORY, inventoryKeystrokes);
+		keystrokes.put(MenuState.BAG, bagKeystrokes);
 
 		return keystrokes;
 	}
@@ -146,10 +154,14 @@ class SampleCommandLineRunner implements CommandLineRunner {
 		GameState gameState = new GameState(player);
 
 		HashMap<MenuState, HashMap<Character, Action>> keystrokes = this.bindCommands(gameState);
-		
+		SetPlayerAction setPlayer = new SetPlayerAction(gameState, player);
+
 		InputParser inputParser = new InputParser(keystrokes);
-		MUDGameUI client = new MUDGameUI(inputParser);
+		GameSetupParser setupParser = new GameSetupParser(setPlayer);
+
+		MUDGameUI client = new MUDGameUI(setupParser, inputParser);
 		gameState.register(client);
+		gameState.updateMap();
 
 		client.start();
 	}
