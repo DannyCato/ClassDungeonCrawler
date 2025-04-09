@@ -9,9 +9,12 @@ import java.util.Random;
 import java.util.Arrays;
 import java.util.List;
 
+import edu.rit.swen262.domain.Chest;
+import edu.rit.swen262.domain.CreateItemFactory;
 import edu.rit.swen262.domain.DirectionalVector;
 import edu.rit.swen262.domain.Enemy;
 import edu.rit.swen262.domain.Exit;
+import edu.rit.swen262.domain.Merchant;
 import edu.rit.swen262.domain.Obstacle;
 import edu.rit.swen262.domain.Occupant;
 import edu.rit.swen262.domain.DungeonPiece.DungeonPiece;
@@ -86,10 +89,16 @@ public class RoomFiller {
             } else {
                 Occupant o = null;
                 if (chance < obstacleChance) {
-                    if (RAND.nextBoolean()) {
+                    boolean choiceA = RAND.nextBoolean();
+                    boolean choiceB = RAND.nextBoolean();
+                    if (!choiceA && !choiceB) {
                         o = new Obstacle("");
-                    } else {
+                    } else if (choiceA && !choiceB) {
                         o = generateEnemy();
+                    } else if (!choiceA && choiceB) {
+                        o = generateMerchant();
+                    } else {
+                        o = generateChest();
                     }
                 }
                 t = new Tile(o);
@@ -118,6 +127,33 @@ public class RoomFiller {
                                                 "Hydra", "Griffin", "Minotaur", "Chimera", "Harpy");
         String name = names.get(RAND.nextInt(names.size()));
         return new Enemy(name, RAND.nextInt(101), RAND.nextInt(50), RAND.nextInt(50));
+    }
+
+    /**
+     * Generates a random merchant, with a random description chosen from the list
+     *  - Grizzled dwarf with scorched robes, sells rare potions brewed from questionable mushrooms.
+     *  - Mysterious figure in a hooded cloak, trades cursed relics for forgotten secrets.
+     *  - Chirpy goblin vendor with a wheeled cart, hawking shiny junk and genuine treasures.
+     *  - Blindfolded elf whispering deals, offers enchanted gear at a price beyond gold.
+     *  - Rusty automaton merchant, sputtering steam, selling salvaged weapons and cryptic blueprints.
+     * @return a new Merchant object
+     */
+    private static Occupant generateMerchant() {
+        List<String> descriptions = Arrays.asList(
+        "Grizzled dwarf with scorched robes, sells rare potions brewed from questionable mushrooms.",
+            "Mysterious figure in a hooded cloak, trades cursed relics for forgotten secrets.",
+            "Chirpy goblin vendor with a wheeled cart, hawking shiny junk and genuine treasures.",
+            "Blindfolded elf whispering deals, offers enchanted gear at a price beyond gold.",
+            "Rusty automaton merchant, sputtering steam, selling salvaged weapons and cryptic blueprints.");
+        String description = descriptions.get(RAND.nextInt(descriptions.size()));
+        return new Merchant(description);
+    }
+
+    private static Occupant generateChest() {
+        CreateItemFactory factory = new CreateItemFactory();
+        Chest chest = new Chest(new ArrayList<>(), 6, "CHEST.");
+        chest.generateChest(factory);
+        return chest;
     }
 
 /**
