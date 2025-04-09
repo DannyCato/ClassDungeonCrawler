@@ -104,14 +104,12 @@ public class MUDGameUI implements GameObserver {
                 Object interactData = event.getData("interactData");
                 if (interactData != null) {
                     InteractionResult interactActions = (InteractionResult) interactData;
-                    
+
                     inputParser.addInteractionMenu(interactActions);
-                    System.out.println("interactable update, " + interactActions.getDefaultKeystroke());
-                    this.redrawMenuDefault();
+                    this.redrawMenuDefault(interactActions.getDefaultMenuString());
                 } else {
-                    this.redrawMenuDefault();
+                    this.redrawMenuDefault("");
                 }
-                
                 
                 Object endGameData = event.getData("canEndGame");
                 if (endGameData != null) {
@@ -138,7 +136,7 @@ public class MUDGameUI implements GameObserver {
                 this.eventLogMsgs.offer((String) event.getData("dmgMessage"));
                 
                 this.redrawEventLog();
-                this.redrawMenuDefault();
+                this.redrawMenuDefault("");
                 break;
             case USE_ITEM:
                 Item usedItem = (Item) event.getData("item");
@@ -147,14 +145,14 @@ public class MUDGameUI implements GameObserver {
                 this.eventLogMsgs.offer(itemMsg);
                 
                 this.redrawEventLog();
-                this.redrawMenuDefault();
+                this.redrawMenuDefault("");
                 break;
             case DROP_ITEM:
                 Item droppedItem = (Item) event.getData("item");
                 this.eventLogMsgs.offer("You dropped the " + droppedItem.getName() + "!");
                 
                 this.redrawEventLog();
-                this.redrawMenuDefault();
+                this.redrawMenuDefault("");
                 break;
             case QUIT_GAME:
                 this.stop();
@@ -334,7 +332,7 @@ public class MUDGameUI implements GameObserver {
             // create panel displaying current menu of possible actions to select
             Panel menuPanel = new Panel(new GridLayout(1));
             this.menuDisplay = new Label("");
-            this.redrawMenuDefault();
+            this.redrawMenuDefault("");
             menuPanel.addComponent(this.menuDisplay);
 
             /* TextBox won't clear text + update statusDisplay unless 
@@ -447,15 +445,19 @@ public class MUDGameUI implements GameObserver {
 
     /**
      * updates the menu display to the default list of actions
+     * 
+     * @param optionString optional String contaning new actions to add to display
      */
-    private void redrawMenuDefault() {
-        String defaultOptions = """
+    private void redrawMenuDefault(String optionString) {
+        StringBuilder sb = new StringBuilder("""
                 [m] Move
                 [a] Attack
                 [i] Open inventory
                 [q] Quit
-                """;
-        this.redrawMenu(defaultOptions);
+                """);
+
+        sb.append(optionString);
+        this.redrawMenu(sb.toString());
     }
 
     /**

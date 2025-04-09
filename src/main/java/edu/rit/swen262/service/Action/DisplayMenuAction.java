@@ -73,6 +73,6 @@ public class DisplayMenuAction implements Action {
 
     @Override
     public String toString() {
-        return this.menuText;
+        return this.menuType.toString();
     }
 }

@@ -193,25 +193,20 @@ public class GameState implements IObservable, GameMediator {
         GameEvent event = new GameEvent(GameEventType.MOVE_PLAYER);
 
         this.map.move(player, direction);
+
+        //check if player has entered the goal room + notify user
         if (this.map.canEndGame(this.player)) {
             event.addData("canEndGame", true);  
             event.addData("playerName", this.player.getName());
             event.addData("playerDescription", this.player.description());    
         }
 
-        Tile currentTile = (Tile) this.map.getTileOf(player);
-        Collection<Occupant> tileOccupants = currentTile.getOccupants();
-        System.out.println(tileOccupants.toString());
-
-        if (!tileOccupants.isEmpty()) {
-            for (Occupant o : tileOccupants) {
-                if (!(o instanceof PlayerCharacter)) {
-                    InteractionActionFactory factory = factoryMap.get(o.getClass());
-                    InteractionResult result = factory.createInteractionCommands(this, this.player, o);
-                    System.out.println(result.getDefaultKeystroke());
-                    event.addData("interactData", result);
-                }
-            }
+        /* check current tile player is on for interactable occupants and add optional 
+         * interaction data
+        */
+        InteractionResult interactAction = this.getCurrentTileActions();
+        if (interactAction != null) {
+            event.addData("interactData", interactAction);
         }
         
         //convert current Room to String render, then pass along to UI
@@ -224,6 +219,24 @@ public class GameState implements IObservable, GameMediator {
         this.notifyObservers(event);
 
         this.playerTurnFinished();
+    }
+
+    private InteractionResult getCurrentTileActions() {
+        Tile currentTile = (Tile) this.map.getTileOf(player);
+        Collection<Occupant> tileOccupants = currentTile.getOccupants();
+
+        if (!tileOccupants.isEmpty()) {
+            for (Occupant o : tileOccupants) {
+                if (!(o instanceof PlayerCharacter)) {
+                    InteractionActionFactory factory = factoryMap.get(o.getClass());
+                    InteractionResult result = factory.createInteractionCommands(this, this.player, o);
+                    
+                    return result;
+                }
+            }
+        }
+
+        return null;
     }
 
     /**

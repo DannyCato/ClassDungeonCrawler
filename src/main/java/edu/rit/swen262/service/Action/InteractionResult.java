@@ -12,6 +12,7 @@ import java.util.HashMap;
  */
 public class InteractionResult {
     private Character defaultKeystroke;
+    private String defaultMenuString;
     private Action menuAction;
     private HashMap<Character, Action> keystrokeMap;
 
@@ -19,6 +20,8 @@ public class InteractionResult {
         this.defaultKeystroke = defaultKeystroke;
         this.menuAction = menuAction;
         this.keystrokeMap = keystrokeMap;
+
+        this.defaultMenuString = String.format("[%s] %s", defaultKeystroke, this.menuAction);
     }
 
     public Action getAction() {
@@ -31,5 +34,9 @@ public class InteractionResult {
 
     public Character getDefaultKeystroke() {
         return this.defaultKeystroke;
+    }
+
+    public String getDefaultMenuString() {
+        return this.defaultMenuString;
     }
 }
