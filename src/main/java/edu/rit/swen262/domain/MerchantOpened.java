@@ -24,7 +24,7 @@ public class MerchantOpened implements MerchantForm {
         if (cost.getCount() <= budget.getCount()) {
             String result = player.addItemToBag(wanted);
             
-            if (!(result == "Inventory full!")) {
+            if (result != "Inventory full!") {
                 budget.setCount(budget.getCount() - cost.getCount());
             }
 

@@ -117,6 +117,10 @@ public class Merchant implements Occupant{
         if (result == null) {
             return "Shop is closed.";
         }
+        else if (result != "Inventory full!") {
+            list.remove(index);
+            generateStoreItems();
+        }
 
         return result;
     }
