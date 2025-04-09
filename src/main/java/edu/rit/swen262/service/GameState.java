@@ -122,7 +122,7 @@ public class GameState implements IObservable, GameMediator {
         // newMap.addRoom(room8, goal, DirectionalVector.WEST, true);
         
         RoomFiller.fill(root, 0.1);
-        RoomFiller.fill(room2, 0.1);
+        RoomFiller.fill(room2, 0.15);
         // RoomFiller.fill(room3, 0.1);
         // RoomFiller.fill(room4, 0.1);
         // RoomFiller.fill(room5, 0.1);

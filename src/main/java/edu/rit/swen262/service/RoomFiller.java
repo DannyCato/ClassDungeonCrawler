@@ -17,6 +17,7 @@ import edu.rit.swen262.domain.Exit;
 import edu.rit.swen262.domain.Merchant;
 import edu.rit.swen262.domain.Obstacle;
 import edu.rit.swen262.domain.Occupant;
+import edu.rit.swen262.domain.Trap;
 import edu.rit.swen262.domain.DungeonPiece.DungeonPiece;
 import edu.rit.swen262.domain.DungeonPiece.Room;
 import edu.rit.swen262.domain.DungeonPiece.RoomNode;
@@ -93,16 +94,17 @@ public class RoomFiller {
             } else {
                 Occupant o = null;
                 if (chance < obstacleChance) {
-                    boolean choiceA = RAND.nextBoolean();
-                    boolean choiceB = RAND.nextBoolean();
-                    if (!choiceA && !choiceB) {
+                    int choice = RAND.nextInt(5);
+                    if (choice == 0) {
                         o = new Obstacle("");
-                    } else if (choiceA && !choiceB) {
+                    } else if (choice == 1) {
                         o = generateEnemy();
-                    } else if (!choiceA && choiceB) {
+                    } else if (choice == 2) {
                         o = generateMerchant();
-                    } else {
+                    } else if (choice == 3) {
                         o = generateChest();
+                    } else {
+                        o = new Trap(RAND.nextInt(51));
                     }
                 }
                 t = new Tile(o);
