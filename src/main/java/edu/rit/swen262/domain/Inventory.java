@@ -155,7 +155,13 @@ public class Inventory implements ItemComponent {
     * @return The {@link Gold Gold} Value of the inventory
     */
     public Gold getValue() {
-        return new Gold(0);
+        int totalVal = 0;
+        
+        for (Bag bag : bags) {
+            totalVal += bag.getValue().getCount();
+        }
+
+        return new Gold(totalVal);
     }
     
     /**

@@ -31,6 +31,9 @@ public class UseItemAction implements Action {
         gameState.useItem(this.item);
     }
 
+    /**
+     * returns the toString
+     */
     @Override
     public String toString() {
         return this.item.toString();

@@ -1,5 +1,8 @@
 package edu.rit.swen262.service.Action;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.rit.swen262.service.GameState;
 import edu.rit.swen262.ui.MUDGameUI;
 
@@ -13,7 +16,9 @@ public class DisplayMenuAction implements Action {
     private GameState gameState;
     private DisplayMenuType menuType;
     private String menuText;
-
+    // list of keystrokes to navigate to this menu
+    private List<Character> menuPath;
+    
     /**
      * instantiates a {@link Action concrete command} with the given 
      * {@link GameState}, {@link DisplayMenuType menu display type},
@@ -63,6 +68,6 @@ public class DisplayMenuAction implements Action {
      */
     @Override
     public void performAction() {
-        gameState.displayMenu(this.menuType, this.menuText);
+        gameState.displayMenu(this.menuType, this.menuText, this.menuPath);
     }
 }

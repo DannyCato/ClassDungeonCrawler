@@ -49,6 +49,9 @@ public class MoveAction implements Action {
         return this.direction;
     }
 
+    /**
+     * returns the toString
+     */
     @Override
     public String toString() {
         return this.direction.toString();

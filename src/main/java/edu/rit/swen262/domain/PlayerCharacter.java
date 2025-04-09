@@ -5,9 +5,9 @@ import java.util.List;
 
 /**
  * represents the Player Character traveling through the dungeon, extends the
- * {@link Character}
+ * {@link GameCharacter}
  */
-public class PlayerCharacter extends Character {
+public class PlayerCharacter extends GameCharacter {
     Armor armor;
     Weapon weapon;
     Inventory inventory;
@@ -164,14 +164,13 @@ public class PlayerCharacter extends Character {
         return "Inventory full!";
     }
 
-    public void lootChest(Chest chest) {
-        for (Item item : chest.getContents()) {
+    public void takeLoot(List<Item> contents) {
+        for (Item item : contents) {
             addItemToBag(item);
         }
-        //chest.getContents().clear();
     }
 
-    public List<Item> getCorpse() {
+    public List<Item> getLoot() {
         if (getHealth() > 0) {
             return null;
         }
@@ -191,9 +190,9 @@ public class PlayerCharacter extends Character {
     }
 
     public void lootCorpse(PlayerCharacter player) {
-        List<Item> items = player.getCorpse();
+        List<Item> items = player.getLoot();
         for (Item item : items) {
-        addItemToBag(item);
+            addItemToBag(item);
         }
     }
 

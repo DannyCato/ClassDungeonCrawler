@@ -3,28 +3,37 @@ package edu.rit.swen262.domain;
 import java.util.List;
 import java.util.Random;
 
-public class Chest implements Occupant {
+import edu.rit.swen262.service.GameMediator;
+
+public class Chest implements Occupant, Lootable {
+    private GameMediator mediator;
 
     private List<Item> contents;
     private int capacity;
     private String description;
     private Random r = new Random();
 
-    public Chest(List<Item> contents, int capacity, String description) {
+
+    /*
+     * 
+     * Chest Constructor
+     */
+    public Chest(List<Item> contents, int capacity) {
         this.contents = contents;
         this.capacity = capacity;
         this.description = description;
         generateChest(new CreateItemFactory());
     }
 
+    /**
+     * 
+     * @return the contents of Chest object
+     */
     public List<Item> getContents() {
         return this.contents;
     }
 
-    public int getCapacity() {
-        return this.capacity;
-    }
-
+    // Needs docustring
     public void generateChest(CreateItemFactory factory) {
 
         int maxItems = r.nextInt(5) + 1;
@@ -56,6 +65,18 @@ public class Chest implements Occupant {
                 }
             }
         }
+    }
+
+    public List<Item> takeLoot() {
+        return this.contents;
+    }
+
+    public void setMediator(GameMediator mediator) {
+        this.mediator = mediator;
+    }
+
+    public int getCapacity() {
+        return this.capacity;
     }
 
     @Override
