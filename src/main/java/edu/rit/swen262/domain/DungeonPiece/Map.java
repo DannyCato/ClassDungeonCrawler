@@ -128,6 +128,14 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
         return currentRoom;
     }
 
+    public DungeonPiece<Tile> getTileOf(Occupant o) {
+        return ((Room) this.currentRoom).getTileOfOccupant(o);
+    }
+
+    public DungeonPiece<Tile> getTileByIndex(int i) {
+        return ((Room) this.currentRoom).getTileByIndex(i);
+    }
+
     /**
      * Checks if there is a connection from the current {@link Room} in the specified {@link DirectionalVector}.
      *

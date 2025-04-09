@@ -5,12 +5,14 @@ import java.util.List;
 import edu.rit.swen262.domain.Armor;
 import edu.rit.swen262.domain.Attackable;
 import edu.rit.swen262.domain.Bag;
+import edu.rit.swen262.domain.Chest;
 import edu.rit.swen262.domain.DayTime;
 import edu.rit.swen262.domain.DirectionalVector;
 import edu.rit.swen262.domain.GameCharacter;
 import edu.rit.swen262.domain.Inventory;
 import edu.rit.swen262.domain.Item;
 import edu.rit.swen262.domain.Lootable;
+import edu.rit.swen262.domain.Merchant;
 import edu.rit.swen262.domain.Occupant;
 import edu.rit.swen262.domain.PlayerCharacter;
 import edu.rit.swen262.domain.DungeonPiece.Map;
@@ -18,9 +20,16 @@ import edu.rit.swen262.domain.DungeonPiece.Room;
 import edu.rit.swen262.domain.DungeonPiece.Tile;
 import edu.rit.swen262.domain.TimePeriod;
 import edu.rit.swen262.domain.Weapon;
+import edu.rit.swen262.service.Action.Action;
 import edu.rit.swen262.service.Action.DisplayMenuType;
+import edu.rit.swen262.service.Action.InteractionActionFactory;
+import edu.rit.swen262.service.Action.InteractionResult;
+import edu.rit.swen262.service.Action.LootableActionFactory;
+import edu.rit.swen262.ui.MUDGameUI;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 
 /**
@@ -32,10 +41,10 @@ import java.util.HashSet;
  */
 public class GameState implements IObservable, GameMediator {
     private static ArrayList<GameState> gameStates = new ArrayList<>() ;
-
     private List<GameObserver> observers;
     private PlayerCharacter player;
     private Map map;
+    private HashMap<Class<?>, InteractionActionFactory> factoryMap;
     private int turnNumber;
     private TimePeriod currentTime;
 
@@ -52,6 +61,11 @@ public class GameState implements IObservable, GameMediator {
         this.player = player;
         this.map = this.buildMap();
         this.map.bindNewGameObserversInRoom();
+
+        this.factoryMap = new HashMap<Class<?>, InteractionActionFactory>() {{
+            put(Chest.class, new LootableActionFactory());
+        }};
+
         this.turnNumber = 1;
         this.setTime(new DayTime(this));
     }
@@ -135,6 +149,11 @@ public class GameState implements IObservable, GameMediator {
         RoomFiller.fill(goal, 0.1);
         
         Tile startTile = (Tile)newMap.startUp();
+
+        // chest placement testing, ignore!
+        Tile chestTile = (Tile) newMap.getTileByIndex(2);
+        Chest chest = new Chest(new ArrayList<>(), 3);
+        chestTile.addOccupant(chest);
         
         startTile.addOccupant(this.player);
 
@@ -178,6 +197,21 @@ public class GameState implements IObservable, GameMediator {
             event.addData("canEndGame", true);  
             event.addData("playerName", this.player.getName());
             event.addData("playerDescription", this.player.description());    
+        }
+
+        Tile currentTile = (Tile) this.map.getTileOf(player);
+        Collection<Occupant> tileOccupants = currentTile.getOccupants();
+        System.out.println(tileOccupants.toString());
+
+        if (!tileOccupants.isEmpty()) {
+            for (Occupant o : tileOccupants) {
+                if (!(o instanceof PlayerCharacter)) {
+                    InteractionActionFactory factory = factoryMap.get(o.getClass());
+                    InteractionResult result = factory.createInteractionCommands(this, this.player, o);
+                    System.out.println(result.getDefaultKeystroke());
+                    event.addData("interactData", result);
+                }
+            }
         }
         
         //convert current Room to String render, then pass along to UI

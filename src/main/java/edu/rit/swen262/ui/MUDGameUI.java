@@ -40,6 +40,7 @@ import edu.rit.swen262.service.GameSetupParser;
 import edu.rit.swen262.service.GameState;
 import edu.rit.swen262.service.InputParser;
 import edu.rit.swen262.service.Action.Action;
+import edu.rit.swen262.service.Action.InteractionResult;
 
 /**
  * The class responsible for rendering the current state of the MUD game to
@@ -99,8 +100,19 @@ public class MUDGameUI implements GameObserver {
                     this.redrawEventLog();
                 }
                 this.redrawMap(event.getData("currentRoom").toString());
-                this.redrawMenuDefault();
-
+                
+                Object interactData = event.getData("interactData");
+                if (interactData != null) {
+                    InteractionResult interactActions = (InteractionResult) interactData;
+                    
+                    inputParser.addInteractionMenu(interactActions);
+                    System.out.println("interactable update, " + interactActions.getDefaultKeystroke());
+                    this.redrawMenuDefault();
+                } else {
+                    this.redrawMenuDefault();
+                }
+                
+                
                 Object endGameData = event.getData("canEndGame");
                 if (endGameData != null) {
                     boolean canEndGame = (Boolean) endGameData;

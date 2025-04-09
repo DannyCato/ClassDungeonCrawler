@@ -70,4 +70,9 @@ public class DisplayMenuAction implements Action {
     public void performAction() {
         gameState.displayMenu(this.menuType, this.menuText, this.menuPath);
     }
+
+    @Override
+    public String toString() {
+        return this.menuText;
+    }
 }

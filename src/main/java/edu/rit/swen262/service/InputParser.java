@@ -4,11 +4,16 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
 
+import org.jline.utils.Display;
+
+import com.googlecode.lanterna.gui2.Interactable;
+
 import edu.rit.swen262.domain.Bag;
 import edu.rit.swen262.domain.Inventory;
 import edu.rit.swen262.service.Action.Action;
 import edu.rit.swen262.service.Action.SetPlayerAction;
 import edu.rit.swen262.service.Action.DisplayMenuAction;
+import edu.rit.swen262.service.Action.InteractionResult;
 
 /**
  * A class which parses input from the user while the game is running, 
@@ -128,5 +133,17 @@ public class InputParser {
     private Character getSecondLast() {
         if (keystrokeHistory.size() < 2) return null;
         return keystrokeHistory.toArray(new Character[0])[keystrokeHistory.size() - 2]; // Second last keystroke
+    }
+
+    public void addInteractionMenu(InteractionResult result) {
+        if (!(result.getAction() instanceof DisplayMenuAction)) {
+            return;
+        }
+
+        DisplayMenuAction menuAction = (DisplayMenuAction) result.getAction();
+        MenuState menuState = MenuState.valueOf(menuAction.getMenuType().toString());
+
+        keystrokes.get(MenuState.DEFAULT).put(result.getDefaultKeystroke(), menuAction);
+        keystrokes.put(menuState, result.getKeystrokes());
     }
 }

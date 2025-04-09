@@ -55,6 +55,12 @@ public enum MenuState {
         public void handleInput(InputParser p, char keystroke) {
             p.setMenu(DEFAULT);
         }
+    },
+    CHEST {
+        @Override
+        public void handleInput(InputParser p, char keystroke) {
+            p.setMenu(DEFAULT);
+        }
     };
     public abstract void handleInput(InputParser p, char keystroke);
 }

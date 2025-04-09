@@ -12,5 +12,6 @@ public enum DisplayMenuType {
     INVENTORY,
     BAG,
     ITEM,
+    CHEST,
     TRAP
 }
