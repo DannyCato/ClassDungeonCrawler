@@ -16,7 +16,7 @@ import java.util.Comparator;
  * @author Danny Catorcini
  */
 public enum RenderRepresentation implements Comparator<RenderRepresentation> {
-    CHARACTER('c', false, 10),
+    CHARACTER('p', false, 10),
     ENEMY('e', false, 5),
     EXIT('X'),
     OBSTACLE('B', false),
