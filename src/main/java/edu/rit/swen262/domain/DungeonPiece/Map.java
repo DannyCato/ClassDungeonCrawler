@@ -8,6 +8,8 @@ import edu.rit.swen262.domain.DirectionalVector;
 import edu.rit.swen262.domain.Exit;
 import edu.rit.swen262.domain.Occupant;
 import edu.rit.swen262.domain.RenderRepresentation;
+import edu.rit.swen262.service.GameObserver;
+import edu.rit.swen262.service.GameState;
 
 /**
  * A representation of {@link Map} {@link DungeonPiece} a composite of {@link Room Rooms}
@@ -26,6 +28,8 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
     private DungeonPiece<Room> currentRoom;
 
     private boolean goalReached = false;
+
+    private Collection<GameObserver> gos = new HashSet<>() ;
 
     // <-----------------------Constructors----------------------->
 
@@ -165,7 +169,7 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
         if (!canExitRoom(dir)) { // if they can exit from the direction given
             return false;
         }
-        Tile exitTile = (Tile)r.getTileOfOccpant(o);
+        Tile exitTile = (Tile)r.getTileOfOccupant(o);
         Occupant thisExit = exitTile.getPermanentOccupant();
         if (!(thisExit instanceof Exit)) { // if the permanent occupant is an exit then pass
             return false;
@@ -185,6 +189,7 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
         exitTile.removeOccupant(o); // finally do process
         otherTile.addOccupant(o);
         currentRoom = otherRoom;
+        bindNewGameObserversInRoom();
         if (playerOnGoal()) {
             this.goalReached = true;
         }
@@ -207,6 +212,20 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
         return startTile;
     }
 
+    /**
+     * This binds new {@link GameObserver GameObservers} that work on a {@link Room}-Level
+     */
+    private void bindNewGameObserversInRoom() {
+        GameState gs = GameState.getGameStateByMap(this) ;
+        for (GameObserver go : gos) {
+            gs.deregister(go);
+        }
+        for (Occupant o : getOccupants()) {
+            if (o instanceof GameObserver) {
+                gs.register((GameObserver) o);
+            }
+        }        
+    }
 
     /**
      * Checks if the player has reached the goal {@link Room}.
