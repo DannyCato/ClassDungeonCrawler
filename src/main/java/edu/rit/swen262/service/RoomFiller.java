@@ -25,6 +25,10 @@ import edu.rit.swen262.domain.DungeonPiece.Tile;
 public class RoomFiller {
     private static final Random RAND = RandomInstance.instance();
 
+    static {
+        RAND.setSeed(9);
+    }
+
 /**
  * Generates an exit {@link Tile} if the current position matches the midpoint.
  *
@@ -57,8 +61,8 @@ public class RoomFiller {
         int size = room.height * room.width;
         
         ArrayList<RoomNode> rns = originalRoom.getRoomNode().getAllConnections();
-        int midWidth = (int) Math.ceil(room.width/2.0) ;
-        int midHeight = (int) Math.ceil(room.height/2.0) ;
+        int midWidth = (int) Math.ceil(room.width/2.0);
+        int midHeight = (int) Math.ceil(room.height/2.0);
         
         for (int i = 0; i < size; i++) {
             int currentWidth = i % room.width;

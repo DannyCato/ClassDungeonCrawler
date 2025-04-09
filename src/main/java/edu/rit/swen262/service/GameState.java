@@ -132,7 +132,7 @@ public class GameState implements IObservable, GameMediator {
         // RoomFiller.fill(room9, 0.1);
         // RoomFiller.fill(room10, 0.1);
         // RoomFiller.fill(room11, 0.1);
-        RoomFiller.fill(goal, 0.1);
+        RoomFiller.fill(goal, 0.0);
         
         Tile startTile = (Tile)newMap.startUp();
         
