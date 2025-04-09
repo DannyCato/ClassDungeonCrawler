@@ -12,12 +12,34 @@ public class Chest implements Occupant, Lootable {
     private int capacity;
     private Random r = new Random();
 
+
+    /*
+     * 
+     * Chest Constructor
+     */
     public Chest(List<Item> contents, int capacity) {
         this.contents = contents;
         this.capacity = capacity;
         generateChest(new CreateItemFactory());
     }
 
+    /**
+     * 
+     * @return the contents of Chest object
+     */
+    public List<Item> getContents() {
+        return this.contents;
+    }
+
+    /**
+     * 
+     * @return the capacity of the chest
+     */
+    public int getCapacity() {
+        return this.capacity;
+    }
+
+    // Needs docustring
     public void generateChest(CreateItemFactory factory) {
 
         int maxItems = r.nextInt(5) + 1;

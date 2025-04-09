@@ -31,6 +31,9 @@ public class DropItemAction implements Action {
         gameState.dropItem(this.item);
     }
 
+    /**
+     * returns the toString
+     */
     @Override
     public String toString() {
         return this.item.toString();

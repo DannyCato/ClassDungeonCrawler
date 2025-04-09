@@ -149,10 +149,22 @@ public class GameState implements IObservable, GameMediator {
         this.notifyObservers(event);
     }
     
+    /** 
+     * handles combat between an initator attacking and a receiver "defending" the attack
+     * 
+     * @param initiator the character initiating combat and attacking
+     * @param receiver the character receiving the attack
+     */
     public String attackCharacter(GameCharacter initiator, Attackable receiver) {
         return receiver.takeDamage(initiator.getAttack());
     }
 
+    /** 
+     * handles a player interacting with a lootable object
+     *
+     * @param player the Player Character attempting to loot the object
+     * @param lootObject object that is being looted by the Player Character
+     */
     public void lootObject(PlayerCharacter player, Lootable lootObject) {
         List<Item> loot = lootObject.takeLoot();
 
