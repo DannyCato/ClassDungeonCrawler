@@ -31,14 +31,6 @@ public class Chest implements Occupant, Lootable {
         return this.contents;
     }
 
-    /**
-     * 
-     * @return the capacity of the chest
-     */
-    public int getCapacity() {
-        return this.capacity;
-    }
-
     // Needs docustring
     public void generateChest(CreateItemFactory factory) {
 
