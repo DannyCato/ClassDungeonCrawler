@@ -2,6 +2,12 @@ package edu.rit.swen262.domain;
 
 import java.util.List;
 
+/**
+ * concrete state of the {@link Merchant} wwhich represents its form when
+ * open and interactable in "safe" conditions
+ * 
+ * @author Ryan M.
+ */
 public class MerchantOpened implements MerchantForm {
 
     public MerchantOpened() {}

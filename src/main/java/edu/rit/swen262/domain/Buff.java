@@ -4,7 +4,7 @@ package edu.rit.swen262.domain;
  * Represents a Buff item that will increase the player's stats for a number of turns.
  * Extends the {@code Item} interface.
  * 
- * @author [Nick F, Ryan M]
+ * @author Nick F, Ryan M
  */
 
 public class Buff extends Item {

@@ -8,7 +8,6 @@ import edu.rit.swen262.service.InventoryVisitor;
  * 
  * @author Nick F, Ryan M
  */
-
 public interface ItemComponent {
 
     /**

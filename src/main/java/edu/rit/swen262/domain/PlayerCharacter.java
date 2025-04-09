@@ -33,6 +33,21 @@ public class PlayerCharacter extends GameCharacter {
         this.gold = new Gold(0);
     }
 
+
+    /**
+     * Initializes a PlayerCharacter with the given name, description, equipped armor, weapon,
+     * inventory, gold, and buffs.
+     * 
+     * Player Character has the default stats: maxHP = 100, attack = 10, and defense = 0.
+     * 
+     * @param name        the name of the player character
+     * @param description a brief description of the player character
+     * @param armor       the armor equipped by the player character
+     * @param weapon      the weapon equipped by the player character
+     * @param inventory   the inventory of the player character
+     * @param gold        the amount of gold the player character has
+     * @param buffs       a list of buffs currently affecting the player character
+     */
     public PlayerCharacter(String name, String description, Armor armor, Weapon weapon, Inventory inventory,
             Gold gold, List<Buff> buffs) {
         super(name, description, 100, 10, 0);
@@ -43,6 +58,11 @@ public class PlayerCharacter extends GameCharacter {
         this.buffs = new ArrayList<>();
     }
 
+    /**
+     * @param food the {@link Food} item the Player Character is consumin
+     * 
+     * 
+     */
     public String eatFood(Food food) {
         this.health += food.getHp();
         if (this.health > this.maxHP) {
@@ -52,6 +72,13 @@ public class PlayerCharacter extends GameCharacter {
         return "Ate food: " + food.getName();
     }
 
+    /**
+     * Attempts to equip the specified {@link Armor} item into the player's
+     * active armor slot
+     * 
+     * @param armor the armor to be equipped
+     * @return a String status message reporting the result of the operation
+     */
     public String equipArmor(Armor armor) {
         if (this.armor == null) {
             this.armor = armor;
@@ -74,6 +101,13 @@ public class PlayerCharacter extends GameCharacter {
         return "Now wearing: " + armor.getName();
     }
 
+    /**
+     * Attempts to equip the specified {@link Weapon} item into the player's
+     * active weapon slot
+     * 
+     * @param weapon the weapon to be equipped
+     * @return a String status message reporting the result of the operation
+     */
     public String equipWeapon(Weapon weapon) {
         if (this.weapon == null) {
             this.weapon = weapon;
@@ -95,6 +129,13 @@ public class PlayerCharacter extends GameCharacter {
         return "Now wielding: " + weapon.getName();
     }
 
+    /**
+     * uses the specified Buff item and applies the corrosponding stat buff
+     * to the player character's stats
+     * 
+     * @param buff the buff item to be used
+     * @return a String status message reporting the result of the operation
+     */
     public String useBuff(Buff buff) {
 
         if (buff.getDuration() > 0) {
@@ -113,6 +154,10 @@ public class PlayerCharacter extends GameCharacter {
 
     }
 
+    /**
+     * updates the durations of the active buff effects on the
+     * player character, decreasing each ones length by one turn
+     */
     public void updateBuffs() {
 
         for (int i = 0; i < buffs.size(); i++) {
@@ -127,6 +172,12 @@ public class PlayerCharacter extends GameCharacter {
         }
     }
 
+    /**
+     * applies the effects of the given item to the player character
+     * 
+     * @param item the item to be used
+     * @return the status message reporting the results of this operation
+     */
     public String useItem(Item item) {
         if (item instanceof Food) {
             Food food = (Food) item;
@@ -142,6 +193,12 @@ public class PlayerCharacter extends GameCharacter {
         }
     }
 
+    /**
+     * locates the given {@link Item} from within the player's {@link Inventory}
+     * 
+     * @param item the item to search for
+     * @return the matching {@link Item} if found, or {@code null} otherwise
+     */
     public Item findItem(Item item) {
         for (Bag bag : inventory.getBags()) {
             for (Item each : bag.getItems()) {
@@ -154,6 +211,12 @@ public class PlayerCharacter extends GameCharacter {
         return null;
     }
 
+    /**
+     * attempts to add a single item to the player's {@link Inventory}
+     * 
+     * @param item
+     * @return
+     */
     public String addItemToBag(Item item) {
         boolean result = inventory.addItem(item);
 
@@ -164,6 +227,11 @@ public class PlayerCharacter extends GameCharacter {
         return "Inventory full!";
     }
 
+    /**
+     * 
+     * 
+     * @param contents
+     */
     public void takeLoot(List<Item> contents) {
         for (Item item : contents) {
             addItemToBag(item);

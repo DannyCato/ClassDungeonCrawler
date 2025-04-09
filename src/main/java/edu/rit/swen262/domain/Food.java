@@ -6,7 +6,6 @@ package edu.rit.swen262.domain;
  * 
  * @author [Nick F, Ryan M]
  */
-
 public class Food extends Item {
 
     /** The amount of HP that will be restored when the item is used. */

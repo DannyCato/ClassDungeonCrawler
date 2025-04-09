@@ -7,6 +7,13 @@ import java.util.Random;
 
 import edu.rit.swen262.domain.DungeonPiece.Room;
 
+/**
+ * represents a Merchant {@link Occupant} on the {@link Map} which the 
+ * {@link PlayerCharacter player} may interact with to buy and sell 
+ * {@link Item items} under the correct conditions
+ * 
+ * @author Ryan M.
+ */
 public class Merchant implements Occupant{
     private List<Item> list;
     private MerchantForm currentForm;

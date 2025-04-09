@@ -5,6 +5,12 @@ import java.util.Random;
 
 import edu.rit.swen262.service.GameMediator;
 
+/**
+ * a type of {@link Occupant} which contains a set number of items which may be
+ * looted by the {@link PlayerCharacter player}
+ * 
+ * @author Nick F., Victor Bovat
+ */
 public class Chest implements Occupant, Lootable {
     private GameMediator mediator;
 
@@ -14,9 +20,13 @@ public class Chest implements Occupant, Lootable {
     private Random r = new Random();
 
 
-    /*
+    /**
+     * Constructs a new Chest {@link Occupant} with the given contents, 
+     * capacity, and description
      * 
-     * Chest Constructor
+     * @param contents the list of items the chest holds
+     * @param capacity the max number of items the chest may hold
+     * @param description description of the chest
      */
     public Chest(List<Item> contents, int capacity, String description) {
         this.contents = contents;
@@ -25,14 +35,21 @@ public class Chest implements Occupant, Lootable {
         generateChest(new CreateItemFactory());
     }
 
+    /**
+     * Constructs a new Chest with the given contents, and capacity.
+     * The decsription is initialized to the stringified version of its contents
+     * by default.
+     * 
+     * @param contents the list of items the chest holds
+     * @param capacity the max number of items the chest may hold
+     */
     public Chest(List<Item> contents, int capacity) {
-        this.contents = contents;
-        this.capacity = capacity;
+        this(contents, capacity, contents.toString());
         generateChest(new CreateItemFactory());
-        this.description = this.contents.toString();
     }
 
     /**
+     * fetches the list in items held in the chest
      * 
      * @return the contents of Chest object
      */
@@ -40,7 +57,12 @@ public class Chest implements Occupant, Lootable {
         return this.contents;
     }
 
-    // Needs docustring
+    /**
+     * populates the chest's contents with {@link Item items} with a random number
+     * and type of new items
+     * 
+     * @param factory the factory object which creates new {@link Item items}
+     */
     public void generateChest(CreateItemFactory factory) {
 
         int maxItems = r.nextInt(5) + 1;
@@ -74,23 +96,44 @@ public class Chest implements Occupant, Lootable {
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public List<Item> takeLoot() {
         return this.contents;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public void setMediator(GameMediator mediator) {
         this.mediator = mediator;
     }
 
+    /**
+     * fetches the max capacity of the chest
+     * 
+     * @return capacity of the chest
+     */
     public int getCapacity() {
         return this.capacity;
     }
 
+    /**
+     * fetches the Render Representation for rendering Chest Event
+     * 
+     * @return the render representation for Chest Object
+     */
     @Override
     public RenderRepresentation render() {
         return RenderRepresentation.CHEST;
     }
 
+    /**
+     * fetches the description of the Chest object
+     * 
+     * @return the description of the Chest object
+     */
     @Override
     public String description() {
         return this.description;
