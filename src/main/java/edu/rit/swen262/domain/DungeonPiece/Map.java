@@ -148,6 +148,7 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
      */
     public boolean move(Occupant o, DirectionalVector dir) {
         Tile t = ((Room)currentRoom).moveOccupant(o, dir);
+
         if (t != null && t.isExit()) {
             exitRoom(o, t.getExitDirection());
         };
@@ -245,6 +246,21 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
      */
     public void setGoal(DungeonPiece<Room> goal) {
         this.goal = goal;
+    }
+
+    /**
+     * updates the Occupant currently residing upon the starting tile in the map
+     * if it is not the same
+     * 
+     * @param o the entity to be updated on the starting tile
+     */
+    public boolean updateOccupant(Occupant o) {
+        Tile startTile = (Tile) this.startUp();
+        if (!(startTile.containsTransientOccupantOf(o))) {
+            startTile.clearTransientOccupants();
+            startTile.addOccupant(o);
+            return true;
+        } return false;
     }
 
     /**

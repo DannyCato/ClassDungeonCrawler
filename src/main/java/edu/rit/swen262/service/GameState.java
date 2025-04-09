@@ -127,10 +127,12 @@ public class GameState implements IObservable {
 
     /**
      * updates the data of the player character currently playing the game
+     * if a new name and description is provided at start-up
      * 
      * @param p the new player character to update to
      */
     public void updatePlayer(PlayerCharacter p) {
+        System.out.println(this.map.updateOccupant(p));
         this.player = p;
     }
 
@@ -141,7 +143,7 @@ public class GameState implements IObservable {
      */
     public void movePlayer(DirectionalVector direction) {
         GameEvent event = new GameEvent(GameEventType.MOVE_PLAYER);
-        
+
         this.map.move(player, direction);
         if (this.map.canEndGame(this.player)) {
             event.addData("canEndGame", true);    

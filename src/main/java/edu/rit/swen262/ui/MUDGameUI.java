@@ -99,11 +99,11 @@ public class MUDGameUI implements GameObserver {
                 this.redrawMap(event.getData("currentRoom").toString());
                 this.redrawMenuDefault();
 
-                Object endGameData = event.getData("canEndGame");
+                /*Object endGameData = event.getData("canEndGame");
                 if (endGameData != null) {
                     boolean canEndData = (Boolean) endGameData;
-                    System.out.println("notify end game");
-                }
+                    //this.drawEndGameUI();
+                }*/
                 break;
             case GameEventType.FINISH_TURN:
                 this.redrawTurn(event.getData("turnNumber").toString());
@@ -341,6 +341,51 @@ public class MUDGameUI implements GameObserver {
                 this.stop();
             }
         }
+    }
+
+    public void drawEndGameUI() {
+        // set no shadow decorations for panels + full screen
+        Window.Hint[] windowHints = new Window.Hint[] {
+            Window.Hint.NO_DECORATIONS,
+            //Window.Hint.NO_POST_RENDERING,
+            Window.Hint.EXPANDED};
+
+        final Window window = new BasicWindow("Welcome!");
+        window.setHints(Arrays.asList(windowHints));
+
+        Panel contentPanel = new Panel();
+        LinearLayout layout = new LinearLayout(Direction.VERTICAL);
+        layout.setSpacing(1);
+        contentPanel.setLayoutManager(layout);
+        LayoutData centerLayoutData = LinearLayout.createLayoutData(LinearLayout.Alignment.Center);
+
+        Label congratsLabel = new Label("Congrats, you reached the goal!");
+        congratsLabel.setLayoutData(centerLayoutData);
+
+        Label queryLabel = new Label("Would you like to exit the dungeon and end your adventure?");
+        queryLabel.setLayoutData(centerLayoutData);
+
+        TextBox queryBox = new TextBox().setPreferredSize(new TerminalSize(20, 1));
+        queryBox.setLayoutData(centerLayoutData);
+
+        // fetch inputted name + description on submit
+        Button submitButton = new Button("Submit", () -> {
+            String endGameChoice = queryBox.getText();
+            System.out.println(endGameChoice);
+
+            window.close(); // close the name prompt window
+        });
+        submitButton.setLayoutData(centerLayoutData);
+
+        contentPanel.addComponent(congratsLabel);
+
+        contentPanel.addComponent(queryLabel);
+        contentPanel.addComponent(queryBox);
+
+        contentPanel.addComponent(submitButton);
+
+        window.setComponent(contentPanel);
+        this.textGUI.addWindowAndWait(window);
     }
 
     /**
