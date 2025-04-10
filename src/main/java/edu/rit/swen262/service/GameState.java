@@ -6,12 +6,15 @@ import java.util.Set;
 import edu.rit.swen262.domain.Armor;
 import edu.rit.swen262.domain.Attackable;
 import edu.rit.swen262.domain.Bag;
+import edu.rit.swen262.domain.Buff;
 import edu.rit.swen262.domain.Chest;
 import edu.rit.swen262.domain.DayTime;
 import edu.rit.swen262.domain.DirectionalVector;
 import edu.rit.swen262.domain.Enemy;
 import edu.rit.swen262.domain.Exit;
+import edu.rit.swen262.domain.Food;
 import edu.rit.swen262.domain.GameCharacter;
+import edu.rit.swen262.domain.Gold;
 import edu.rit.swen262.domain.Inventory;
 import edu.rit.swen262.domain.Item;
 import edu.rit.swen262.domain.Lootable;
@@ -188,8 +191,18 @@ public class GameState implements IObservable, GameMediator {
      * @param p the new player character to update to
      */
     public void updatePlayer(PlayerCharacter p) {
+        GameEvent event = new GameEvent(GameEventType.UPDATE_PLAYER);
         this.map.updateOccupant(p);
         this.player = p;
+
+        event.addData("player", p);
+
+        pickUpItem(new Food("BEANS", "Little yummy guys", 10, new Gold(10))); 
+		pickUpItem(new Buff("Yo-Yo", "Walk that dog", 5, 10, 0, 0, new Gold(10)));
+		pickUpItem(new Weapon("Rusty Dagger", "¿Back Scratcher?", 1, new Gold(10)));
+		pickUpItem(new Armor("Holey Armor", "Praise Hole God!", 1, new Gold(10)));
+
+        this.notifyObservers(event);
     }
 
     /**

@@ -125,6 +125,10 @@ public class InputParser {
         this.currentMenu = menu;
     }
 
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
+    }
+
     /**
      * helper method to fetch the last entered keystroke from the keystroke
      * history queue
