@@ -35,6 +35,7 @@ public class BuyItemAction implements Action{
      */
     @Override
     public String toString() {
-        return this.item.toString();
+        String itemClassText = this.item.getClass().getSimpleName();
+        return this.item.getName() + "(" + itemClassText + ")";
     }
 }

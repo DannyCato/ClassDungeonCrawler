@@ -1,6 +1,7 @@
 package edu.rit.swen262.service;
 
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashMap;
 
@@ -10,8 +11,10 @@ import com.googlecode.lanterna.gui2.Interactable;
 
 import edu.rit.swen262.domain.Bag;
 import edu.rit.swen262.domain.Inventory;
+import edu.rit.swen262.domain.Occupant;
 import edu.rit.swen262.service.Action.Action;
 import edu.rit.swen262.service.Action.SetPlayerAction;
+import edu.rit.swen262.ui.MUDGameUI;
 import edu.rit.swen262.service.Action.DisplayMenuAction;
 import edu.rit.swen262.service.Action.DisplayMenuType;
 import edu.rit.swen262.service.Action.InteractionResult;
@@ -154,8 +157,8 @@ public class InputParser {
         keystrokes.get(MenuState.DEFAULT).put(result.getDefaultKeystroke(), menuAction);
         for (HashMap.Entry<DisplayMenuType, HashMap<Character, Action>> submenu : interactKeystrokes.entrySet()) {
             MenuState menuState = MenuState.valueOf(submenu.getKey().toString());
-
-            keystrokes.put(menuState, result.getKeystrokes().get(menuAction.getMenuType()));
+            System.out.println(submenu.getValue());
+            keystrokes.put(menuState, submenu.getValue());
         }
     }
 
@@ -166,12 +169,7 @@ public class InputParser {
      */
     public void clearInteractionMenus() {
         HashMap<Character, Action> defaultKeystrokes = keystrokes.get(MenuState.DEFAULT);
-
-        for (HashMap.Entry<Character, Action> entry : defaultKeystrokes.entrySet()) {
-            Character key = entry.getKey();
-            if (!(key == 'm' || key == 'a' || key == 'i' || key == 'q')) {
-                defaultKeystrokes.remove(key);
-            }
-        }
+        
+        defaultKeystrokes.keySet().retainAll(Arrays.asList('m', 'i', 'a', 'q'));
     }
 }

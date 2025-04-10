@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Set;
 
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
@@ -99,20 +100,33 @@ public class MUDGameUI implements GameObserver {
                     this.eventLogMsgs.offer("You moved.");
                     this.redrawEventLog();
                 }
+                
                 this.redrawMap(event.getData("currentRoom").toString());
                 
                 // reset default menu action hashmap
                 this.inputParser.clearInteractionMenus();
 
-                Object interactData = event.getData("interactData");
+                Object interactData = event.getData("sharedInteract");
+                Object adjacentInteractData = event.getData("adjacentInteract");
+                String menuString = "";
+
                 if (interactData != null) {
                     InteractionResult interactActions = (InteractionResult) interactData;
 
                     inputParser.addInteractionMenu(interactActions);
-                    this.redrawMenuDefault(interactActions.getDefaultMenuString());
-                } else {
-                    this.redrawMenuDefault("");
+                    menuString += interactActions.getDefaultMenuString();
                 }
+
+                if (adjacentInteractData != null) {
+                    Set<InteractionResult> adjacentActions = (Set) adjacentInteractData;
+                    
+                    for (InteractionResult interact : adjacentActions) {
+                        inputParser.addInteractionMenu(interact);
+                        menuString += interact.getDefaultMenuString();
+                    }
+                }
+
+                this.redrawMenuDefault(menuString);
                 
                 Object endGameData = event.getData("canEndGame");
                 if (endGameData != null) {
@@ -169,6 +183,7 @@ public class MUDGameUI implements GameObserver {
                 String purchaseFeedback = (String) event.getData("itemMsg");
                 this.eventLogMsgs.offer(purchaseFeedback);   
 
+                this.redrawEventLog();
                 this.redrawMenuDefault("");
                 break;
             case LOOT_ALL:

@@ -34,13 +34,13 @@ public class MerchantActionFactory implements InteractionActionFactory {
         
         // build actions for buying merchant items
         for (int i = 0; i < merchantInventory.size(); i++) {
-            buyKeystrokes.put(Character.forDigit( + 1, 10), new BuyItemAction(gameState, merchant, merchantInventory.get(i), i));
+            buyKeystrokes.put(Character.forDigit(i + 1, 10), new BuyItemAction(gameState, merchant, merchantInventory.get(i), i));
         }
 
         //build merchant sub-menu for all options taken when interacting with merchant
         String merchantInventoryText = buildMenuString(buyKeystrokes);
 
-        merchantKeystrokes.put('1', new DisplayMenuAction(gameState, DisplayMenuType.MERCHANT_INVENTORY, ""));
+        merchantKeystrokes.put('1', new DisplayMenuAction(gameState, DisplayMenuType.MERCHANT_INVENTORY, merchantInventoryText));
         //merchantKeystrokes.put('2', new DisplayMenuAction(gameState, DisplayMenuType.INVENTORY, ""));
         
         // build entry action which is called when merchant is interacted with
@@ -48,6 +48,7 @@ public class MerchantActionFactory implements InteractionActionFactory {
         DisplayMenuAction menuAction = new DisplayMenuAction(gameState, DisplayMenuType.MERCHANT, merchantMenuText);
 
         keystrokesMap.put(DisplayMenuType.MERCHANT_INVENTORY, buyKeystrokes);
+        keystrokesMap.put(DisplayMenuType.MERCHANT, merchantKeystrokes);
 
         return new InteractionResult('e', menuAction, keystrokesMap);
     }

@@ -1,6 +1,7 @@
 package edu.rit.swen262.service;
 
 import java.util.List;
+import java.util.Set;
 
 import edu.rit.swen262.domain.Armor;
 import edu.rit.swen262.domain.Attackable;
@@ -27,6 +28,7 @@ import edu.rit.swen262.service.Action.DisplayMenuType;
 import edu.rit.swen262.service.Action.InteractionActionFactory;
 import edu.rit.swen262.service.Action.InteractionResult;
 import edu.rit.swen262.service.Action.LootableActionFactory;
+import edu.rit.swen262.service.Action.MerchantActionFactory;
 import edu.rit.swen262.ui.MUDGameUI;
 
 import java.util.ArrayList;
@@ -66,6 +68,7 @@ public class GameState implements IObservable, GameMediator {
 
         this.factoryMap = new HashMap<Class<?>, InteractionActionFactory>() {{
             put(Chest.class, new LootableActionFactory());
+            put(Merchant.class, new MerchantActionFactory());
         }};
 
         this.turnNumber = 1;
@@ -154,8 +157,9 @@ public class GameState implements IObservable, GameMediator {
 
         // chest placement testing, ignore!
         Tile chestTile = (Tile) newMap.getTileByIndex(2);
+        Merchant merchant = new Merchant("give!1 item!!");
         Chest chest = new Chest(new ArrayList<>(), 3);
-        chestTile.addOccupant(chest);
+        chestTile.addOccupant(merchant);
         
         startTile.addOccupant(this.player);
 
@@ -207,9 +211,17 @@ public class GameState implements IObservable, GameMediator {
          * interaction data */
         InteractionResult interactAction = this.getCurrentTileActions();
         if (interactAction != null) {
-            event.addData("interactData", interactAction);
+            event.addData("sharednteract", interactAction);
         }
-        
+
+        /**
+         * check adjacent tiles for player for interactable occupants
+         */
+        Set<InteractionResult> adjacentInteractActions = this.getAdjacentTileInteractions();
+        if (!adjacentInteractActions.isEmpty()) {
+            event.addData("adjacentInteract", adjacentInteractActions);
+        }
+
         //convert current Room to String render, then pass along to UI
         String currentRoomRender = this.map.structuredRender();
 
@@ -238,6 +250,23 @@ public class GameState implements IObservable, GameMediator {
         }
 
         return null;
+    }
+
+    private Set<InteractionResult> getAdjacentTileInteractions() {
+        Collection<Occupant> adjacentOccupants = map.getAllAdjacentOccupants(this.player);
+        Set<InteractionResult> actionSet = new HashSet<InteractionResult>();
+
+        if (!adjacentOccupants.isEmpty()) {
+            for (Occupant o : adjacentOccupants) {
+                InteractionActionFactory factory = factoryMap.get(o.getClass());
+                if (factory != null) {
+                    InteractionResult result = factory.createInteractionCommands(this, this.player, o);
+                    actionSet.add(result);
+                }
+            }
+        }
+
+        return actionSet;
     }
 
     /**
