@@ -13,5 +13,7 @@ public enum DisplayMenuType {
     BAG,
     ITEM,
     CHEST,
+    MERCHANT,
+    MERCHANT_INVENTORY,
     TRAP
 }

@@ -14,9 +14,9 @@ public class InteractionResult {
     private Character defaultKeystroke;
     private String defaultMenuString;
     private Action menuAction;
-    private HashMap<Character, Action> keystrokeMap;
+    private HashMap<DisplayMenuType, HashMap<Character, Action>> keystrokeMap;
 
-    public InteractionResult(Character defaultKeystroke, Action menuAction, HashMap<Character, Action> keystrokeMap) {
+    public InteractionResult(Character defaultKeystroke, Action menuAction, HashMap<DisplayMenuType, HashMap<Character, Action>> keystrokeMap) {
         this.defaultKeystroke = defaultKeystroke;
         this.menuAction = menuAction;
         this.keystrokeMap = keystrokeMap;
@@ -28,7 +28,7 @@ public class InteractionResult {
         return this.menuAction;
     }
 
-    public HashMap<Character, Action> getKeystrokes() {
+    public HashMap<DisplayMenuType, HashMap<Character, Action>> getKeystrokes() {
         return this.keystrokeMap;
     }
 

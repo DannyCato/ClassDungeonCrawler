@@ -8,17 +8,27 @@ import edu.rit.swen262.domain.Occupant;
 import edu.rit.swen262.domain.PlayerCharacter;
 import edu.rit.swen262.service.GameState;
 
+/**
+ * generates the {@link Action} mapping for interaction of a {@link PlayerCharacter} and a {@link Lootable} Tile {@link Occupant}
+ * 
+ * @author Victor Bovat
+ */
 public class LootableActionFactory implements InteractionActionFactory {
 
-    @Override
+    /*
+     * {@inheritdoc}
+     */
     public InteractionResult createInteractionCommands(GameState gameState, PlayerCharacter player, 
             Occupant occupant) {
-        HashMap<Character, Action> keystrokes = new HashMap<Character, Action>(); 
-        keystrokes.put('1', new LootObjectAction(gameState, player, (Lootable) occupant));
-        String menuText = buildMenuString(keystrokes);
+        HashMap<DisplayMenuType, HashMap<Character, Action>> keystrokesMap = new HashMap<DisplayMenuType, HashMap<Character, Action>>();
+        HashMap<Character, Action> chestKeystrokes = new HashMap<Character, Action>(); 
+        chestKeystrokes.put('1', new LootObjectAction(gameState, player, (Lootable) occupant));
+        String menuText = buildMenuString(chestKeystrokes);
 
         DisplayMenuAction menuAction = new DisplayMenuAction(gameState, DisplayMenuType.CHEST, menuText);
 
-        return new InteractionResult('o', menuAction, keystrokes);
+        keystrokesMap.put(DisplayMenuType.CHEST, chestKeystrokes);
+
+        return new InteractionResult('o', menuAction, keystrokesMap);
     }
 }
