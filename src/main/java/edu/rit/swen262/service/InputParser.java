@@ -93,6 +93,8 @@ public class InputParser {
                 break;
         }
 
+        System.out.println(inventory.getBags().get(0).getItems());
+
         Action action = keystrokes.get(currentMenu).get(input);
 
         // once action has been fully constructed, execute the command
