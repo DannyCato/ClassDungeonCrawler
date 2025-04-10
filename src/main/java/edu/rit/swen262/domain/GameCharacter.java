@@ -130,4 +130,8 @@ public abstract class GameCharacter implements Occupant, java.io.Serializable, A
     public int getDefense() {
         return this.defense;
     }
+
+    public String getDescription() {
+        return this.description;
+    }
 }

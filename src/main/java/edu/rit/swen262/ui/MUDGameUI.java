@@ -192,6 +192,15 @@ public class MUDGameUI implements GameObserver {
                 this.redrawEventLog();
                 this.redrawMenuDefault("");
                 break;
+            case LOSE_GAME:
+                String killerName = (String) event.getData("killer");
+                Integer turnNumber = (Integer) event.getData("turnNumber");
+                this.drawLoseGameUI((String) event.getData("playerName"), 
+                                    (String) event.getData("playerDescription"),
+                                    killerName,
+                                    turnNumber);
+                
+                break;
             case QUIT_GAME:
                 this.stop();
                 break;
@@ -462,6 +471,56 @@ public class MUDGameUI implements GameObserver {
         buttonPanel.setLayoutData(centerLayoutData);
 
         contentPanel.addComponent(congratsLabel);
+        contentPanel.addComponent(playerDataText);
+
+        contentPanel.addComponent(queryLabel);
+        contentPanel.addComponent(buttonPanel);
+
+        window.setComponent(contentPanel);
+        this.textGUI.addWindowAndWait(window);
+    }
+
+    public void drawLoseGameUI(String playerName, String playerDescription, String killerName, int turnNumber) {
+        // set no shadow decorations for panels + full screen
+        Window.Hint[] windowHints = new Window.Hint[] {
+            Window.Hint.NO_DECORATIONS,
+            //Window.Hint.NO_POST_RENDERING,
+            Window.Hint.EXPANDED};
+
+        final Window window = new BasicWindow("Welcome!");
+        window.setHints(Arrays.asList(windowHints));
+
+        Panel contentPanel = new Panel();
+        LinearLayout layout = new LinearLayout(Direction.VERTICAL);
+        layout.setSpacing(1);
+        contentPanel.setLayoutManager(layout);
+        LayoutData centerLayoutData = LinearLayout.createLayoutData(LinearLayout.Alignment.Center);
+
+        Label loseLabel = new Label("RIP " + playerName + " :(");
+        loseLabel.setLayoutData(centerLayoutData);
+
+        Label playerDataText = new Label("\"" + playerDescription
+                                        + "\"\nLived a long life from Turn 1 to Turn " 
+                                        + turnNumber + ".\n Perished at the hands of " + killerName);
+        playerDataText.setPreferredSize(new TerminalSize(60, 4));
+        playerDataText.setLayoutData(centerLayoutData);
+
+        Label queryLabel = new Label("End your adventure?");
+        queryLabel.setLayoutData(centerLayoutData);
+
+        Panel buttonPanel = new Panel();
+        buttonPanel.setLayoutManager(new GridLayout(2));
+
+        // if selected, immediately closes out the window + ends the game
+        Button yesButton = new Button("Ok", () -> {
+            window.close(); // close the name prompt window
+            this.stop();
+        });
+
+        buttonPanel.addComponent(yesButton);
+        buttonPanel.setLayoutData(centerLayoutData);
+
+        contentPanel.addComponent(loseLabel);
         contentPanel.addComponent(playerDataText);
 
         contentPanel.addComponent(queryLabel);

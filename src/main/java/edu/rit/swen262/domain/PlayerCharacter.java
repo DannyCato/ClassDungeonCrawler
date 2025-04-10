@@ -276,7 +276,7 @@ public class PlayerCharacter extends GameCharacter {
      * {@inheritdoc}
      */
     public String description() {
-        return "the player, " + this.name;
+        return super.getDescription();
     }
 
     /**

@@ -443,12 +443,24 @@ public class GameState implements IObservable, GameMediator {
         this.currentTime.handlePlayerTurn();
 
         Collection<Occupant> adjacentOccupants = this.map.getAllAdjacentOccupants(this.player);
+        Enemy attackedLast = null;
         String dmgMessage = "";
 
         for (Occupant o : adjacentOccupants) {
             if (o instanceof Enemy) {
                 dmgMessage += this.attackCharacter((Enemy) o, this.player);
                 event.addData("dmgMessage", dmgMessage);
+                attackedLast = (Enemy) o;
+            }
+        }
+
+        if (this.player.getHealth() <= 0) {
+            event = new GameEvent(GameEventType.LOSE_GAME);
+            event.addData("playerName", this.player.getName());
+            event.addData("playerDescription", this.player.description());
+            
+            if (attackedLast != null) {
+                event.addData("killer", attackedLast.getName());
             }
         }
 

@@ -17,5 +17,6 @@ public enum GameEventType {
     LOOT_ALL,
     UPDATE_MAP,
     QUIT_GAME,
+    LOSE_GAME,
     DISARM_TRAP
 }
