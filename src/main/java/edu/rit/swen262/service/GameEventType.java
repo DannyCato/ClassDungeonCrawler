@@ -13,8 +13,9 @@ public enum GameEventType {
     ADD_ITEM,
     USE_ITEM,
     DROP_ITEM,
+    BUY_ITEM,
+    LOOT_ALL,
     UPDATE_MAP,
     QUIT_GAME,
     DISARM_TRAP
-    // Find Trap?
 }

@@ -21,6 +21,12 @@ public enum MenuState {
                 case 'i':
                     p.setMenu(INVENTORY);
                     break;
+                case 'o':
+                    p.setMenu(CHEST);
+                    break;
+                case 'e':
+                    p.setMenu(MERCHANT);
+                    break;
                 default:
                     break;
             }
@@ -51,6 +57,31 @@ public enum MenuState {
         }
     },
     ITEM {
+        @Override
+        public void handleInput(InputParser p, char keystroke) {
+            p.setMenu(DEFAULT);
+        }
+    },
+    CHEST {
+        @Override
+        public void handleInput(InputParser p, char keystroke) {
+            p.setMenu(DEFAULT);
+        }
+    },
+    MERCHANT {
+        @Override
+        public void handleInput(InputParser p, char keystroke) {
+            switch(keystroke) {
+                case '1':
+                    p.setMenu(MERCHANT_INVENTORY);
+                    break;
+                /*case '2':
+                    p.setMenu(MERCHANT_INVENTORY);
+                    break;*/
+            }
+        }
+    },
+    MERCHANT_INVENTORY {
         @Override
         public void handleInput(InputParser p, char keystroke) {
             p.setMenu(DEFAULT);

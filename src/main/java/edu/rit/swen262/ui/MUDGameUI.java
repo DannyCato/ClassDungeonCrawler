@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Set;
 
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
@@ -40,6 +41,7 @@ import edu.rit.swen262.service.GameSetupParser;
 import edu.rit.swen262.service.GameState;
 import edu.rit.swen262.service.InputParser;
 import edu.rit.swen262.service.Action.Action;
+import edu.rit.swen262.service.Action.InteractionResult;
 
 /**
  * The class responsible for rendering the current state of the MUD game to
@@ -62,7 +64,7 @@ public class MUDGameUI implements GameObserver {
     private Label turnDisplay;
     private Label timeDisplay;
     private Label menuDisplay;
-    private final int EVENT_LOG_SIZE = 10;
+    private final int EVENT_LOG_SIZE = 20;
     private Queue<String> eventLogMsgs;
     private Label eventLogDisplay;
 
@@ -98,9 +100,34 @@ public class MUDGameUI implements GameObserver {
                     this.eventLogMsgs.offer("You moved.");
                     this.redrawEventLog();
                 }
+                
                 this.redrawMap(event.getData("currentRoom").toString());
-                this.redrawMenuDefault();
+                
+                // reset default menu action hashmap
+                this.inputParser.clearInteractionMenus();
 
+                Object interactData = event.getData("sharedInteract");
+                Object adjacentInteractData = event.getData("adjacentInteract");
+                String menuString = "";
+
+                if (interactData != null) {
+                    InteractionResult interactActions = (InteractionResult) interactData;
+
+                    inputParser.addInteractionMenu(interactActions);
+                    menuString += interactActions.getDefaultMenuString();
+                }
+
+                if (adjacentInteractData != null) {
+                    Set<InteractionResult> adjacentActions = (Set) adjacentInteractData;
+                    
+                    for (InteractionResult interact : adjacentActions) {
+                        inputParser.addInteractionMenu(interact);
+                        menuString += interact.getDefaultMenuString();
+                    }
+                }
+
+                this.redrawMenuDefault(menuString);
+                
                 Object endGameData = event.getData("canEndGame");
                 if (endGameData != null) {
                     boolean canEndGame = (Boolean) endGameData;
@@ -111,6 +138,11 @@ public class MUDGameUI implements GameObserver {
                 }
                 break;
             case FINISH_TURN:
+                if (event.getData("dmgMessage") != null) {
+                    this.eventLogMsgs.offer((String) event.getData("dmgMessage"));
+                }
+
+                this.redrawEventLog();
                 this.redrawTurn(event.getData("turnNumber").toString());
                 break;
             case CHANGE_TIME:
@@ -123,10 +155,13 @@ public class MUDGameUI implements GameObserver {
                 break;
             case TAKE_DAMAGE:
                 this.eventLogMsgs.offer((String) event.getData("attackMessage"));
-                this.eventLogMsgs.offer((String) event.getData("dmgMessage"));
+
+                if (event.getData("dmgMessage") != null) {
+                    this.eventLogMsgs.offer((String) event.getData("dmgMessage"));
+                }
                 
                 this.redrawEventLog();
-                this.redrawMenuDefault();
+                this.redrawMenuDefault("");
                 break;
             case USE_ITEM:
                 Item usedItem = (Item) event.getData("item");
@@ -135,14 +170,27 @@ public class MUDGameUI implements GameObserver {
                 this.eventLogMsgs.offer(itemMsg);
                 
                 this.redrawEventLog();
-                this.redrawMenuDefault();
+                this.redrawMenuDefault("");
                 break;
             case DROP_ITEM:
                 Item droppedItem = (Item) event.getData("item");
                 this.eventLogMsgs.offer("You dropped the " + droppedItem.getName() + "!");
                 
                 this.redrawEventLog();
-                this.redrawMenuDefault();
+                this.redrawMenuDefault("");
+                break;
+            case BUY_ITEM:
+                String purchaseFeedback = (String) event.getData("itemMsg");
+                this.eventLogMsgs.offer(purchaseFeedback);   
+
+                this.redrawEventLog();
+                this.redrawMenuDefault("");
+                break;
+            case LOOT_ALL:
+                this.eventLogMsgs.offer("You looted items from the Chest.");
+                
+                this.redrawEventLog();
+                this.redrawMenuDefault("");
                 break;
             case QUIT_GAME:
                 this.stop();
@@ -322,7 +370,7 @@ public class MUDGameUI implements GameObserver {
             // create panel displaying current menu of possible actions to select
             Panel menuPanel = new Panel(new GridLayout(1));
             this.menuDisplay = new Label("");
-            this.redrawMenuDefault();
+            this.redrawMenuDefault("");
             menuPanel.addComponent(this.menuDisplay);
 
             /* TextBox won't clear text + update statusDisplay unless 
@@ -435,15 +483,18 @@ public class MUDGameUI implements GameObserver {
 
     /**
      * updates the menu display to the default list of actions
+     * 
+     * @param optionString optional String contaning new actions to add to display
      */
-    private void redrawMenuDefault() {
-        String defaultOptions = """
+    private void redrawMenuDefault(String optionString) {
+        StringBuilder sb = new StringBuilder("""
                 [m] Move
                 [a] Attack
                 [i] Open inventory
                 [q] Quit
-                """;
-        this.redrawMenu(defaultOptions);
+                """);
+        sb.append(optionString);
+        this.redrawMenu(sb.toString());
     }
 
     /**

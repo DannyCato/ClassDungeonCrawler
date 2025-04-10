@@ -55,7 +55,6 @@ public abstract class GameCharacter implements Occupant, java.io.Serializable, A
      * @param opponent the {@link GameCharacter} to be attacked
      */
     public String attack(GameCharacter opponent) {
-
         int damage = getAttack() - opponent.getDefense();
         opponent.health -= damage;
 
@@ -74,15 +73,13 @@ public abstract class GameCharacter implements Occupant, java.io.Serializable, A
      * {@inheritdoc}
      */
     public String takeDamage(int damage) {
-        int damageTaken = damage - this.defense;
+        int damageTaken = Math.max(damage - this.defense, 1);
 
         if (this.health >= damageTaken) {
             this.health -= damageTaken;
         } else {
             this.health = 0;
         }
-
-        System.out.println(this.name + ": " + this.health);
 
         return this.name + " took damage for " + damageTaken + " points!";
     }

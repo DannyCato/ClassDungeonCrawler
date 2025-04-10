@@ -1,14 +1,23 @@
 package edu.rit.swen262.service;
 
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashMap;
 
+import org.jline.utils.Display;
+
+import com.googlecode.lanterna.gui2.Interactable;
+
 import edu.rit.swen262.domain.Bag;
 import edu.rit.swen262.domain.Inventory;
+import edu.rit.swen262.domain.Occupant;
 import edu.rit.swen262.service.Action.Action;
 import edu.rit.swen262.service.Action.SetPlayerAction;
+import edu.rit.swen262.ui.MUDGameUI;
 import edu.rit.swen262.service.Action.DisplayMenuAction;
+import edu.rit.swen262.service.Action.DisplayMenuType;
+import edu.rit.swen262.service.Action.InteractionResult;
 
 /**
  * A class which parses input from the user while the game is running, 
@@ -128,5 +137,39 @@ public class InputParser {
     private Character getSecondLast() {
         if (keystrokeHistory.size() < 2) return null;
         return keystrokeHistory.toArray(new Character[0])[keystrokeHistory.size() - 2]; // Second last keystroke
+    }
+
+    /**
+     * adds a single new submenu tree to the parser's keystroke hashmap to allow
+     * for dynamic interactions with other {@link Occupant occupants} on the map
+     * only when sharing the same or an adjacent tile in the {@link Map}
+     * 
+     * @param result result of generating a single interactable action submenu
+     */
+    public void addInteractionMenu(InteractionResult result) {
+        if (!(result.getAction() instanceof DisplayMenuAction)) {
+            return;
+        }
+
+        DisplayMenuAction menuAction = (DisplayMenuAction) result.getAction();
+        HashMap<DisplayMenuType, HashMap<Character, Action>> interactKeystrokes = result.getKeystrokes();
+
+        keystrokes.get(MenuState.DEFAULT).put(result.getDefaultKeystroke(), menuAction);
+        for (HashMap.Entry<DisplayMenuType, HashMap<Character, Action>> submenu : interactKeystrokes.entrySet()) {
+            MenuState menuState = MenuState.valueOf(submenu.getKey().toString());
+            System.out.println(submenu.getValue());
+            keystrokes.put(menuState, submenu.getValue());
+        }
+    }
+
+    /**
+     * resets the default keystroke-action mappings to its state at the start
+     * of the game, removing any references to interactions with other 
+     * {@link Occupant occupants}
+     */
+    public void clearInteractionMenus() {
+        HashMap<Character, Action> defaultKeystrokes = keystrokes.get(MenuState.DEFAULT);
+        
+        defaultKeystrokes.keySet().retainAll(Arrays.asList('m', 'i', 'a', 'q'));
     }
 }

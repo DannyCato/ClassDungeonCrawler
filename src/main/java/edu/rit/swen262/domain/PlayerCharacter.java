@@ -159,7 +159,6 @@ public class PlayerCharacter extends GameCharacter {
      * player character, decreasing each ones length by one turn
      */
     public void updateBuffs() {
-
         for (int i = 0; i < buffs.size(); i++) {
             buffs.get(i).decreaseDuration();
             if (buffs.get(i).getDuration() <= 0) {

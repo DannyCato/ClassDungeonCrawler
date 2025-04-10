@@ -34,6 +34,8 @@ import edu.rit.swen262.service.Action.QuitGameAction;
 import edu.rit.swen262.service.Action.SetPlayerAction;
 import edu.rit.swen262.ui.MUDGameUI;
 
+import static edu.rit.swen262.ui.UIUtilities.buildMenuString;;
+
 @SpringBootApplication
 public class MUDApplication {
 
@@ -99,10 +101,9 @@ class SampleCommandLineRunner implements CommandLineRunner {
 
 		HashMap<Character, Action> itemKeystrokes = new HashMap<>();
 
-
-		String moveMenuString = this.buildMenuString(moveKeystrokes);
-		String attackMenuString = this.buildMenuString(attackKeystrokes);
-		String inventoryMenuString = this.buildMenuString(inventoryKeystrokes);
+		String moveMenuString = buildMenuString(moveKeystrokes);
+		String attackMenuString = buildMenuString(attackKeystrokes);
+		String inventoryMenuString = buildMenuString(inventoryKeystrokes);
 
 		HashMap<Character, Action> defaultKeystrokes = new HashMap<>() {{
 			put('q', new QuitGameAction(gameState));
@@ -119,24 +120,6 @@ class SampleCommandLineRunner implements CommandLineRunner {
 		keystrokes.put(MenuState.ITEM, itemKeystrokes);
 
 		return keystrokes;
-	}
-
-	/**
-	 * helper method which produces a string representation of a hash map of
-	 * {@link Action commands}, producing a list in the format of:
-	 * '[n] <Action>' for every command and its associated number value
-	 * 
-	 * @param commandMap map which associates a set of {@link Action commands}
-	 * with a different keystroke
-	 * @return a String representation of the given command hashmap
-	 */
-	public String buildMenuString(HashMap<Character, Action> commandMap) {
-        StringBuilder displayText = new StringBuilder();
-        commandMap.forEach((key, value) -> 
-			displayText.append(String.format("[%s] %s\n", key, value))
-		);
-		
-		return displayText.toString();
 	}
 
 	

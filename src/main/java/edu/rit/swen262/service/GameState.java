@@ -1,16 +1,21 @@
 package edu.rit.swen262.service;
 
 import java.util.List;
+import java.util.Set;
 
 import edu.rit.swen262.domain.Armor;
 import edu.rit.swen262.domain.Attackable;
 import edu.rit.swen262.domain.Bag;
+import edu.rit.swen262.domain.Chest;
 import edu.rit.swen262.domain.DayTime;
 import edu.rit.swen262.domain.DirectionalVector;
+import edu.rit.swen262.domain.Enemy;
+import edu.rit.swen262.domain.Exit;
 import edu.rit.swen262.domain.GameCharacter;
 import edu.rit.swen262.domain.Inventory;
 import edu.rit.swen262.domain.Item;
 import edu.rit.swen262.domain.Lootable;
+import edu.rit.swen262.domain.Merchant;
 import edu.rit.swen262.domain.Occupant;
 import edu.rit.swen262.domain.PlayerCharacter;
 import edu.rit.swen262.domain.DungeonPiece.Map;
@@ -18,9 +23,17 @@ import edu.rit.swen262.domain.DungeonPiece.Room;
 import edu.rit.swen262.domain.DungeonPiece.Tile;
 import edu.rit.swen262.domain.TimePeriod;
 import edu.rit.swen262.domain.Weapon;
+import edu.rit.swen262.service.Action.Action;
 import edu.rit.swen262.service.Action.DisplayMenuType;
+import edu.rit.swen262.service.Action.InteractionActionFactory;
+import edu.rit.swen262.service.Action.InteractionResult;
+import edu.rit.swen262.service.Action.LootableActionFactory;
+import edu.rit.swen262.service.Action.MerchantActionFactory;
+import edu.rit.swen262.ui.MUDGameUI;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 
 /**
@@ -32,10 +45,10 @@ import java.util.HashSet;
  */
 public class GameState implements IObservable, GameMediator {
     private static ArrayList<GameState> gameStates = new ArrayList<>() ;
-
     private List<GameObserver> observers;
     private PlayerCharacter player;
     private Map map;
+    private HashMap<Class<?>, InteractionActionFactory> factoryMap;
     private int turnNumber;
     private TimePeriod currentTime;
 
@@ -52,6 +65,12 @@ public class GameState implements IObservable, GameMediator {
         this.player = player;
         this.map = this.buildMap();
         this.map.bindNewGameObserversInRoom();
+
+        this.factoryMap = new HashMap<Class<?>, InteractionActionFactory>() {{
+            put(Chest.class, new LootableActionFactory());
+            put(Merchant.class, new MerchantActionFactory());
+        }};
+
         this.turnNumber = 1;
         this.setTime(new DayTime(this));
     }
@@ -135,6 +154,12 @@ public class GameState implements IObservable, GameMediator {
         RoomFiller.fill(goal, 0.0);
         
         Tile startTile = (Tile)newMap.startUp();
+
+        // chest placement testing, ignore!
+        Tile chestTile = (Tile) newMap.getTileByIndex(2);
+        Merchant merchant = new Merchant("give!1 item!!");
+        Chest chest = new Chest(new ArrayList<>(), 3);
+        chestTile.addOccupant(merchant);
         
         startTile.addOccupant(this.player);
 
@@ -174,12 +199,29 @@ public class GameState implements IObservable, GameMediator {
         GameEvent event = new GameEvent(GameEventType.MOVE_PLAYER);
 
         this.map.move(player, direction);
+
+        //check if player has entered the goal room + notify user
         if (this.map.canEndGame(this.player)) {
             event.addData("canEndGame", true);  
             event.addData("playerName", this.player.getName());
             event.addData("playerDescription", this.player.description());    
         }
-        
+
+        /* check current tile player is on for interactable occupants and add optional 
+         * interaction data */
+        InteractionResult interactAction = this.getCurrentTileActions();
+        if (interactAction != null) {
+            event.addData("sharednteract", interactAction);
+        }
+
+        /**
+         * check adjacent tiles for player for interactable occupants
+         */
+        Set<InteractionResult> adjacentInteractActions = this.getAdjacentTileInteractions();
+        if (!adjacentInteractActions.isEmpty()) {
+            event.addData("adjacentInteract", adjacentInteractActions);
+        }
+
         //convert current Room to String render, then pass along to UI
         String currentRoomRender = this.map.structuredRender();
 
@@ -192,6 +234,41 @@ public class GameState implements IObservable, GameMediator {
         this.playerTurnFinished();
     }
 
+    private InteractionResult getCurrentTileActions() {
+        Tile currentTile = (Tile) this.map.getTileOf(player);
+        Collection<Occupant> tileOccupants = currentTile.getOccupants();
+
+        if (!tileOccupants.isEmpty()) {
+            for (Occupant o : tileOccupants) {
+                InteractionActionFactory factory = factoryMap.get(o.getClass());
+                if (factory != null) {
+                    InteractionResult result = factory.createInteractionCommands(this, this.player, o);
+                    
+                    return result;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private Set<InteractionResult> getAdjacentTileInteractions() {
+        Collection<Occupant> adjacentOccupants = map.getAllAdjacentOccupants(this.player);
+        Set<InteractionResult> actionSet = new HashSet<InteractionResult>();
+
+        if (!adjacentOccupants.isEmpty()) {
+            for (Occupant o : adjacentOccupants) {
+                InteractionActionFactory factory = factoryMap.get(o.getClass());
+                if (factory != null) {
+                    InteractionResult result = factory.createInteractionCommands(this, this.player, o);
+                    actionSet.add(result);
+                }
+            }
+        }
+
+        return actionSet;
+    }
+
     /**
      * attacks the specified character on the map
      * 
@@ -202,15 +279,27 @@ public class GameState implements IObservable, GameMediator {
         event.addData("direction", direction);
         
         //check if valid target found in attack direction on map, awaiting integration :(
+        Collection<Occupant> occupants = map.getOccupantInDirectionFromOther(player, direction);
+        Attackable recipient = null;
+        String attackMessage = "Attack missed! no valid target found";
 
-        // test enemy
-        PlayerCharacter recipient = new PlayerCharacter("target dummy", "a sword pincushion");
+        for (Occupant o : occupants) {
+            if (o instanceof Attackable) {
+                recipient = (Attackable) o;
+                break;
+            }
+        }
 
-        String attackMessage = player.getName() + " launched an attack on " + recipient.getName() + "!";
-        String dmgMessage = attackCharacter(player, recipient);
+        if (recipient != null) {
+            String dmgMessage = attackCharacter(player, recipient);
+            event.addData("dmgMessage", dmgMessage);
+
+            attackMessage = player.getName() + " launched an attack on " + recipient.getName() + "!";
+        }
+        
 
         event.addData("attackMessage", attackMessage);
-        event.addData("dmgMessage", dmgMessage);
+        
 
         this.notifyObservers(event);
         this.playerTurnFinished();
@@ -234,8 +323,20 @@ public class GameState implements IObservable, GameMediator {
      */
     public void lootObject(PlayerCharacter player, Lootable lootObject) {
         List<Item> loot = lootObject.takeLoot();
+        GameEvent event = new GameEvent(GameEventType.LOOT_ALL);
+        this.player.takeLoot(loot);
 
-        player.takeLoot(loot);
+        this.notifyObservers(event);
+        //this.playerTurnFinished();
+    }
+
+    public void buyItem(Merchant merchant, Item item, int itemIndex) {
+        GameEvent event = new GameEvent(GameEventType.BUY_ITEM);
+
+        String result = merchant.purchaseItem(itemIndex, this.player, (Room) map.getCurrentRoom());
+        event.addData("itemMsg", result);
+
+        this.notifyObservers(event);
     }
     
     /**
@@ -337,10 +438,20 @@ public class GameState implements IObservable, GameMediator {
      * moving, attacking, opening a chest, disarming a trap
      */
     public void playerTurnFinished() {
+        GameEvent event = new GameEvent(GameEventType.FINISH_TURN);
         this.turnNumber++;
         this.currentTime.handlePlayerTurn();
 
-        GameEvent event = new GameEvent(GameEventType.FINISH_TURN);
+        Collection<Occupant> adjacentOccupants = this.map.getAllAdjacentOccupants(this.player);
+        String dmgMessage = "";
+
+        for (Occupant o : adjacentOccupants) {
+            if (o instanceof Enemy) {
+                dmgMessage += this.attackCharacter((Enemy) o, this.player);
+                event.addData("dmgMessage", dmgMessage);
+            }
+        }
+
         event.addData("turnNumber", this.turnNumber);
         this.notifyObservers(event);
     }
