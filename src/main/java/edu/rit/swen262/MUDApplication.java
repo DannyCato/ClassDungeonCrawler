@@ -139,7 +139,8 @@ class SampleCommandLineRunner implements CommandLineRunner {
 		// }
 		RandomInstance.instance();
 		Inventory inventory = new Inventory(6);
-		PlayerCharacter player = new PlayerCharacter("Bobert", "can lift at least 7 worms.", null, null, inventory, null, null);
+		Gold starterGold = new Gold(999);
+		PlayerCharacter player = new PlayerCharacter("Bobert", "can lift at least 7 worms.", null, null, inventory, starterGold, null);
 		GameState gameState = new GameState(player);
 		ActionVisitor actionVisitor = new ActionVisitor(gameState);
 

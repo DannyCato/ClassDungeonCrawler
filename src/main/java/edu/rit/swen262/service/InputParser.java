@@ -99,7 +99,12 @@ public class InputParser {
 
         // once action has been fully constructed, execute the command
         if (action != null) {
-            action.performAction();
+            try {
+                action.performAction();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         this.currentMenu.handleInput(this, input);
 
