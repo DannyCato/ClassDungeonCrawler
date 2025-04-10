@@ -21,6 +21,9 @@ public enum MenuState {
                 case 'i':
                     p.setMenu(INVENTORY);
                     break;
+                case 'o':
+                    p.setMenu(CHEST);
+                    break;
                 default:
                     break;
             }

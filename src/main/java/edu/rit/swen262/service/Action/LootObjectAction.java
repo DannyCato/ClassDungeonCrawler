@@ -18,6 +18,7 @@ public class LootObjectAction implements Action {
      */
     public LootObjectAction(GameState gameState, PlayerCharacter player, Lootable lootable) {
         this.gameState = gameState;
+        this.player = player;
         this.lootable = lootable;
     }
 
@@ -25,7 +26,7 @@ public class LootObjectAction implements Action {
      * {@inheritDoc}
      */
     public void performAction() {
-        gameState.lootObject(player, lootable);;
+        gameState.lootObject(player, lootable);
     }
 
     /**

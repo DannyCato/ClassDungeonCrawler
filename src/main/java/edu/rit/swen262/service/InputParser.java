@@ -146,4 +146,15 @@ public class InputParser {
         keystrokes.get(MenuState.DEFAULT).put(result.getDefaultKeystroke(), menuAction);
         keystrokes.put(menuState, result.getKeystrokes());
     }
+
+    public void clearInteractionMenus() {
+        HashMap<Character, Action> defaultKeystrokes = keystrokes.get(MenuState.DEFAULT);
+
+        for (HashMap.Entry<Character, Action> entry : defaultKeystrokes.entrySet()) {
+            Character key = entry.getKey();
+            if (!(key == 'm' || key == 'a' || key == 'i' || key == 'q')) {
+                defaultKeystrokes.remove(key);
+            }
+        }
+    }
 }

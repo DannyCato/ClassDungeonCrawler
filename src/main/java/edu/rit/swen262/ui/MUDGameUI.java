@@ -101,6 +101,9 @@ public class MUDGameUI implements GameObserver {
                 }
                 this.redrawMap(event.getData("currentRoom").toString());
                 
+                // reset default menu action hashmap
+                this.inputParser.clearInteractionMenus();
+
                 Object interactData = event.getData("interactData");
                 if (interactData != null) {
                     InteractionResult interactActions = (InteractionResult) interactData;
@@ -150,6 +153,12 @@ public class MUDGameUI implements GameObserver {
             case DROP_ITEM:
                 Item droppedItem = (Item) event.getData("item");
                 this.eventLogMsgs.offer("You dropped the " + droppedItem.getName() + "!");
+                
+                this.redrawEventLog();
+                this.redrawMenuDefault("");
+                break;
+            case LOOT_ALL:
+                this.eventLogMsgs.offer("You looted items from the Chest.");
                 
                 this.redrawEventLog();
                 this.redrawMenuDefault("");
@@ -455,7 +464,6 @@ public class MUDGameUI implements GameObserver {
                 [i] Open inventory
                 [q] Quit
                 """);
-
         sb.append(optionString);
         this.redrawMenu(sb.toString());
     }

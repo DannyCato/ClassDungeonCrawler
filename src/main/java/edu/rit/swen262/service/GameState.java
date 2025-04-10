@@ -200,10 +200,9 @@ public class GameState implements IObservable, GameMediator {
             event.addData("playerName", this.player.getName());
             event.addData("playerDescription", this.player.description());    
         }
-
+        
         /* check current tile player is on for interactable occupants and add optional 
-         * interaction data
-        */
+         * interaction data */
         InteractionResult interactAction = this.getCurrentTileActions();
         if (interactAction != null) {
             event.addData("interactData", interactAction);
@@ -281,8 +280,11 @@ public class GameState implements IObservable, GameMediator {
      */
     public void lootObject(PlayerCharacter player, Lootable lootObject) {
         List<Item> loot = lootObject.takeLoot();
+        GameEvent event = new GameEvent(GameEventType.LOOT_ALL);
+        this.player.takeLoot(loot);
 
-        player.takeLoot(loot);
+        this.notifyObservers(event);
+        //this.playerTurnFinished();
     }
     
     /**
