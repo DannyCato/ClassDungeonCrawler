@@ -15,6 +15,7 @@ import edu.rit.swen262.domain.Armor;
 import edu.rit.swen262.domain.DirectionalVector;
 import edu.rit.swen262.domain.Food;
 import edu.rit.swen262.domain.Gold;
+import edu.rit.swen262.domain.Inventory;
 import edu.rit.swen262.domain.Buff;
 import edu.rit.swen262.domain.Armor;
 import edu.rit.swen262.domain.PlayerCharacter;
@@ -137,7 +138,8 @@ class SampleCommandLineRunner implements CommandLineRunner {
 		// 	}
 		// }
 		RandomInstance.instance();
-		PlayerCharacter player = new PlayerCharacter("Bobert", "can lift at least 7 worms.");
+		Inventory inventory = new Inventory(6);
+		PlayerCharacter player = new PlayerCharacter("Bobert", "can lift at least 7 worms.", null, null, inventory, null, null);
 		GameState gameState = new GameState(player);
 		ActionVisitor actionVisitor = new ActionVisitor(gameState);
 
