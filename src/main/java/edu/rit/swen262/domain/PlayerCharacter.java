@@ -187,6 +187,9 @@ public class PlayerCharacter extends GameCharacter {
         } else if (item instanceof Armor) {
             Armor armor = (Armor) item;
             return this.equipArmor(armor);
+        } else if (item instanceof Buff) {
+            Buff buff = (Buff) item;
+            return this.useBuff(buff);
         } else {
             return "The" + item.getName() + "cannot be used.";
         }

@@ -6,6 +6,7 @@ package edu.rit.swen262.service;
  */
 public enum GameEventType {
     DISPLAY_SUBMENU,
+    UPDATE_PLAYER,
     MOVE_PLAYER,
     TAKE_DAMAGE,
     CHANGE_TIME,

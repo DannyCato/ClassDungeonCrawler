@@ -33,7 +33,9 @@ import com.googlecode.lanterna.terminal.swing.SwingTerminalFrame;
 import com.googlecode.lanterna.terminal.swing.TerminalEmulatorAutoCloseTrigger;
 
 import ch.qos.logback.core.net.QueueFactory;
+import edu.rit.swen262.domain.Inventory;
 import edu.rit.swen262.domain.Item;
+import edu.rit.swen262.domain.PlayerCharacter;
 import edu.rit.swen262.service.GameEvent;
 import edu.rit.swen262.service.GameEventType;
 import edu.rit.swen262.service.GameObserver;
@@ -91,6 +93,13 @@ public class MUDGameUI implements GameObserver {
             case DISPLAY_SUBMENU:
                 //update status panel w/ menu options
                 this.redrawMenu(event.getData("menuText").toString());
+                break;
+            case UPDATE_PLAYER:
+                PlayerCharacter player = (PlayerCharacter) event.getData("player");
+                Inventory inv = player.getInventory();
+
+                inputParser.setInventory(inv);
+
                 break;
             case UPDATE_MAP:
                 this.redrawMap(event.getData("currentRoom").toString());
