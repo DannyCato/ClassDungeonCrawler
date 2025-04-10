@@ -63,7 +63,7 @@ public class MUDGameUI implements GameObserver {
     private Label turnDisplay;
     private Label timeDisplay;
     private Label menuDisplay;
-    private final int EVENT_LOG_SIZE = 10;
+    private final int EVENT_LOG_SIZE = 20;
     private Queue<String> eventLogMsgs;
     private Label eventLogDisplay;
 
@@ -124,6 +124,11 @@ public class MUDGameUI implements GameObserver {
                 }
                 break;
             case FINISH_TURN:
+                if (event.getData("dmgMessage") != null) {
+                    this.eventLogMsgs.offer((String) event.getData("dmgMessage"));
+                }
+
+                this.redrawEventLog();
                 this.redrawTurn(event.getData("turnNumber").toString());
                 break;
             case CHANGE_TIME:

@@ -3,6 +3,7 @@ package edu.rit.swen262.domain.DungeonPiece;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 
 import edu.rit.swen262.domain.DirectionalVector;
@@ -281,11 +282,28 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
      * @return 
      */
     public Collection<Occupant> getOccupantInDirectionFromOther(Occupant origin, DirectionalVector dir) {
-        Room r = ((Room) currentRoom) ;
-        DungeonPiece<Tile> occpiedTile = (Tile) r.getTileOfOccupant(origin) ;
-        ArrayList<DungeonPiece<Tile>> ret = new ArrayList<>() ;
-        ret = (ArrayList) r.getAllAdjacentTiles(occpiedTile, ret) ;
-        return ret.get(dir.ordinal()).getOccupants() ;
+        Room r = ((Room) currentRoom);
+        DungeonPiece<Tile> occpiedTile = (Tile) r.getTileOfOccupant(origin);
+        ArrayList<DungeonPiece<Tile>> ret = new ArrayList<>();
+        ret = (ArrayList) r.getAllAdjacentTiles(occpiedTile, ret);
+        return ret.get(dir.ordinal()).getOccupants();
+    }
+
+    public Collection<Occupant> getAllAdjacentOccupants(Occupant o) {
+        Room r = ((Room) currentRoom);
+        DungeonPiece<Tile> occupiedTile = (Tile) r.getTileOfOccupant(o);
+        ArrayList<DungeonPiece<Tile>> adjacentTiles = new ArrayList<>();
+        
+        adjacentTiles = (ArrayList) r.getAllAdjacentTiles(occupiedTile, adjacentTiles);
+        List<Occupant> allOccupants = new LinkedList<>();
+
+        for (DungeonPiece<Tile> tile : adjacentTiles) {
+            if (tile != null) {
+                allOccupants.addAll(tile.getOccupants());
+            }
+        }
+
+        return allOccupants;
     }
 
     /**

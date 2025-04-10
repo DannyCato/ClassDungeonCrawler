@@ -8,6 +8,8 @@ import edu.rit.swen262.domain.Bag;
 import edu.rit.swen262.domain.Chest;
 import edu.rit.swen262.domain.DayTime;
 import edu.rit.swen262.domain.DirectionalVector;
+import edu.rit.swen262.domain.Enemy;
+import edu.rit.swen262.domain.Exit;
 import edu.rit.swen262.domain.GameCharacter;
 import edu.rit.swen262.domain.Inventory;
 import edu.rit.swen262.domain.Item;
@@ -226,8 +228,8 @@ public class GameState implements IObservable, GameMediator {
 
         if (!tileOccupants.isEmpty()) {
             for (Occupant o : tileOccupants) {
-                if (!(o instanceof PlayerCharacter)) {
-                    InteractionActionFactory factory = factoryMap.get(o.getClass());
+                InteractionActionFactory factory = factoryMap.get(o.getClass());
+                if (factory != null) {
                     InteractionResult result = factory.createInteractionCommands(this, this.player, o);
                     
                     return result;
@@ -262,7 +264,7 @@ public class GameState implements IObservable, GameMediator {
         if (recipient != null) {
             String dmgMessage = attackCharacter(player, recipient);
             event.addData("dmgMessage", dmgMessage);
-            
+
             attackMessage = player.getName() + " launched an attack on " + recipient.getName() + "!";
         }
         
@@ -407,10 +409,20 @@ public class GameState implements IObservable, GameMediator {
      * moving, attacking, opening a chest, disarming a trap
      */
     public void playerTurnFinished() {
+        GameEvent event = new GameEvent(GameEventType.FINISH_TURN);
         this.turnNumber++;
         this.currentTime.handlePlayerTurn();
 
-        GameEvent event = new GameEvent(GameEventType.FINISH_TURN);
+        Collection<Occupant> adjacentOccupants = this.map.getAllAdjacentOccupants(this.player);
+        String dmgMessage = "";
+
+        for (Occupant o : adjacentOccupants) {
+            if (o instanceof Enemy) {
+                dmgMessage += this.attackCharacter((Enemy) o, this.player);
+                event.addData("dmgMessage", dmgMessage);
+            }
+        }
+
         event.addData("turnNumber", this.turnNumber);
         this.notifyObservers(event);
     }
