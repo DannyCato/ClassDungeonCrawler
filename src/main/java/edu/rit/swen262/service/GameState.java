@@ -248,17 +248,27 @@ public class GameState implements IObservable, GameMediator {
         event.addData("direction", direction);
         
         //check if valid target found in attack direction on map, awaiting integration :(
-        //map.get
-         ; //TODO: THIUSSSSS
-        
-        // test enemy
-        PlayerCharacter recipient = new PlayerCharacter("target dummy", "a sword pincushion");
+        Collection<Occupant> occupants = map.getOccupantInDirectionFromOther(player, direction);
+        Attackable recipient = null;
+        String attackMessage = "Attack missed! no valid target found";
 
-        String attackMessage = player.getName() + " launched an attack on " + recipient.getName() + "!";
-        String dmgMessage = attackCharacter(player, recipient);
+        for (Occupant o : occupants) {
+            if (o instanceof Attackable) {
+                recipient = (Attackable) o;
+                break;
+            }
+        }
+
+        if (recipient != null) {
+            String dmgMessage = attackCharacter(player, recipient);
+            event.addData("dmgMessage", dmgMessage);
+            
+            attackMessage = player.getName() + " launched an attack on " + recipient.getName() + "!";
+        }
+        
 
         event.addData("attackMessage", attackMessage);
-        event.addData("dmgMessage", dmgMessage);
+        
 
         this.notifyObservers(event);
         this.playerTurnFinished();
@@ -290,7 +300,12 @@ public class GameState implements IObservable, GameMediator {
     }
 
     public void buyItem(Merchant merchant, Item item, int itemIndex) {
-        merchant.purchaseItem(itemIndex, this.player, (Room) map.getCurrentRoom());
+        GameEvent event = new GameEvent(GameEventType.BUY_ITEM);
+
+        String result = merchant.purchaseItem(itemIndex, this.player, (Room) map.getCurrentRoom());
+        event.addData("itemMsg", result);
+
+        this.notifyObservers(event);
     }
     
     /**

@@ -136,7 +136,10 @@ public class MUDGameUI implements GameObserver {
                 break;
             case TAKE_DAMAGE:
                 this.eventLogMsgs.offer((String) event.getData("attackMessage"));
-                this.eventLogMsgs.offer((String) event.getData("dmgMessage"));
+
+                if (event.getData("dmgMessage") != null) {
+                    this.eventLogMsgs.offer((String) event.getData("dmgMessage"));
+                }
                 
                 this.redrawEventLog();
                 this.redrawMenuDefault("");
@@ -155,6 +158,12 @@ public class MUDGameUI implements GameObserver {
                 this.eventLogMsgs.offer("You dropped the " + droppedItem.getName() + "!");
                 
                 this.redrawEventLog();
+                this.redrawMenuDefault("");
+                break;
+            case BUY_ITEM:
+                String purchaseFeedback = (String) event.getData("itemMsg");
+                this.eventLogMsgs.offer(purchaseFeedback);   
+
                 this.redrawMenuDefault("");
                 break;
             case LOOT_ALL:

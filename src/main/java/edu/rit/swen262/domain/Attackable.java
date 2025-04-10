@@ -25,4 +25,6 @@ public interface Attackable {
      * @return String description of how much damage was taken
      */
     public String takeDamage(int damage);
+
+    public String getName();
 }
