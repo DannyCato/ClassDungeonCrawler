@@ -1,5 +1,6 @@
 package edu.rit.swen262.domain.DungeonPiece;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -269,6 +270,22 @@ public class Map implements DungeonPiece<Map>, java.io.Serializable {
             startTile.addOccupant(o);
             return true;
         } return false;
+    }
+
+    /**
+     * Does black magic and gets cool things
+     * 
+     * @param origin {@link Occpant}
+     * @param dir {@link DirectionalVector}
+     * 
+     * @return 
+     */
+    public Collection<Occupant> getOccupantInDirectionFromOther(Occupant origin, DirectionalVector dir) {
+        Room r = ((Room) currentRoom) ;
+        DungeonPiece<Tile> occpiedTile = (Tile) r.getTileOfOccupant(origin) ;
+        ArrayList<DungeonPiece<Tile>> ret = new ArrayList<>() ;
+        ret = (ArrayList) r.getAllAdjacentTiles(occpiedTile, ret) ;
+        return ret.get(dir.ordinal()).getOccupants() ;
     }
 
     /**

@@ -139,9 +139,9 @@ public class InputParser {
     /**
      * adds a single new submenu tree to the parser's keystroke hashmap to allow
      * for dynamic interactions with other {@link Occupant occupants} on the map
-     * when sharing the same or an adjacent tile in the {@link Map}
+     * only when sharing the same or an adjacent tile in the {@link Map}
      * 
-     * @param result 
+     * @param result result of generating a single interactable action submenu
      */
     public void addInteractionMenu(InteractionResult result) {
         if (!(result.getAction() instanceof DisplayMenuAction)) {

@@ -311,7 +311,7 @@ public class Room implements DungeonPiece<Room>, java.io.Serializable {
      * 
      * @return the index of the adjacent {@link Tile}. Returns param index if it failed
      */
-    private int getAdjactentTileInDir(int index, DirectionalVector dir) {
+    public int getAdjactentTileInDir(int index, DirectionalVector dir) {
         if ((index % width == 0 && dir.x == -1 ) || (index % width == width - 1 && dir.x == 1) // Check if moving on X would wrap
             || (index < width && dir.y == 1) || (index > ((height - 1) * width) && dir.y == -1)) { // Check if moving on Y would go out of bounds
             return index;

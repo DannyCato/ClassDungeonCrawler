@@ -200,7 +200,7 @@ public class GameState implements IObservable, GameMediator {
             event.addData("playerName", this.player.getName());
             event.addData("playerDescription", this.player.description());    
         }
-        
+
         /* check current tile player is on for interactable occupants and add optional 
          * interaction data */
         InteractionResult interactAction = this.getCurrentTileActions();
@@ -248,7 +248,9 @@ public class GameState implements IObservable, GameMediator {
         event.addData("direction", direction);
         
         //check if valid target found in attack direction on map, awaiting integration :(
-
+        //map.get
+         ; //TODO: THIUSSSSS
+        
         // test enemy
         PlayerCharacter recipient = new PlayerCharacter("target dummy", "a sword pincushion");
 
@@ -285,6 +287,10 @@ public class GameState implements IObservable, GameMediator {
 
         this.notifyObservers(event);
         //this.playerTurnFinished();
+    }
+
+    public void buyItem(Merchant merchant, Item item, int itemIndex) {
+        merchant.purchaseItem(itemIndex, this.player, (Room) map.getCurrentRoom());
     }
     
     /**
