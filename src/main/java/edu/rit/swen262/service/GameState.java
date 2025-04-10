@@ -140,7 +140,7 @@ public class GameState implements IObservable, GameMediator {
         // newMap.addRoom(room7, goal, DirectionalVector.SOUTH, true);
         // newMap.addRoom(room8, goal, DirectionalVector.WEST, true);
         
-        RoomFiller.fill(root, 0.1);
+        RoomFiller.fill(root, 0);
         RoomFiller.fill(room2, 0.15);
         // RoomFiller.fill(room3, 0.1);
         // RoomFiller.fill(room4, 0.1);
@@ -156,10 +156,12 @@ public class GameState implements IObservable, GameMediator {
         Tile startTile = (Tile)newMap.startUp();
 
         // chest placement testing, ignore!
-        Tile chestTile = (Tile) newMap.getTileByIndex(2);
+        Tile chestTile = (Tile) newMap.getTileByIndex(5);
+        Tile merchantTile = (Tile) newMap.getTileByIndex(9);
         Merchant merchant = new Merchant("give!1 item!!");
         Chest chest = new Chest(new ArrayList<>(), 3);
-        chestTile.addOccupant(merchant);
+        chestTile.addOccupant(chest);
+        merchantTile.addOccupant(merchant);
         
         startTile.addOccupant(this.player);
 
@@ -323,6 +325,7 @@ public class GameState implements IObservable, GameMediator {
      */
     public void lootObject(PlayerCharacter player, Lootable lootObject) {
         List<Item> loot = lootObject.takeLoot();
+        System.out.println(loot);
         GameEvent event = new GameEvent(GameEventType.LOOT_ALL);
         this.player.takeLoot(loot);
 
@@ -448,9 +451,12 @@ public class GameState implements IObservable, GameMediator {
 
         for (Occupant o : adjacentOccupants) {
             if (o instanceof Enemy) {
-                dmgMessage += this.attackCharacter((Enemy) o, this.player);
-                event.addData("dmgMessage", dmgMessage);
-                attackedLast = (Enemy) o;
+                Enemy enemy = (Enemy) o;
+                if (enemy.isAlive()) {
+                    dmgMessage += this.attackCharacter(enemy, this.player);
+                    event.addData("dmgMessage", dmgMessage);
+                    attackedLast = enemy;
+                }
             }
         }
 

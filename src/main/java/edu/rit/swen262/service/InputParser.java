@@ -157,7 +157,6 @@ public class InputParser {
         keystrokes.get(MenuState.DEFAULT).put(result.getDefaultKeystroke(), menuAction);
         for (HashMap.Entry<DisplayMenuType, HashMap<Character, Action>> submenu : interactKeystrokes.entrySet()) {
             MenuState menuState = MenuState.valueOf(submenu.getKey().toString());
-            System.out.println(submenu.getValue());
             keystrokes.put(menuState, submenu.getValue());
         }
     }

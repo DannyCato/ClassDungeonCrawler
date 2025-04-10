@@ -30,7 +30,7 @@ public class PlayerCharacter extends GameCharacter {
         this.armor = null;
         this.weapon = null;
         this.inventory = new Inventory(6);
-        this.gold = new Gold(0);
+        this.gold = new Gold(30);
     }
 
 

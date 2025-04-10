@@ -132,7 +132,7 @@ public class RoomFiller {
                                                 "Lich", "Demon", "Dragon", "Wraith", "Kraken",
                                                 "Hydra", "Griffin", "Minotaur", "Chimera", "Harpy");
         String name = names.get(RAND.nextInt(names.size()));
-        return new Enemy(name, RAND.nextInt(101), RAND.nextInt(50), RAND.nextInt(50));
+        return new Enemy(name, RAND.nextInt(30), RAND.nextInt(15), RAND.nextInt(10));
     }
 
     /**
