@@ -154,8 +154,9 @@ public class GameState implements IObservable, GameMediator {
 
         // chest placement testing, ignore!
         Tile chestTile = (Tile) newMap.getTileByIndex(2);
+        Merchant merchant = new Merchant("give!! item!!!");
         Chest chest = new Chest(new ArrayList<>(), 3);
-        chestTile.addOccupant(chest);
+        chestTile.addOccupant(merchant);
         
         startTile.addOccupant(this.player);
 
