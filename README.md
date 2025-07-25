@@ -41,7 +41,9 @@ I spent nearly a few days making a complicated system that would take the size o
 
 ### Illness
 
-My output during the second phase was also greatly reduced due to catching Covid during that week. No less, there was not a whole lot of work to do for my system since it was mostly finished and just needed to be orchestrated with the rest of it and have some bug-fixing.
+My output during the second phase was also greatly reduced due to catching Covid during that week.
+
+## Check it Out
 
 To run this project, clone and run 
 ```shell
