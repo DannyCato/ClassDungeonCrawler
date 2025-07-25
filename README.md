@@ -10,8 +10,15 @@ My task for this project was doing all the programming from the map down. What t
 
 I also handled, map rendering, player movement, and map layout on a back-end scale. These were all sort of additional effects that were easy to add to the system so i got them done even if they were not in the explicit requirements for my portion.
 
-## My design
-add an in-depth explanation of my subsystem w/ UML and sequence diagrams
+## The Design
+
+The main parts of the system all extend a generic interface called [DungeonPiece](https://github.com/DannyCato/ClassDungeonCrawler/blob/main/src/main/java/edu/rit/swen262/domain/DungeonPiece/DungeonPiece.java). In essence, it allows for each one of the elements to contain a list of the other and allow for recursive inclusion of a class in another instance of itself following the [Composite Pattern](https://en.wikipedia.org/wiki/Composite_pattern). This was doing most of the heavy lifting for organziation of the structure.
+
+The data structure that the Map used was a simple "graph" \([MapStructure](https://github.com/DannyCato/ClassDungeonCrawler/blob/main/src/main/java/edu/rit/swen262/domain/DungeonPiece/MapStructure.java)\) with four possible connections \([RoomNode](https://github.com/DannyCato/ClassDungeonCrawler/blob/main/src/main/java/edu/rit/swen262/domain/DungeonPiece/RoomNode.java)\). These did the work of connecting each room in the map, and would be continually genearted in the endless mode.
+
+The representation for all the different pieces in the game, from playable characters to rocks. These were refered to as the [Occupant](https://github.com/DannyCato/ClassDungeonCrawler/blob/main/src/main/java/edu/rit/swen262/domain/Occupant.java) subsystem. The spirit of the system relies on how it interacts with the [Tile](https://github.com/DannyCato/ClassDungeonCrawler/blob/main/src/main/java/edu/rit/swen262/domain/DungeonPiece/Tile.java). The Tile has two slots for occupants, permanent and transient. The permanent occupants are given to the tile on creation and represent things like obstacles, exits, and chests. Transient Occupants are allowed to move around or can reasonably be removed, including things like the player character, enemies, and traps. All these occupants also contain a specific [RenderReprestation](https://github.com/DannyCato/ClassDungeonCrawler/blob/main/src/main/java/edu/rit/swen262/domain/RenderRepresentation.java) which is constant for every subclass of Occupant. This is also where the rule for what occupants allow others on its tile, like an Obstacle would not let a player move through it. This RenderRepresentation, is then complied and rendered to the screen for viewing of the game.
+
+![UML Class Diagram of the Map System](./Images/Map-Room-Tile_Subsystem.png)
 
 ## What We did Well
 
