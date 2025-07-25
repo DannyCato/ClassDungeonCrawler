@@ -18,6 +18,8 @@ The data structure that the Map used was a simple "graph" \([MapStructure](https
 
 The representation for all the different pieces in the game, from playable characters to rocks. These were refered to as the [Occupant](https://github.com/DannyCato/ClassDungeonCrawler/blob/main/src/main/java/edu/rit/swen262/domain/Occupant.java) subsystem. The spirit of the system relies on how it interacts with the [Tile](https://github.com/DannyCato/ClassDungeonCrawler/blob/main/src/main/java/edu/rit/swen262/domain/DungeonPiece/Tile.java). The Tile has two slots for occupants, permanent and transient. The permanent occupants are given to the tile on creation and represent things like obstacles, exits, and chests. Transient Occupants are allowed to move around or can reasonably be removed, including things like the player character, enemies, and traps. All these occupants also contain a specific [RenderReprestation](https://github.com/DannyCato/ClassDungeonCrawler/blob/main/src/main/java/edu/rit/swen262/domain/RenderRepresentation.java) which is constant for every subclass of Occupant. This is also where the rule for what occupants allow others on its tile, like an Obstacle would not let a player move through it. This RenderRepresentation, is then complied and rendered to the screen for viewing of the game.
 
+Finally, there is the [DirectionalVector](https://github.com/DannyCato/ClassDungeonCrawler/blob/main/src/main/java/edu/rit/swen262/domain/DirectionalVector.java). This is purely a data enumeration, to give some abstraction to direction for ease in development. It was used throughout the project, but is mainly used for traversing the rooms.
+
 ![UML Class Diagram of the Map System](./Images/Map-Room-Tile_Subsystem.png)
 
 ## What We did Well
