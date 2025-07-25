@@ -1,44 +1,49 @@
-# DesignProjectSpringStarter
-This is an alternate Design Project starter kit that uses Maven (with wrapper) and SpringBoot.
+# Class Dungeon Project
 
-## Basic Setup
-Read this section first.  Take these steps as soon as you download the git repo.
+This was a group project for Swen-262 Design of Software Subsystems, it is an ascii-styled infinite dungeon crawler and is an requirement to be allowed to go on co-op.
 
-### Prepare the Project
-**BEFORE** you import the project into your IDE, I would recommend you do the following:
-* Replace the text `TEAM-XX` in the `pom.xml` file with your own team identifier, such as
-  `MUD-1` or `NutriApp-2` and so on.
-* Replace the text `REPLACE-ME-WITH-PROJECT-NAME` in the `pom.xml` file with your own project name.
-* Replace the text `REPLACE-ME-WITH-PROJECT-NAME` in the `application.properties` file with your own project name.
-* Replace the text `YOUR PROJECT DESCRIPTION HERE` in the `pom.xml` file with your own project description.
+At a high-level, this class is an in-depth first look at how to properly design a complex software project by breaking it down into smaller pieces and applying various [Gang of Four](https://en.wikipedia.org/wiki/Design_Patterns) patterns. Additionally, the class emphasized a lot of work outside of coding: creating design docs, reports, presentations about our systems, and various UML Diagrams. 
 
-### Using the Maven Wrapper
-This project starter includes a Maven wrapper.  This means that Maven runs in a virtual
-environment; not against your global Maven installation.  Use the `./mvnw` command in a *NIX
-environment such as MacOS or Linux and use the `mvnw.cmd` in a Windows environment.
+## My Contributions
 
-Learn more [here](https://maven.apache.org/wrapper/).
+My task for this project was doing all the programming from the map down. What that means, is that I created the classes for a majority of the tile, room, and map. This also lead to other things I worked on, such as the occupant interface for tiles, and most of its realizations. Some notable classes that I did most of the work on [Room](https://github.com/DannyCato/ClassDungeonCrawler/blob/main/src/main/java/edu/rit/swen262/domain/DungeonPiece/Room.java) and [Trap](https://github.com/DannyCato/ClassDungeonCrawler/blob/main/src/main/java/edu/rit/swen262/domain/Trap.java).
 
-## Basic Build Commands
-This section provides basic build commands for this project.
+I also handled, map rendering, player movement, and map layout on a back-end scale. These were all sort of additional effects that were easy to add to the system so i got them done even if they were not in the explicit requirements for my portion.
 
-### Running the App
-To run the Spring Boot application, use this command:
+## My design
+add an in-depth explanation of my subsystem w/ UML and sequence diagrams
 
+## What We did Well
+
+### Teamwork
+
+If we asked for help, people would quickly come to our aid. We used slack during the class and it allowed for us to keep rapidly devloping.
+
+### Commenting
+
+There was a trend in the group to comment. This made developing between systems easier since we can just look at what anything does. (I believe I kicked this trend off cause I spent a few hours putting down a lot of comments at the beginning of the project.)
+
+## Issues the Group Faced
+
+### Difficulty
+
+Of the projects offered in the course, this was by far the hardest. The problem statement for phase one was nearly 5 pages long and phase two was a little over 3 pages, while the other projects' statements did not exceed a page. Part of the final grading for this project was that all feature from phase one were well implemented. This lead to a lot of stress since it coincided with the final deliverable for phase 2. This specific project has since been retired by the department for this reason. All that said, we still made the most out of the situation and I am proud of it.
+
+### Lack of Time for Code Development
+
+The project was developed in two phases each of which lasted a week, that were before or during midterms. However, we were given an excess of time for design, ususally about 3 weeks with explicit instructions to not start until it was approved by teaching staff. The first phase was just to lay down the basics of the game and make sure that we understand the project. The second phase was about fleshing out the features and refactoring our code to be expandable without many additional rewrites (our group started with a decent design that kept it to a minimum).
+
+## Issuse I Faced
+
+### Scope Creep
+
+I spent nearly a few days making a complicated system that would take the size of the room and sprawl outwards such that there minimal gaps inbetween rooms, like a real place. This would mean that large rooms could have an execptional number of connections and lead to interesting gameplay but it was shelved for simplicity and my own sanity. Instead, a less complicated graph with connections in each cardinal direction was developed. This lead to me feeling a bit of burnout, but i managed to work around it.
+
+### Illness
+
+My output during the second phase was also greatly reduced due to catching Covid during that week. No less, there was not a whole lot of work to do for my system since it was mostly finished and just needed to be orchestrated with the rest of it and have some bug-fixing.
+
+To run this project, clone and run 
 ```shell
 ./mvnw spring-boot:run
 ```
-
-This will also execute any `CommandLineRunner` implementation classes, such as
-the sample `SampleCommandLineRunner` in this starter kit.
-
-### Running Unit Tests
-To run the complete suite of unit tests, use this command:
-
-```shell
-./mvnw clean test surefire-report:report
-```
-
-This generates the Surefire report (on unit tests) in the file
-`target/site/surefire-report.html`.  It also generates the JaCoCo
-(code coverage) report at: `target/site/jacoco/index.html`.
